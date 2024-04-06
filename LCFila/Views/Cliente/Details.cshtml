@@ -1,0 +1,70 @@
+﻿@model LCFila.ViewModels.PessoaViewModel
+@{
+    Layout = "_LayoutCliente";
+}
+
+<div class="h-100" style="">
+    <div class="pt-5"></div>
+
+    @if (Model.Status == LCFilaApplication.Enums.PessoaStatus.Esperando)
+    {
+        <div class="pt-5 pb-5 lcfilabackground">
+            <div class="row justify-content-center valign">
+                <i class="far fa-clock pt-2"></i>
+                <div class="pl-2 pt-1">
+                    <b>Você está na lista de espera</b>
+                </div>
+            </div>
+            <div class="row justify-content-center valign pt-3">
+                <span class="iconify pt-1" data-icon="mdi:account-arrow-right" data-width="30" data-height="30"></span>
+                <div class="pl-2 pt-1">
+                    <b>Você está na @Model.Posicao ° posição</b>
+                </div>
+            </div>
+
+            <div class="row justify-content-center valign pt-3">
+
+                <div class="pl-2 pt-1">
+                    <b>Desistiu? </b>
+                    <a class="btn btn-dark" asp-area="" asp-controller="Cliente" asp-action="Remove" asp-route-id="@Model.Id" asp-route-filaid="@Model.filaid" data-id="@Model.Id">Sair</a>
+                </div>
+
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="pt-5 pb-5 chegouavez">
+            <div class="row justify-content-center valign">
+                <i class="far fa-clock pt-2"></i>
+                <div class="pl-2 pt-1">
+                    <b>Sua vez chegou!</b>
+                </div>
+            </div>
+            <div class="row justify-content-center valign pt-3">
+                @*<span class="iconify pt-1" data-icon="mdi:account-arrow-right" data-width="30" data-height="30"></span>*@
+                <div class="pl-2 pt-1">
+                   
+                </div>
+            </div>
+
+            <div class="row justify-content-center valign pt-3">
+
+                <div class="pl-2 pt-1">
+                    <b>Desistiu? </b>
+                    <a class="btn btn-dark" asp-area="" asp-controller="Cliente" asp-action="Remove" asp-route-id="@Model.Id" asp-route-filaid="@Model.filaid" data-id="@Model.Id">Sair</a>
+                </div>
+
+            </div>
+        </div>
+    }
+
+</div>
+
+
+<script>
+    setInterval(() => {
+        window.location.reload()
+    }, 10000);
+
+</script>

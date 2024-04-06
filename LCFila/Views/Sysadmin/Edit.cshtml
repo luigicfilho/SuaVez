@@ -1,0 +1,109 @@
+﻿@model LCFila.ViewModels.EmpresaLoginViewModel
+
+@{
+    ViewData["Title"] = "Alterar Empresa";
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>@ViewData["Title"]</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="breadcrumb-item active">Alterar</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">@ViewData["Title"]</h3>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <form asp-action="Edit" id="myform" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="Id" />
+
+                            <div class="form-group">
+                                <label asp-for="NomeEmpresa" class="control-label"></label>
+                                <input asp-for="NomeEmpresa" class="form-control" />
+                                <span asp-validation-for="NomeEmpresa" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="CNPJ" class="control-label"></label>
+                                <input asp-for="CNPJ" class="form-control disabled" disabled />
+                                <span asp-validation-for="CNPJ" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Email" class="control-label"></label>
+                                <input asp-for="Email" class="form-control" disabled/>
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="ListaUsers" class="control-label"></label>
+                                <select asp-for="ListaUsers" class="form-control" asp-items="@Model.ListaUsers" disabled ></select>
+                                <span asp-validation-for="ListaUsers" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="AdminEmpresa" class="control-label"></label>
+                                <input asp-for="AdminEmpresa.Email" class="form-control" disabled/>
+                                <span asp-validation-for="AdminEmpresa.Email" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Ativo" class="control-label"></label>
+                                <input asp-for="Ativo" class="form-control" />
+                                <span asp-validation-for="Ativo" class="text-danger"></span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+                <div class="form-group">
+                    <a class="btn btn-secondary" asp-action="Index">Voltar</a>
+                    <input type="submit" value="Salvar Alterações" form="myform" class="btn btn-success float-right" />
+                </div>
+            </div>
+            <!-- /.card-footer-->
+        </div>
+        <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

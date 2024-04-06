@@ -1,0 +1,195 @@
+﻿@inherits Microsoft.VisualStudio.Web.CodeGeneration.Templating.RazorTemplateBase
+@using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
+@using System.Collections.Generic
+@using System.Linq
+@@model @Model.ViewDataTypeName
+
+@{
+    if (Model.IsPartialView)
+    {
+    }
+    else if (Model.IsLayoutPageSelected)
+    {
+@:@@{
+    @:ViewData["Title"] = "@Model.ViewName";
+        if (!string.IsNullOrEmpty(Model.LayoutPageFile))
+        {
+    @:Layout = "@Model.LayoutPageFile";
+        }
+@:}
+@:
+@:<!-- Content Wrapper. Contains page content -->
+@:<div class="content-wrapper">
+@:    <!-- Content Header (Page header) -->
+@:    <section class="content-header">
+@:        <div class="container-fluid">
+@:            <div class="row mb-2">
+@:                <div class="col-sm-6">
+@:                    <h1>Alterar @Model.ViewDataTypeShortName</h1>
+@:                </div>
+@:                <div class="col-sm-6">
+@:                    <ol class="breadcrumb float-sm-right">
+@:                        <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+@:                        <li class="breadcrumb-item active">Alterar @Model.ViewDataTypeShortName</li>
+@:                    </ol>
+@:                </div>
+@:            </div>
+@:        </div><!-- /.container-fluid -->
+@:    </section>
+@:
+    }
+    else
+    {
+@:@@{
+    @:Layout = null;
+@:}
+@:
+@:<!DOCTYPE html>
+@:
+@:<html>
+@:<head>
+    @:<meta name="viewport" content="width=device-width" />
+    @:<title>@Model.ViewName</title>
+@:</head>
+@:<body>
+@:
+        //    PushIndent("    ");
+    }
+@:   <!-- Main content -->
+@:    <section class="content">
+@:
+@:        <!-- Default box -->
+@:        <div class="card">
+@:            <div class="card-header">
+@:                <h3 class="card-title">Alterar @Model.ViewDataTypeShortName</h3>
+@:
+@:                <div class="card-tools">
+@:                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+@:                        <i class="fas fa-minus"></i>
+@:                    </button>
+@:                    <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
+@:                        <i class="fas fa-times"></i>
+@:                    </button>
+@:                </div>
+@:            </div>
+@:            <div class="card-body">
+@:<div class="row">
+    @:<div class="col-md-4">
+        @:<form asp-action="@Model.ViewName" id="myform">
+            @:<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        foreach (PropertyMetadata property in Model.ModelMetadata.Properties)
+        {
+            if (property.IsPrimaryKey)
+            {
+            @:<input type="hidden" asp-for="@property.PropertyName" />
+                continue;
+            }
+
+            if (property.Scaffold)
+            {
+                if (property.IsReadOnly)
+                {
+                    continue;
+                }
+
+                if (property.IsForeignKey)
+                {
+            @:<div class="form-group">
+                @:<label asp-for="@property.PropertyName" class="control-label"></label>
+                @:<select asp-for="@property.PropertyName" class="form-control" asp-items="ViewBag.@property.PropertyName"></select>
+                @:<span asp-validation-for="@property.PropertyName" class="text-danger"></span>
+            @:</div>
+                    continue;
+                }
+
+                bool isCheckbox = property.TypeName.Equals("System.Boolean");
+                if (isCheckbox)
+                {
+            @:<div class="form-group form-check">
+                @:<label class="form-check-label">
+                    @:<input class="form-check-input" asp-for="@property.PropertyName" /> @@Html.DisplayNameFor(model => model.@GetValueExpression(property))
+                @:</label>
+            @:</div>
+                }
+                else if (property.IsEnum && !property.IsEnumFlags)
+                {
+            @:<div class="form-group">
+                @:<label asp-for="@property.PropertyName" class="control-label"></label>
+                @:<select asp-for="@property.PropertyName" class="form-control"></select>
+                @:<span asp-validation-for="@property.PropertyName" class="text-danger"></span>
+            @:</div>
+                }
+                else if (property.IsMultilineText)
+                {
+            @:<div class="form-group">
+                @:<label asp-for="@property.PropertyName" class="control-label"></label>
+                @:<textarea asp-for="@property.PropertyName" class="form-control"></textarea>
+                @:<span asp-validation-for="@property.PropertyName" class="text-danger"></span>
+            @:</div>
+                }
+                else
+                {
+            @:<div class="form-group">
+                @:<label asp-for="@property.PropertyName" class="control-label"></label>
+                @:<input asp-for="@property.PropertyName" class="form-control" />
+                @:<span asp-validation-for="@property.PropertyName" class="text-danger"></span>
+            @:</div>
+                }
+            }
+            // Ideally we shouldn't be here  but if the user marks the foreign key as [ScaffoldColumn(false)], we want to atleast try to make it work.
+            else if (property.IsForeignKey)
+            {
+        @:<input type="hidden" asp-for="@property.PropertyName" />
+                continue;
+            }
+        }
+    }
+        </form>
+   </div>
+                </div>
+
+
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+                <div class="form-group">
+                    <a class="btn btn-secondary" asp-action="Index">Voltar</a>
+                    <input type="submit" value="Salvar Alterações" form="myform" class="btn btn-success float-right" />
+                </div>
+            </div>
+            <!-- /.card-footer-->
+        </div>
+        <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+@{
+    if (Model.ReferenceScriptLibraries)
+    {
+@:@@section Scripts {
+    @:@@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+@:}
+    }
+    // The following code closes the tag used in the case of a view using a layout page and the body and html tags in the case of a regular view page
+    if (!Model.IsPartialView && !Model.IsLayoutPageSelected)
+    {
+@:</body>
+@:</html>
+    }
+}
+@functions
+{
+    string GetAssociationName(IPropertyMetadata property)
+    {
+        //Todo: Implement properly.
+        return property.PropertyName;
+    }
+
+    string GetValueExpression(IPropertyMetadata property)
+    {
+        return property.PropertyName;
+    }
+}

@@ -1,0 +1,50 @@
+﻿using LCFilaApplication.Context;
+using LCFilaApplication.Interfaces;
+using LCFilaApplication.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LCFilaApplication.Repository
+{
+    public class EmpresaLoginRepository : Repository<EmpresaLogin>, IEmpresaLoginRepository
+    {
+        //protected readonly FilaDbContext _context;
+        public EmpresaLoginRepository(FilaDbContext context) : base(context) {
+            //_context = context;
+        }
+
+
+        public override async Task<EmpresaLogin> ObterPorId(Guid id)
+        {
+            return await Db.EmpresasLogin.Include(f => f.UsersEmpresa).Include(f => f.EmpresaConfiguracao).SingleOrDefaultAsync(p => p.Id == id);
+        }
+        public override async Task<List<EmpresaLogin>> ObterTodos()
+        {
+            return await Db.EmpresasLogin.Include(f => f.UsersEmpresa)
+                .Include(f => f.EmpresaConfiguracao).ToListAsync();
+        }
+
+        public void CadastrarUsuario(Guid empresaId, AppUser user)
+        {
+            //var empresa = _context.EmpresasLogin.Include(f => f.UsersEmpresa).Include(f => f.EmpresaConfiguracao)
+             //                                   .Include(f => f.EmpresaFilas).FirstOrDefault(p => p.Id == empresaId);
+            var empresa = Db.EmpresasLogin.Include(f => f.UsersEmpresa).FirstOrDefault(p => p.Id == empresaId);
+            List<Fila> EmpresaFilas = new List<Fila>();
+            empresa.EmpresaFilas = EmpresaFilas;
+            empresa.UsersEmpresa.Add(user);
+
+            //_context.EmpresasLogin.Update(empresa);
+            //_context.SaveChanges();
+            Atualizar(empresa);
+            SaveChanges();
+            //await Db.SaveChangesAsync();
+            //await Atualizar(empresa);
+
+        }
+    }
+}

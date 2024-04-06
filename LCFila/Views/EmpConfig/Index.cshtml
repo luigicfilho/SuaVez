@@ -1,0 +1,187 @@
+﻿@model LCFila.ViewModels.EmpresaConfiguracaoViewModel
+
+@{
+    ViewData["Title"] = "Alterar Configurações";
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>@ViewData["Title"]</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="breadcrumb-item active">Alterar</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">@ViewData["Title"]</h3>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <form asp-action="Edit" id="myform" method="post" enctype="multipart/form-data">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="Id" />
+
+                            <div class="form-group col-md-8">
+                                <label asp-for="NomeDaEmpresa" class="control-label"></label>
+                                <input asp-for="NomeDaEmpresa" class="form-control" />
+                                <span asp-validation-for="NomeDaEmpresa" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-md-8">
+                                <div class="custom-file">
+                                    <label asp-for="LinkLogodaEmpresa" class=""></label>
+                                    <input asp-for="file" class="form-control" accept="image/*" />
+                                    <span asp-validation-for="LinkLogodaEmpresa" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-8">
+                                <label asp-for="CorPrincipalEmpresa" class="control-label"></label>
+                                <input asp-for="CorPrincipalEmpresa" class="form-control" type="color" />
+                                <span asp-validation-for="CorPrincipalEmpresa" class="text-danger"></span>
+                            </div>
+
+                            @*<div class="form-group col-md-8">
+                                <label asp-for="CorSegundariaEmpresa" class="control-label"></label>
+                                <input asp-for="CorSegundariaEmpresa" class="form-control" type="color" /></input>
+                                <span asp-validation-for="CorSegundariaEmpresa" class="text-danger"></span>
+                            </div>*@
+
+                            <div class="form-group col-md-8">
+                                <label asp-for="FooterEmpresa" class="control-label"></label>
+                                <textarea asp-for="FooterEmpresa" class="form-control"></textarea>
+                                <span asp-validation-for="FooterEmpresa" class="text-danger"></span>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+                <div class="form-group">
+                    <a class="btn btn-secondary" asp-controller="Home" asp-action="Index">Voltar</a>
+                    <input type="submit" value="Salvar" form="myform" class="btn btn-success float-right"/>
+                </div>
+            </div>
+            <!-- /.card-footer-->
+        </div>
+        <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        //var inputs = document.getElementById('inputGroupFile02');
+        //inputs.addEventListener('change', updateDisplay);
+
+        function updateDisplay() {
+            //var reader = new FileReader();
+            var FileName = inputs.files[0].name
+            var lastIndex = FileName.lastIndexOf('.');
+            var Extensao = FileName.substr(lastIndex);
+
+            if (validFileExt(Extensao)) {
+                document.getElementById('file_info').textContent = "";
+            } else {
+                document.getElementById('file_info').textContent = "Extensão não permitida."
+                document.forms[1].reset()
+            }
+
+            //if (inputs.files[0] != undefined) {
+            //    //console.log(inputs.files[0].type)
+            //if (validFileType(inputs.files[0]) || inputs.files[0].type == "") {
+            //    document.getElementById('file_info').textContent = "";
+            //} else {
+            //    //inputs.labels[0].childNodes[0].textContent = `O arquivo ${file.name}: náo possui extensáo permitida.`;
+            //    document.getElementById('file_info').textContent = "Extensão não permitida."
+            //    document.forms[1].reset()
+            //    }
+            //}
+        };
+
+        const validext = [
+            ".txt",
+            ".csv",
+            ".xls",
+            ".xlsx",
+            ".doc",
+            ".docx",
+            ".xml",
+            ".bmp",
+            ".jpg",
+            ".jpeg",
+            ".pdf",
+            ".zip",
+            ".rar",
+            ".svg",
+            ".png"
+        ];
+        function validFileExt(ext) {
+            return validext.includes(ext);
+        }
+
+        const fileTypes = [
+            "image/apng",
+            "image/bmp",
+            "image/gif",
+            "image/jpeg",
+            "image/pjpeg",
+            "image/png",
+            "image/svg+xml",
+            "application/pdf",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "xls",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/vnd.ms-excel",
+            "text/xml",
+            "text/plain",
+            "application/zip",
+            "application/rar",
+            "application/vnd.rar",
+            "application/x-zip",
+            "application/x-zip-compressed",
+            "application/x-rar-compressed",
+            "application/x-rar",
+            "application/x-7z-compressed",
+            "application/octet-stream"
+        ];
+
+        function validFileType(file) {
+            return fileTypes.includes(file.type);
+        }
+    </script>
+}

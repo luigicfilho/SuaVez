@@ -1,0 +1,161 @@
+﻿@inherits Microsoft.VisualStudio.Web.CodeGeneration.Templating.RazorTemplateBase
+@using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
+@using System.Collections.Generic
+@using System.Linq
+@@model @Model.ViewDataTypeName
+
+@{
+    if (Model.IsPartialView)
+    {
+    }
+    else if (Model.IsLayoutPageSelected)
+    {
+@:@@{
+    @:ViewData["Title"] = "@Model.ViewName";
+        if (!string.IsNullOrEmpty(Model.LayoutPageFile))
+        {
+    @:Layout = "@Model.LayoutPageFile";
+        }
+@:}
+@:
+@:<!-- Content Wrapper. Contains page content -->
+@:<div class="content-wrapper">
+@:    <!-- Content Header (Page header) -->
+@:    <section class="content-header">
+@:        <div class="container-fluid">
+@:            <div class="row mb-2">
+@:                <div class="col-sm-6">
+@:                    <h1>Excluir @Model.ViewDataTypeShortName</h1>
+@:                </div>
+@:                <div class="col-sm-6">
+@:                    <ol class="breadcrumb float-sm-right">
+@:                        <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+@:                        <li class="breadcrumb-item active">Excluir @Model.ViewDataTypeShortName</li>
+@:                    </ol>
+@:                </div>
+@:            </div>
+@:        </div><!-- /.container-fluid -->
+@:    </section>
+@:
+@:
+    }
+    else
+    {
+@:@@{
+    @:Layout = null;
+@:}
+@:
+@:<!DOCTYPE html>
+@:
+@:<html>
+@:<head>
+    @:<meta name="viewport" content="width=device-width" />
+    @:<title>@Model.ViewName</title>
+@:</head>
+@:<body>
+@:
+        //    PushIndent("    ");
+    }
+}
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Excluir @Model.ViewDataTypeShortName</h3>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+
+                <table id="example" class="table table-hover table-striped ">
+                    <thead>
+                        <tr>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <h3>Você tem certeza que deseja excluir essa @Model.ViewDataTypeShortName?</h3>
+                        <div>
+    <hr />
+    <dl class="row">
+@{
+    Dictionary<string, IPropertyMetadata> propertyLookup = ((IModelMetadata)Model.ModelMetadata).Properties.ToDictionary(x => x.PropertyName, x => x);
+    Dictionary<string, INavigationMetadata> navigationLookup = ((IModelMetadata)Model.ModelMetadata).Navigations.ToDictionary(x => x.AssociationPropertyName, x => x);
+
+    foreach (var item in Model.ModelMetadata.ModelType.GetProperties())
+    {
+        if (propertyLookup.TryGetValue(item.Name, out IPropertyMetadata property)
+            && property.Scaffold && !property.IsForeignKey && !property.IsPrimaryKey)
+        {
+        <dt class = "col-sm-2">
+            @@Html.DisplayNameFor(model => model.@GetValueExpression(property))
+        </dt>
+        <dd class = "col-sm-10">
+            @@Html.DisplayFor(model => model.@GetValueExpression(property))
+        </dd>
+        }
+        else if (navigationLookup.TryGetValue(item.Name, out INavigationMetadata navigation))
+        {
+        <dt class = "col-sm-2">
+            @@Html.DisplayNameFor(model => model.@GetValueExpression(navigation))
+        </dt>
+        <dd class = "col-sm-10">
+            @@Html.DisplayFor(model => model.@GetValueExpression(navigation).@navigation.DisplayPropertyName)
+        </dd class>
+        }
+    }
+    @:</dl>
+    @:
+    @:                     </tbody>
+    @:            </table>
+    @:            @@if (TempData["mensagemErro"] != null)
+    @:            {
+    @:                <div class="alert alert-danger alert-dismissible">
+    @:                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    @:                    <h5><i class="icon fas fa-ban"></i> Alerta!</h5>
+    @:                    @@TempData["mensagemErro"]
+    @:                </div>
+    @:            }
+    @:        </div>
+    @:<!-- /.card-body -->
+    @:        <div class="card-footer">
+    @:            <form asp-action="Delete">
+    @:                <a class="btn btn-secondary" asp-action="Index">Voltar</a>
+    @:                <input type="hidden" asp-for="@@item" />
+    @:                <input type="submit" value="Excluir" class="btn btn-danger float-right" />
+    @:            </form>
+    @:        </div>
+    @:        <!-- /.card-footer-->
+    @:    </div>
+    @:    <!-- /.card -->
+    @:</section>
+    @:<!-- /.content -->
+@:</div>
+@:<!-- /.content-wrapper -->
+    if (!Model.IsPartialView && !Model.IsLayoutPageSelected)
+    {
+        //ClearIndent();
+@:</body>
+@:</html>
+    }
+}
+@functions
+{
+    string GetValueExpression(IPropertyMetadata property)
+    {
+        return property.PropertyName;
+    }
+
+    string GetValueExpression(INavigationMetadata navigation)
+    {
+        return navigation.AssociationPropertyName;
+    }
+}

@@ -1,0 +1,158 @@
+﻿@model LCFila.ViewModels.AdicionarpessoasViewModel
+
+<div class="">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Adicionar Cliente</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item">Fila</li>
+                        <li class="breadcrumb-item active">Adicionar Cliente</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content text-center col-xxl-6 col-xl-9 col-md-12 col-sm-12 col-md-12  m-auto">
+
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Adicionar Cliente</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form asp-action="Create">
+                <div class="card-body">
+                    <vc:Summary></vc:Summary>
+                    <input asp-for="filaId" type="hidden" class="form-control" />
+                    <div class="form-group">
+                        <label asp-for="pessoa.Nome" class="control-label"></label>
+                        <input asp-for="pessoa.Nome" class="form-control" />
+                        <span asp-validation-for="pessoa.Nome" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="pessoa.Celular" class="control-label"></label>
+                        <input asp-for="pessoa.Celular" class="form-control" />
+                        <span asp-validation-for="pessoa.Celular" class="text-danger"></span>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="pessoa.Preferencial" /> @Html.DisplayNameFor(model => model.pessoa.Preferencial)
+                        </label>
+                    </div>
+                    @*<div class="form-group">
+            <label asp-for="Documento" class="control-label"></label>
+            <input asp-for="Documento" class="form-control" />
+            <span asp-validation-for="Documento" class="text-danger"></span>
+        </div>*@
+
+                    @*<div class="form-group form-check">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="pessoa.Ativo" /> @Html.DisplayNameFor(model => model.pessoa.Ativo)
+            </label>
+        </div>*@
+                    <div class="form-group">
+                        <input type="submit" value="Incluir" class="btn btn-primary" />
+                        <a class="btn btn-info" asp-action="Index">Voltar</a>
+                    </div>
+                </div>
+            </form>
+            <!--<form>
+        <div class="card-body">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputFile">File input</label>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="exampleInputFile">
+                        <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                    </div>
+                    <div class="input-group-append">
+                        <span class="input-group-text">Upload</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            </div>
+        </div>-->
+            <!-- /.card-body -->
+            <!--<div class="card-footer">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>-->
+        </div>
+        <!-- Default box -->
+        <!--<div class="card">
+            <div class="card-header">
+            </div>
+            <div class="card-body p-0">
+                <div class="row">
+                    <div class="col-md-10">
+                        <form asp-action="Create">
+
+                            <vc:Summary></vc:Summary>
+
+                            <div class="form-group">
+                                <label asp-for="Nome" class="control-label"></label>
+                                <input asp-for="Nome" class="form-control" />
+                                <span asp-validation-for="Nome" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Celular" class="control-label"></label>
+                                <input asp-for="Celular" class="form-control" />
+                                <span asp-validation-for="Celular" class="text-danger"></span>
+                            </div>-->
+                            @*<div class="form-group">
+                                <label asp-for="Documento" class="control-label"></label>
+                                <input asp-for="Documento" class="form-control" />
+                                <span asp-validation-for="Documento" class="text-danger"></span>
+                            </div>*@
+
+                            <!--<div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="Ativo" /> @Html.DisplayNameFor(model => model.pessoa.Ativo)
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Cadastrar" class="btn btn-primary" />
+                                <a class="btn btn-info" asp-action="Index">Voltar</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+
+            </div>-->
+            <!-- /.card-body -->
+        <!--</div>-->
+        <!-- /.card -->
+
+    </section>
+
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        BuscaCep();
+    </script>
+}

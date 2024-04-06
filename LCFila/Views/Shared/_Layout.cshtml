@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Sua Vez</title>
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/lib/adminlte/plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Tempusdominus Bbootstrap 4 -->
+    <link rel="stylesheet" href="~/lib/adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+
+    <!-- Theme style -->
+    <link href="~/lib/adminlte/css/adminlte.css" rel="stylesheet" />
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="~/lib/adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    @if(ViewBag.bgcolor != null) { 
+        <style>
+            [class*="sidebar-dark-"] {
+                background-color: @ViewBag.bgcolor;
+            }
+        </style>
+    }
+
+    @await RenderSectionAsync("Style", required: false)
+</head>
+<body class="sidebar-mini layout-fixed">
+    <div class="wrapper">
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
+                </li>
+            </ul>
+            <div class="col-10 text-center">
+                @if (ViewBag.logo != null)
+                {
+                    <img src="@ViewBag.logo" style="width: 260px;" alt="Sua Vez" />
+                }
+                else
+                {
+                    <img src="~/img/suavez.png" style="width: 260px;" alt="Sua Vez" />
+                }
+
+            </div>
+        </nav>
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- Brand Logo -->
+            <a asp-area="" asp-controller="Home" asp-action="Index" class="brand-link text-center">
+                @*<img src="~/lib/adminlte/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light">FilaAdmin</span>*@
+                @if (ViewBag.logo != null)
+                {
+                    <img src="@ViewBag.logo" style="width: 150px;" alt="Sua Vez" />
+                }
+                else
+                {
+                    <img src="~/img/suavez.png" style="width: 150px;" alt="Sua Vez" />
+                }
+
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar os-host os-theme-light os-host-overflow os-host-overflow-y os-host-resize-disabled os-host-scrollbar-horizontal-hidden os-host-transition">
+                <div class="os-resize-observer-host"><div class="os-resize-observer observed" style="left: 0px; right: auto;"></div></div><div class="os-size-auto-observer" style="height: calc(100% + 1px); float: left;"><div class="os-resize-observer observed"></div></div><div class="os-content-glue" style="margin: 0px -8px; width: 73px; height: 592px;"></div><div class="os-padding">
+                    <div class="os-viewport os-viewport-native-scrollbars-invisible" style="overflow-y: scroll;">
+                        <div class="os-content" style="padding: 0px 8px; height: 100%; width: 100%;">
+                            <!-- Sidebar user panel (optional) -->
+                            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                                <div class="image">
+                                    <img src="~/lib/adminlte/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                                </div>
+                                <div class="info">
+                                    <a href="#" class="d-block">@User.Identity.Name</a>
+                                </div>
+
+
+                            </div>
+
+
+                            <!-- Sidebar Menu -->
+                            <nav class="mt-2">
+                                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                                    <!-- Add icons to the links using the .nav-icon class
+    with font-awesome or any other icon font library -->
+                                      @if (!User.IsInRole("SysAdmin"))
+                                      {
+                                    <li class="nav-item active">
+                                        <a asp-area="" asp-controller="Fila" asp-action="Index" class="nav-link">
+                                            <i class="nav-icon fas fa-edit"></i>
+                                            <p>
+                                                Fila
+                                            </p>
+                                        </a>
+                                    </li>
+                                      }
+                                     @if (User.IsInRole("EmpAdmin") @*|| User.IsInRole("SysAdmin")*@)
+                                     {
+                                    <li class="nav-item has-treeview ">
+                                        <a href="#" class="nav-link ">
+                                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                                            <p>
+                                                Gerenciamento
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
+                                        </a>
+                                        <ul class="nav nav-treeview">
+                                            <li class="nav-item">
+                                                <a asp-area="" asp-controller="Usuario" asp-action="Index" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Colaboradores</p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a asp-area="" asp-controller="EmpConfig" asp-action="Index" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Configurações</p>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                     }
+                                    @if (User.IsInRole("SysAdmin"))
+                                    {
+                                    <li class="nav-item bordertopmine" >
+                                        <a asp-area="" asp-controller="SysAdmin" asp-action="Index" class="nav-link">
+                                            <i class="nav-icon fas fa-th"></i>
+                                            <p>Sistema</p>
+                                        </a>
+                                    </li>
+                                    }
+                                    <li class="nav-item bordertopmine">
+                                        <a asp-area="" asp-controller="Home" asp-action="Logout" class="nav-link">
+                                            <i class="fas fa-sign-out-alt"></i>
+                                            <p>Sair</p>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                            </nav>
+                            <!-- /.sidebar-menu -->
+                           
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+    </div>
+    <div class="content-wrapper" >
+        @RenderBody()
+
+    </div>
+
+    <footer class="main-footer">
+
+        @if (ViewBag.footer != null)
+        {
+            <div class="">
+                @Html.Raw(ViewBag.footer)
+            </div>
+        }
+        else
+        {
+            <div class="">
+                &copy; 2021 - Sua Vez - <a asp-area="" asp-controller="Home" asp-action="Privacy">Termo de privacidade</a>
+            </div>
+        }
+</footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/adminlte/js/adminlte.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

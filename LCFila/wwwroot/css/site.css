@@ -1,0 +1,229 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+/* Provide sufficient contrast against white background */
+a {
+  color: #0366d6;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  font-size: 14px;
+  margin:0;
+  padding:0;
+
+}
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+
+  min-height: 100vh;
+}
+
+body {
+  /* Margin bottom by footer height */
+
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px; /* Vertically center the text there */
+}
+
+/* ------------------------------------------ */
+.bolt-card-white {
+    background-color: rgba(255,255,255,1);
+    background-color: var(--callout-background-color,rgba(255, 255, 255, 1));
+}
+
+.bolt-card {
+    border-radius: 4px;
+    overflow: hidden;
+    padding: 20px 0;
+}
+
+.padding-0, .no-padding {
+    padding: 0 !important;
+}
+
+.depth-8 {
+    box-shadow: 0 3.2px 7.2px 0 rgb(0 0 0 / 13%), 0 0.6px 1.8px 0 rgb(0 0 0 / 11%);
+    box-shadow: 0 3.2px 7.2px 0 var(--callout-shadow-color,rgba(0, 0, 0, .132)),0 .6px 1.8px 0 var(--callout-shadow-secondary-color,rgba(0, 0, 0, .108));
+}
+
+.flex-grow {
+    flex-grow: 1;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+* {
+
+}
+
+folha de estilos de agente de usuário
+div {
+    display: block;
+}
+
+li {
+    list-style: none;
+}
+
+folha de estilos de agente de usuário
+li {
+    text-align: -webkit-match-parent;
+}
+
+folha de estilos de agente de usuário
+ul {
+    list-style-type: disc;
+}
+
+.vertical-layout {
+    font-family: "Segoe UI VSS (Regular)","Segoe UI","-apple-system",BlinkMacSystemFont,Roboto,"Helvetica Neue",Helvetica,Ubuntu,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+}
+
+.bolt-card-content {
+    overflow: auto;
+}
+
+.flex-grow {
+    flex-grow: 1;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.suite-me-page-view .suite-project-list .project-card .project-link {
+    overflow: hidden;
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.suite-me-page-view .project-link {
+    text-decoration: none;
+    color: rgba(0,0,0,.9);
+    color: var(--text-primary-color,rgba(0, 0, 0, .9));
+}
+
+.suite-me-page-view .suite-project-list .project-card .top-row {
+    overflow: hidden;
+}
+
+.flex-noshrink {
+    flex-shrink: 0;
+}
+
+.vss-Persona.large {
+    width: 48px;
+    height: 48px;
+}
+
+.suite-me-page-view .suite-project-list .project-card .project-details {
+    margin-left: 16px;
+    overflow: hidden;
+}
+
+.suite-me-page-view .suite-project-list .project-card {
+    position: relative;
+    transition: background-color .5s ease;
+    border-radius: 4px;
+    height: 200px;
+    max-width: 440px;
+    min-width: 300px;
+    flex-basis: 300px;
+    margin-right: 32px;
+}
+
+.btn-block {
+    width: auto;
+}
+
+.bordertopmine {
+    border-top: 1px solid #4f5962;
+}
+
+@media (min-width: 1400px) {
+    .col-xxl-6 {
+        -webkit-flex: 0 0 50%;
+        -ms-flex: 0 0 50%;
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+.meuheader {
+    border-bottom: 1px solid #dee2e6;
+    z-index: 1034;
+}
+
+.lcfilawrapper {
+    background-color: #f4f6f9;
+}
+
+.lcfilabackground {
+    background-color: rgb(0,123,255);
+    color: white;
+}
+
+.valign {
+    vertical-align: middle;
+}
+
+.chegouavez {
+    background-color: rgb(42 152 25);
+    color: white;
+}
+
+#file-upload-button {
+    display:none;
+}

@@ -1,0 +1,104 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+    Layout = null;
+}
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Sua Vez | Log in</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/lib/adminlte/plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="~/lib/adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/lib/adminlte/css/adminlte.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="login-page" style="min-height: 512.391px;">
+    <div class="login-box">
+        <div class="login-logo">
+            @*<a href="../../index2.html"><b>Sua</b>VEZ</a>*@
+            <img src="~/img/suavez.png" style="width: 260px;" />
+        </div>
+        <!-- /.login-logo -->
+        <div class="card">
+            <div class="card-body login-card-body">
+                <p class="login-box-msg">Faça login para iniciar sessão</p>
+                
+                <form  method="post">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="input-group mb-3">
+                        <input type="email" asp-for="Input.Email" class="form-control" placeholder="Email">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                        @*<span asp-validation-for="Input.Email" class="text-danger"></span>*@
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="password" asp-for="Input.Password" class="form-control" placeholder="Digite sua senha">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                        @*<span asp-validation-for="Input.Password" class="text-danger"></span>*@
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="icheck-primary">
+                                <label asp-for="Input.RememberMe">
+                                    <input type="checkbox" asp-for="Input.RememberMe"/>
+                                    @Html.DisplayNameFor(m => m.Input.RememberMe)
+                                </label>
+                                @*<input type="checkbox" id="remember">
+                                <label for="remember">
+                                    Lembrar Senha
+                                </label>*@
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Entrar</button>
+                            </div>
+                            @*<a class="btn btn-primary btn-block" asp-area="" asp-controller="Home" asp-action="Index">Entrar</a>*@
+                        </div>
+                    </div>
+                </form>
+
+                <p class="mb-1">
+                    <a href="ForgotPassword">Esqueceu a senha?</a>
+                </p>
+                @*<p class="mb-0">
+                    <a href="register.html" class="text-center">Registrar novo usuário</a>
+                </p>*@
+            </div>
+            <!-- /.login-card-body -->
+        </div>
+    </div>
+    <!-- /.login-box -->
+    <!-- jQuery -->
+    <script src="~/lib/adminlte/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/lib/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/lib/adminlte/js/adminlte.min.js"></script>
+
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
+</body>
+</html>

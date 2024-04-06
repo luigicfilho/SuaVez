@@ -1,0 +1,30 @@
+﻿using LCFilaApplication.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace LCFilaApplication.Mappings
+{
+    public class PessoaMapping : IEntityTypeConfiguration<Pessoa>
+    {
+        public void Configure(EntityTypeBuilder<Pessoa> builder)
+        {
+            builder.HasKey(p => p.Id);
+
+            builder.Property(c => c.Documento)
+                //.IsRequired()
+                .HasColumnType("varchar(14)");
+
+            builder.Property(c => c.Celular)
+                //.IsRequired()
+                .HasColumnType("varchar(20)");
+
+            builder.Property(c => c.Nome)
+                .IsRequired()
+                .HasColumnType("varchar(200)");
+
+            builder.HasOne(f => f.Fila);
+
+            builder.ToTable("Pessoas");
+        }
+    }
+}

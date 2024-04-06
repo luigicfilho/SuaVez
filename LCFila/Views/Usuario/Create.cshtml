@@ -1,0 +1,78 @@
+﻿@model LCFila.ViewModels.UserCreateViewModel
+
+<div class="">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Adicionar Colaborador</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item">Fila</li>
+                        <li class="breadcrumb-item active">Adicionar Colaborador</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content text-center col-xxl-6 col-xl-9 col-md-12 col-sm-12 col-md-12  m-auto">
+
+        <!-- Default box -->
+
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Adicionar Colaborador</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form asp-action="Create">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label asp-for="UserName" class="control-label"></label>
+                        <input asp-for="UserName" class="form-control" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                        @*<label for="exampleInputEmail1">Endereço de e-mail</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                        @*<label for="exampleInputPassword1">Senha</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password" class="control-label"></label>
+                        <input asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputFile">Tipo de Usuário</label>
+                        <select asp-for="RoleId" asp-items="Model.Roles">
+                            @*<option>Administrador</option>
+                            <option>Funcionário</option>*@
+                        </select>
+                    </div>
+                    @*<div class="form-check">
+            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+        </div>*@
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                    <div class="form-group">
+                        <input type="submit" value="Cadastrar" class="btn btn-primary" />
+                        <a class="btn btn-info" asp-action="Index">Voltar</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+</div>
