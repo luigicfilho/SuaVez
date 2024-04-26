@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using LCFila.Extensions;
 using LCFila.ViewModels;
 using LCFilaApplication.Enums;
 using LCFilaApplication.Interfaces;
@@ -43,7 +42,6 @@ namespace LCFila.Controllers
         public async Task<IActionResult> Index(/*Guid? id*/)
         {
             ConfigEmpresa();
-            //var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var user = await _userManager.Users.Include(p => p.empresaLogin).SingleOrDefaultAsync(p => p.UserName == User.Identity.Name);
             var allusers = _userManager.Users.Include(p => p.empresaLogin).Where(p => p.empresaLogin.Id == user.empresaLogin.Id).ToList();  
             var Empresaid = user.empresaLogin.Id;
@@ -64,61 +62,6 @@ namespace LCFila.Controllers
             {
                 item.NomeUser = allusers.SingleOrDefault(p => p.Id == item.UserId.ToString()).UserName;
             }
-            //var teste1 = _mapper.Map<IEnumerable<PessoaViewModel>>(pessoas);
-            //if (id == null)
-            //{
-            //    var filahoje = pegarfila.SingleOrDefault(p => p.DataInicio.Date == DateTime.Today && p.EmpresaId == Empresaid);
-            //    if(filahoje == null)
-            //    {
-            //        FilaViewModel novafila = new FilaViewModel();
-            //        novafila.DataInicio = DateTime.Now;
-            //        novafila.TempoMedio = "30";
-            //        novafila.EmpresaId = Empresaid;
-            //        var fila = _mapper.Map<Fila>(novafila);
-            //        await _filaRepository.Adicionar(fila);
-            //        List<PessoaViewModel> newpessoas = new List<PessoaViewModel>();
-            //        ViewBag.idFila = fila.Id;
-            //        ViewBag.info = "Fila nova criada!";
-            //        return View(newpessoas);
-            //    } 
-            //    else {
-            //        //var pessoas = await _pessoaRepository.ObterTodos();
-            //        var pessoasdafila = pessoas.Where(p => p.FilaId == filahoje.Id);
-            //        var pessoasnafila = _mapper.Map<IEnumerable<PessoaViewModel>>(pessoasdafila);
-            //        ViewBag.idFila = filahoje.Id;
-            //        //ViewBag.info = "Fila já existente!";
-            //        return View(pessoasnafila);
-            //    }
-            //} 
-            //else
-            //{
-            //    var filadoid = pegarfila.SingleOrDefault(p => p.Id == id && p.EmpresaId == Empresaid);
-            //    if(filadoid.DataInicio.Date == DateTime.Today)
-            //    {
-            //       // var pessoas = await _pessoaRepository.ObterTodos();
-            //        var pessoasdafila = pessoas.Where(p => p.FilaId == filadoid.Id);
-            //        var pessoasnafila = _mapper.Map<IEnumerable<PessoaViewModel>>(pessoasdafila);
-            //        ViewBag.info = "Fila já existente!";
-            //        ViewBag.idFila = filadoid.Id;
-            //        return View(pessoasnafila);
-            //    } else
-            //    {
-            //        FilaViewModel novafila = new FilaViewModel();
-            //        novafila.DataInicio = DateTime.Now;
-            //        novafila.TempoMedio = "30";
-            //        novafila.EmpresaId = Empresaid;
-            //        var fila = _mapper.Map<Fila>(novafila);
-            //        await _filaRepository.Adicionar(fila);
-            //        List<PessoaViewModel> newpessoas = new List<PessoaViewModel>();
-            //        ViewBag.idFila = fila.Id;
-            //        ViewBag.info = "Fila nova criada!";
-            //        return View(newpessoas);
-            //    }
-            //}
-
-            //var pessoas = await _pessoaRepository.ObterTodos();
-            
-                    
             return View(teste.ToList());
         }
 
@@ -129,7 +72,6 @@ namespace LCFila.Controllers
             var user = await _userManager.Users.Include(p => p.empresaLogin).SingleOrDefaultAsync(p => p.UserName == User.Identity.Name);
             var Empresaid = user.empresaLogin.Id;
             var filatoopen = await _filaRepository.ObterPorId(id);
-            //var allusers = _userManager.Users.Include(p => p.empresaLogin).Where(p => p.empresaLogin.Id == user.empresaLogin.Id).ToList();
             var pessoas = await _pessoaRepository.Buscar(p => p.FilaId == id);
             var pessoasdafila = _mapper.Map<IEnumerable<PessoaViewModel>>(pessoas);
             ViewBag.idFila = id;
@@ -145,7 +87,6 @@ namespace LCFila.Controllers
             filatoopen.Status = FilaStatus.Aberta;
             await _filaRepository.Atualizar(filatoopen);
             await _filaRepository.SaveChanges();
-            //var filatoopenviewmodel = _mapper.Map<FilaViewModel>(filatoopen);
             return RedirectToAction(nameof(Index));
         }
 
@@ -182,7 +123,7 @@ namespace LCFila.Controllers
             ConfigEmpresa();
             filamodel.DataInicio = DateTime.Now;
             filamodel.Ativo = true;
-            filamodel.Status = FilaStatus.Aberta; //(FilaStatus)Enum.Parse(typeof(FilaStatus), "Aberta")
+            filamodel.Status = FilaStatus.Aberta;
             var fila = _mapper.Map<Fila>(filamodel);
             await _filaRepository.Adicionar(fila);
             return RedirectToAction("Index");
@@ -193,8 +134,6 @@ namespace LCFila.Controllers
         public async Task<IActionResult> Create(Guid id)
         {
             ConfigEmpresa();
-            // var user = await _userManager.Users.Include(p => p.empresaLogin).SingleOrDefaultAsync(p => p.UserName == User.Identity.Name);
-            //var Empresaid = user.empresaLogin.Id;
             AdicionarpessoasViewModel pessoasviewmodel = new AdicionarpessoasViewModel();
             pessoasviewmodel.filaId = id;
             return View(pessoasviewmodel);
@@ -203,29 +142,17 @@ namespace LCFila.Controllers
         public async Task<IActionResult> IniciarFila()
         {
             ConfigEmpresa();
-            // Checkar se já existe fila de hoje
-            //var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var user = await _userManager.Users.Include(p => p.empresaLogin).SingleOrDefaultAsync(p => p.UserName == User.Identity.Name);
             var Empresaid = user.empresaLogin.Id;
-            //var pegarfila = await _filaRepository.ObterTodos();
-            //var filahoje = pegarfila.SingleOrDefault(p => p.DataInicio.Date == DateTime.Today);
-            //if(filahoje == null)
-            //{
-                FilaViewModel novafila = new FilaViewModel();
-                novafila.DataInicio = DateTime.Now;
-                novafila.TempoMedio = "30";
-                novafila.EmpresaId = Empresaid;
-                novafila.UserId = Guid.Parse(user.Id);
-                var fila = _mapper.Map<Fila>(novafila);
-                await _filaRepository.Adicionar(fila);
-                //ViewBag.info = "Fila nova criada!";
-                return RedirectToAction("Index", fila.Id);
-            //} else {
-            //    //ViewBag.info = "Fila já existente!";
-            //    return RedirectToAction("Index", filahoje.Id);
-            //}
-           
-            //return View();
+            FilaViewModel novafila = new FilaViewModel();
+            novafila.DataInicio = DateTime.Now;
+            novafila.TempoMedio = "30";
+            novafila.EmpresaId = Empresaid;
+            novafila.UserId = Guid.Parse(user.Id);
+            var fila = _mapper.Map<Fila>(novafila);
+            await _filaRepository.Adicionar(fila);
+            return RedirectToAction("Index", fila.Id);
+
         }
 
         // POST: FilaController/Create
@@ -235,24 +162,14 @@ namespace LCFila.Controllers
             ConfigEmpresa();
             if (!ModelState.IsValid) return View(pessoaViewModel);
 
-            //FilaViewModel newfila = new FilaViewModel()
-            //{
-            //    TempoMedio = "30",
-            //    DataInicio = DateTime.Now
-            //};
             pessoaViewModel.pessoa.DataEntradaNaFila = DateTime.Now;
             pessoaViewModel.pessoa.Ativo = true;
             pessoaViewModel.pessoa.Status = PessoaStatus.Esperando;
-            //var pegarfila = await _filaRepository.ObterTodos();
-            //var filahoje = pegarfila.SingleOrDefault(p => p.Id == pessoaViewModel.filaId);
             var pessoas = await _pessoaRepository.ObterTodos();
-            //var filahoje = pegarfila.SingleOrDefault(p => p.Id == pessoaViewModel.filaId);
             var pessoasdafila = pessoas.Where(p => p.FilaId == pessoaViewModel.filaId && p.Ativo == true && p.Status == PessoaStatus.Esperando).ToList();
 
             var pessoa = _mapper.Map<Pessoa>(pessoaViewModel.pessoa);
 
-            //pessoaViewModel.DataEntradaNaFila = newfila.DataInicio;
-            //var pessoas1 = await _pessoaRepository.ObterTodos();
             if (pessoaViewModel.pessoa.Preferencial)
             {
                 pessoa.Posicao = 1;
@@ -276,9 +193,6 @@ namespace LCFila.Controllers
                 pessoa.Posicao = pessoasdafila.Count + 1;
             }
             pessoa.FilaId = pessoaViewModel.filaId;
-            //var fila = _mapper.Map<Fila>(newfila);
-            //await _filaRepository.Adicionar(fila);
-            //pessoa.FilaId = fila.Id;
 
             await _pessoaRepository.Adicionar(pessoa);
 
@@ -321,7 +235,6 @@ namespace LCFila.Controllers
             await _filaRepository.Atualizar(filatoopen);
             await _filaRepository.SaveChanges();
             return RedirectToAction(nameof(Index));
-            //return View();
         }
 
         // POST: FilaController/Delete/5
@@ -338,8 +251,6 @@ namespace LCFila.Controllers
                 await _filaRepository.Atualizar(filatoopen);
                 await _filaRepository.SaveChanges();
 
-                //await _filaRepository.Remover(id);
-                //await _filaRepository.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch

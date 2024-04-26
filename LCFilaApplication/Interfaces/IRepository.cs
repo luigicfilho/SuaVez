@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-
 namespace LCAppFila.Domain.Interfaces
 {
     public interface IRepository<TEntity> : IDisposable where TEntity : Entity

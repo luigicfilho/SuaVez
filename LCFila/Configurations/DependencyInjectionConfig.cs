@@ -34,8 +34,6 @@ namespace LCFila.Configurations
             );
 
             services.AddScoped<INotificador, Notificador>();
-            //services.AddScoped<IFornecedorService, FornecedorService>();
-            //services.AddScoped<IProdutoService, ProdutoService>();
 
             return services;
         }

@@ -14,8 +14,6 @@ namespace LCFilaApplication.Mappings
                 .IsRequired()
                 .HasColumnType("varchar(50)");
 
-            //builder.Property(c => c.EmpresaId)
-
             builder.ToTable("Filas");
         }
     }

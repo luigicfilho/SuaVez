@@ -14,6 +14,5 @@ namespace LCFilaApplication.Models
         public FilaStatus Status { get; set; }
         public bool Ativo { get; set; }
         public Guid UserId { get; set; }
-        //public EmpresaLogin Emmpresa { get; set; }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LCFilaApplication.Enums
+﻿namespace LCFilaApplication.Enums
 {
     public enum TiposFilas
     {

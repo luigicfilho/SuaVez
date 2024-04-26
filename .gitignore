@@ -1,0 +1,10 @@
+﻿################################################################################
+# Este arquivo .gitignore foi criado automaticamente pelo Microsoft(R) Visual Studio.
+################################################################################
+
+/LCFila/bin/Debug/netcoreapp3.1
+/.vs/LCFila
+/LCFila/obj
+/LCFilaApplication/bin/Debug/netcoreapp3.1
+/LCFilaApplication/obj/Debug/netcoreapp3.1
+/LCFilaApplication/obj

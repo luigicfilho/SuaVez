@@ -102,12 +102,6 @@ namespace LCFila.Controllers
                     _logger.LogInformation($"User {empresaViewModel.NomeEmpresa} created a new account with password.");
                     var returnUrl = Url.Content("~/");
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    //var callbackUrl = Url.Page(
-                    //    "/Account/ConfirmEmail",
-                    //    pageHandler: null,
-                    //    values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
-                    //    protocol: Request.Scheme);
 
                     var resultemail = await _userManager.ConfirmEmailAsync(user, code);
 
@@ -116,15 +110,9 @@ namespace LCFila.Controllers
                         await _userManager.DeleteAsync(user);
                         throw new Exception();
                     }
-                    // await _emailSender.SendEmailAsync(empresaViewModel.Email, "Confirm your email",
-                    //     $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     var roles = await _userManager.AddToRoleAsync(user, "EmpAdmin");
 
-                    //var userapp = new AppUserViewModel { UserName = empresaViewModel.Email, Email = empresaViewModel.Email };
-                    //userapp.Id = Guid.NewGuid();
-                    //userapp.PasswordHash = user.PasswordHash;
-                   // userapp.EmailConfirmed = true;
                     List<AppUser> listausers = new List<AppUser>();
                     listausers.Add(user);
                     List<FilaViewModel> EmpresaFilas = new List<FilaViewModel>();
@@ -145,12 +133,8 @@ namespace LCFila.Controllers
 
                 }
 
-
-
-
                 if (!OperacaoValida()) return View(empresaViewModel);
 
-                //return RedirectToAction("Index");
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception Ex)
@@ -184,7 +168,6 @@ namespace LCFila.Controllers
             {
                 
                 var empresa = _mapper.Map<EmpresaLogin>(empresaViewModel);
-                //var empresa = await _empresaRepository.ObterPorId(empresaViewModel.Id);
                 await _empresaRepository.Atualizar(empresa);
                 await _empresaRepository.SaveChanges();
                 return RedirectToAction(nameof(Index));

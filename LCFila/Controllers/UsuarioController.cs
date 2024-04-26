@@ -94,15 +94,8 @@ namespace LCFila.Controllers
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-                    //_logger.LogInformation($"User {empresaViewModel.NomeEmpresa} created a new account with password.");
                     var returnUrl = Url.Content("~/");
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    //var callbackUrl = Url.Page(
-                    //    "/Account/ConfirmEmail",
-                    //    pageHandler: null,
-                    //    values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
-                    //    protocol: Request.Scheme);
 
                     var resultemail = await _userManager.ConfirmEmailAsync(user, code);
 
@@ -119,35 +112,18 @@ namespace LCFila.Controllers
                     {
                         await _userManager.AddToRoleAsync(user, "OperatorEmp");
                     }
-                    
-                    // await _emailSender.SendEmailAsync(empresaViewModel.Email, "Confirm your email",
-                    //     $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                    //var roles = _userManager.AddToRoleAsync(user, "EmpAdmin");
                 }
 
-                //    var result1 = await _userManager.CreateAsync(user, Input.Password);
-               // var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                //var result = await _userManager.ConfirmEmailAsync(user, code);
                 if(result.Succeeded)
                 {
-                    //var userapp = new AppUserViewModel { UserName = user.Email, Email = user.Email };
-                    //userapp.Id = Guid.NewGuid();
-                    //userapp.PasswordHash = user.PasswordHash;
-                    //userapp.EmailConfirmed = true;
                     var AllUsers = _userManager.Users;
                     var admin = AllUsers.FirstOrDefault(p => p.UserName == User.Identity.Name);
                     var AllEmpresas = await _empresaRepository.ObterTodos();
                     var empresa = AllEmpresas.FirstOrDefault(p => p.IdAdminEmpresa == Guid.Parse(admin.Id));
                     empresa.UsersEmpresa.Add(user);
                     await _empresaRepository.Atualizar(empresa);
-                    //var appusermaped = _mapper.Map<AppUser>(userapp);
-                    //_empresaRepository.CadastrarUsuario(empresa.Id, appusermaped);
                 }
-                //var teste = _userManager.VerifyUserTokenAsync(user,"", "" , code);
 
-                //var result1 = 
-                //_userManager.CreateAsync(user);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception Ex)

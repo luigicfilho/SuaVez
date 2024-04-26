@@ -15,15 +15,12 @@ namespace LCFilaApplication.Mappings
                 .HasColumnType("varchar(50)");
 
             builder.Property(c => c.Descricao)
-                //.IsRequired()
                 .HasColumnType("varchar(200)");
 
             builder.Property(c => c.Dimensoes)
-                //.IsRequired()
                 .HasColumnType("varchar(50)");
 
             builder.Property(c => c.Peso)
-                //.IsRequired()
                 .HasColumnType("varchar(10)");
 
             builder.HasOne(f => f.Fila);

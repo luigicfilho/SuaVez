@@ -11,8 +11,6 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using LCFilaApplication.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
 
 namespace LCFila
 {
@@ -46,13 +44,6 @@ namespace LCFila
 
             services.AddMvcConfiguration();
 
-            // services.Configure<CookieAuthenticationOptions>(opt =>
-            // {
-            //     opt.LoginPath = new PathString("/login2");
-            // });
-            // services.AddAuthentication(IdentityConstants.ApplicationScheme)
-            //.AddCookie(opt => opt.LoginPath = "/login2");
-            //var teste = Configuration.GetSection("EmailSender");
             services.ResolveDependencies(Configuration);
 
         }

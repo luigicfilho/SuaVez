@@ -7,9 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -125,8 +123,6 @@ namespace LCFila.Controllers
                 }
                 await _pessoaRepository.Atualizar(item);
             }
-            //pessoa.Status = PessoaStatus.PuladoVez;
-            //await _pessoaRepository.Atualizar(pessoa);
             return RedirectToAction("Details", "Fila", new { id = filaid });
         }
 
@@ -152,7 +148,6 @@ namespace LCFila.Controllers
                 }
                 await _pessoaRepository.Atualizar(item);
             }
-            //await _pessoaRepository.Atualizar(pessoa);
             return RedirectToAction("Details", "Fila", new { id = filaid });
         }
 

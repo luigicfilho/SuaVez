@@ -45,7 +45,7 @@
                 </li>
             </ul>
             <div class="col-10 text-center">
-                @if (ViewBag.logo != null)
+                @if (ViewBag.logo != "http://")
                 {
                     <img src="@ViewBag.logo" style="width: 260px;" alt="Sua Vez" />
                 }
@@ -61,7 +61,7 @@
             <a asp-area="" asp-controller="Home" asp-action="Index" class="brand-link text-center">
                 @*<img src="~/lib/adminlte/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">FilaAdmin</span>*@
-                @if (ViewBag.logo != null)
+                @if (ViewBag.logo !=  "http://")
                 {
                     <img src="@ViewBag.logo" style="width: 150px;" alt="Sua Vez" />
                 }

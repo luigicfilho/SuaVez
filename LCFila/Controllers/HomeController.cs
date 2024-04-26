@@ -5,9 +5,7 @@ using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace LCFila.Controllers
@@ -52,15 +50,6 @@ namespace LCFila.Controllers
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
             return RedirectToAction("Index", "Home");
-            //if (returnUrl != null)
-            //{
-            //    return LocalRedirect(returnUrl);
-            //}
-            //else
-            //{
-            //    return RedirectToPage("Index", "Home" );
-            //}
-            //return View();
         }
 
         [Route("erro/{id:length(3,3)}")]

@@ -1,9 +1,6 @@
 ﻿using LCFilaApplication.Context;
 using LCFilaApplication.Interfaces;
 using LCFilaApplication.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace LCFilaApplication.Repository
 {
@@ -11,5 +8,4 @@ namespace LCFilaApplication.Repository
     {
         public FilaRepository(FilaDbContext context) : base(context) { }
     }
-
 }

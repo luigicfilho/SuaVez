@@ -1,5 +1,3 @@
-using System;
-
 namespace LCFila.Models
 {
     public class ErrorViewModel

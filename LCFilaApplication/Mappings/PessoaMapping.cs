@@ -11,11 +11,9 @@ namespace LCFilaApplication.Mappings
             builder.HasKey(p => p.Id);
 
             builder.Property(c => c.Documento)
-                //.IsRequired()
                 .HasColumnType("varchar(14)");
 
             builder.Property(c => c.Celular)
-                //.IsRequired()
                 .HasColumnType("varchar(20)");
 
             builder.Property(c => c.Nome)

@@ -1,11 +1,8 @@
 ﻿using LCFilaApplication.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace LCFila.ViewModels
 {
@@ -28,7 +25,6 @@ namespace LCFila.ViewModels
         [Display(Name = "Senha")]
         public string Password { get; set; }
 
-        //[Display(Name = "Administrador")]
         public Guid IdAdminEmpresa { get; set; }
         public List<AppUser> UsersEmpresa { get; set; }
 
