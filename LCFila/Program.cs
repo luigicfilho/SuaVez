@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using AutoMapper;
 using LCFila.Configurations;
 using LCFilaApplication.Context;
 using LCFilaApplication.Models;

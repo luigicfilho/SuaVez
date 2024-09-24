@@ -8,3 +8,7 @@
 /LCFilaApplication/bin/*
 /LCFilaApplication/obj/*
 /LCFilaApplication/obj
+/LCFilaDomain/bin/Debug/net6.0
+/LCFilaDomain/obj
+/LCFilaInfra/bin/Debug/net6.0
+/LCFilaInfra/obj
