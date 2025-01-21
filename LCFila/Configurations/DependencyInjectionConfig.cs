@@ -5,36 +5,33 @@ using LCFilaApplication.Interfaces;
 using LCFilaApplication.Repository;
 using LCFilaApplication.Services;
 using Microsoft.AspNetCore.Mvc.DataAnnotations;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace LCFila.Configurations
+namespace LCFila.Configurations;
+
+public static class DependencyInjectionConfig
 {
-    public static class DependencyInjectionConfig
+    public static IServiceCollection ResolveDependencies(this IServiceCollection services, IConfiguration configuration)
     {
-        public static IServiceCollection ResolveDependencies(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddScoped<FilaDbContext>();
-            services.AddScoped<IPessoaRepository, PessoaRepository>();
-            services.AddScoped<IFilaRepository, FilaRepository>();
-            services.AddScoped<IFilaPessoaRepository, FilaPessoaRepository>();
-            services.AddScoped<IEmpresaLoginRepository, EmpresaLoginRepository>();
-            services.AddScoped<IEmpresaConfiguracaoRepository, EmpresaConfiguracaoRepository>();
-            services.AddSingleton<IValidationAttributeAdapterProvider, MoedaValidationAttributeAdapterProvider>();
+        services.AddScoped<FilaDbContext>();
+        services.AddScoped<IPessoaRepository, PessoaRepository>();
+        services.AddScoped<IFilaRepository, FilaRepository>();
+        services.AddScoped<IFilaPessoaRepository, FilaPessoaRepository>();
+        services.AddScoped<IEmpresaLoginRepository, EmpresaLoginRepository>();
+        services.AddScoped<IEmpresaConfiguracaoRepository, EmpresaConfiguracaoRepository>();
+        services.AddSingleton<IValidationAttributeAdapterProvider, MoedaValidationAttributeAdapterProvider>();
 
-            services.AddTransient<IEmailSender, EmailSender>(i =>
-                new EmailSender(
-                    configuration["EmailSender:Host"],
-                    configuration.GetValue<int>("EmailSender:Port"),
-                    configuration.GetValue<bool>("EmailSender:EnableSSL"),
-                    configuration["EmailSender:UserName"],
-                    configuration["EmailSender:Password"]
-                )
-            );
+        services.AddTransient<IEmailSender, EmailSender>(i =>
+            new EmailSender(
+                configuration["EmailSender:Host"],
+                configuration.GetValue<int>("EmailSender:Port"),
+                configuration.GetValue<bool>("EmailSender:EnableSSL"),
+                configuration["EmailSender:UserName"],
+                configuration["EmailSender:Password"]
+            )
+        );
 
-            services.AddScoped<INotificador, Notificador>();
+        services.AddScoped<INotificador, Notificador>();
 
-            return services;
-        }
+        return services;
     }
 }

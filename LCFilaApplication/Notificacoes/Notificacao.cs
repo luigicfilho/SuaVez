@@ -1,12 +1,11 @@
-﻿namespace LCFilaApplication.Notificacoes
-{
-    public class Notificacao
-    {
-        public Notificacao(string mensagem)
-        {
-            Mensagem = mensagem;
-        }
+﻿namespace LCFilaApplication.Notificacoes;
 
-        public string Mensagem { get; }
+public class Notificacao
+{
+    public Notificacao(string mensagem)
+    {
+        Mensagem = mensagem;
     }
+
+    public string Mensagem { get; }
 }

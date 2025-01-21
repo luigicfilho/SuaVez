@@ -1,12 +1,11 @@
-﻿namespace LCFilaApplication.Enums
+﻿namespace LCFilaApplication.Enums;
+
+public enum PessoaStatus
 {
-    public enum PessoaStatus
-    {
-        Adicionado,
-        Esperando,
-        Chamado,
-        Atendido,
-        PuladoVez,
-        Removido
-    }
+    Adicionado,
+    Esperando,
+    Chamado,
+    Atendido,
+    PuladoVez,
+    Removido
 }

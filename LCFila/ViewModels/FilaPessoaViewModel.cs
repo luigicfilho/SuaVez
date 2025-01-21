@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
+﻿namespace LCFila.ViewModels;
 
-namespace LCFila.ViewModels
+public class FilaPessoaViewModel
 {
-    public class FilaPessoaViewModel
-    {
-        public FilaViewModel FiladePessoas { get; set; }
-        public IEnumerable<PessoaViewModel> Pessoas { get; set; }
-    }
+    public FilaViewModel FiladePessoas { get; set; }
+    public IEnumerable<PessoaViewModel> Pessoas { get; set; }
 }

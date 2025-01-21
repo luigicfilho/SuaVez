@@ -1,9 +1,7 @@
-﻿namespace LCFilaApplication.Enums
+﻿namespace LCFilaApplication.Enums;
+public enum TiposFilas
 {
-    public enum TiposFilas
-    {
-        Pessoa,
-        Veiculo,
-        Mercadoria
-    }
+    Pessoa,
+    Veiculo,
+    Mercadoria
 }

@@ -2,19 +2,18 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace LCFilaApplication.Mappings
+namespace LCFilaApplication.Mappings;
+
+public class FilaMapping : IEntityTypeConfiguration<Fila>
 {
-    public class FilaMapping : IEntityTypeConfiguration<Fila>
+    public void Configure(EntityTypeBuilder<Fila> builder)
     {
-        public void Configure(EntityTypeBuilder<Fila> builder)
-        {
-            builder.HasKey(p => p.Id);
+        builder.HasKey(p => p.Id);
 
-            builder.Property(c => c.TempoMedio)
-                .IsRequired()
-                .HasColumnType("varchar(50)");
+        builder.Property(c => c.TempoMedio)
+            .IsRequired()
+            .HasColumnType("varchar(50)");
 
-            builder.ToTable("Filas");
-        }
+        builder.ToTable("Filas");
     }
 }

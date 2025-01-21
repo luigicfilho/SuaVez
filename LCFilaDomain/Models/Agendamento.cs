@@ -1,10 +1,7 @@
-﻿using System;
+﻿namespace LCFilaApplication.Models;
 
-namespace LCFilaApplication.Models
+public class Agendamento: Entity
 {
-    public class Agendamento: Entity
-    {
-        public DateTime DatadoAgendamento { get; set; }
-        public Pessoa Pessoanodia { get; set; }
-    }
+    public DateTime DatadoAgendamento { get; set; }
+    public Pessoa Pessoanodia { get; set; }
 }

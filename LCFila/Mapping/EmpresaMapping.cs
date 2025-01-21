@@ -1,96 +1,94 @@
 ﻿using LCFila.ViewModels;
 using LCFilaApplication.Mapping;
 using LCFilaApplication.Models;
-using System.Collections.Generic;
 
-namespace LCFila.Mapping
+namespace LCFila.Mapping;
+
+public static class EmpresaMapping
 {
-    public static class EmpresaMapping
+    public static EmpresaLogin ConvertToEmpresaLogin(this EmpresaLoginViewModel empresaloginViewModel)
     {
-        public static EmpresaLogin ConvertToEmpresaLogin(this EmpresaLoginViewModel empresaloginViewModel)
+        EmpresaLogin empresaLogin = new()
         {
-            EmpresaLogin empresaLogin = new()
-            {
-                Id = empresaloginViewModel.Id,
-                IdAdminEmpresa = empresaloginViewModel.IdAdminEmpresa,
-                CNPJ = empresaloginViewModel.CNPJ,
-                EmpresaConfiguracao = empresaloginViewModel.EmpresaConfiguracao.ConvertToEmpresaConfiguracao(),
-                EmpresaFilas = empresaloginViewModel.EmpresaFilas.ConvertToListFila(),
-                NomeEmpresa = empresaloginViewModel.NomeEmpresa,
-                UsersEmpresa = empresaloginViewModel.UsersEmpresa,
-                Ativo = empresaloginViewModel.Ativo
-            };
+            Id = empresaloginViewModel.Id,
+            IdAdminEmpresa = empresaloginViewModel.IdAdminEmpresa,
+            CNPJ = empresaloginViewModel.CNPJ,
+            EmpresaConfiguracao = empresaloginViewModel.EmpresaConfiguracao.ConvertToEmpresaConfiguracao(),
+            EmpresaFilas = empresaloginViewModel.EmpresaFilas.ConvertToListFila(),
+            NomeEmpresa = empresaloginViewModel.NomeEmpresa,
+            UsersEmpresa = empresaloginViewModel.UsersEmpresa,
+            Ativo = empresaloginViewModel.Ativo
+        };
 
-            return empresaLogin;
-        }
+        return empresaLogin;
+    }
 
-        public static EmpresaLoginViewModel ConvertToEmpresaLoginViewModel(this EmpresaLogin empresalogin)
+    public static EmpresaLoginViewModel ConvertToEmpresaLoginViewModel(this EmpresaLogin empresalogin)
+    {
+        EmpresaLoginViewModel empresaLoginview = new()
         {
-            EmpresaLoginViewModel empresaLoginview = new()
-            {
-                Id = empresalogin.Id,
-                IdAdminEmpresa = empresalogin.IdAdminEmpresa,
-                CNPJ = empresalogin.CNPJ,
-                EmpresaConfiguracao = empresalogin.EmpresaConfiguracao.ConvertToEmpresaConfiguracaoView(),
-                EmpresaFilas = empresalogin.EmpresaFilas.ConvertToListFilaViewModel(),
-                NomeEmpresa = empresalogin.NomeEmpresa,
-                UsersEmpresa = empresalogin.UsersEmpresa,
-                Ativo = empresalogin.Ativo
-            };
+            Id = empresalogin.Id,
+            IdAdminEmpresa = empresalogin.IdAdminEmpresa,
+            CNPJ = empresalogin.CNPJ,
+            EmpresaConfiguracao = empresalogin.EmpresaConfiguracao.ConvertToEmpresaConfiguracaoView(),
+            EmpresaFilas = empresalogin.EmpresaFilas.ConvertToListFilaViewModel(),
+            NomeEmpresa = empresalogin.NomeEmpresa,
+            UsersEmpresa = empresalogin.UsersEmpresa,
+            Ativo = empresalogin.Ativo
+        };
 
-            return empresaLoginview;
-        }
+        return empresaLoginview;
+    }
 
-        public static EmpresaConfiguracao ConvertToEmpresaConfiguracao(this EmpresaConfiguracaoViewModel empresaConfiguracaoViewModel)
+    public static EmpresaConfiguracao ConvertToEmpresaConfiguracao(this EmpresaConfiguracaoViewModel empresaConfiguracaoViewModel)
+    {
+        EmpresaConfiguracao empresaConfig = new()
         {
-            EmpresaConfiguracao empresaConfig = new()
-            {
-                Id = empresaConfiguracaoViewModel.Id,
-                CorPrincipalEmpresa = empresaConfiguracaoViewModel.CorPrincipalEmpresa,
-                NomeDaEmpresa = empresaConfiguracaoViewModel.NomeDaEmpresa,
-                CorSegundariaEmpresa = empresaConfiguracaoViewModel.CorSegundariaEmpresa,
-                FooterEmpresa = empresaConfiguracaoViewModel.FooterEmpresa,
-                LinkLogodaEmpresa = empresaConfiguracaoViewModel.LinkLogodaEmpresa
-            };
+            Id = empresaConfiguracaoViewModel.Id,
+            CorPrincipalEmpresa = empresaConfiguracaoViewModel.CorPrincipalEmpresa,
+            NomeDaEmpresa = empresaConfiguracaoViewModel.NomeDaEmpresa,
+            CorSegundariaEmpresa = empresaConfiguracaoViewModel.CorSegundariaEmpresa,
+            FooterEmpresa = empresaConfiguracaoViewModel.FooterEmpresa,
+            LinkLogodaEmpresa = empresaConfiguracaoViewModel.LinkLogodaEmpresa
+        };
 
-            return empresaConfig;
-        }
+        return empresaConfig;
+    }
 
-        public static EmpresaConfiguracaoViewModel ConvertToEmpresaConfiguracaoView(this EmpresaConfiguracao empresaConfiguracao)
+    public static EmpresaConfiguracaoViewModel ConvertToEmpresaConfiguracaoView(this EmpresaConfiguracao empresaConfiguracao)
+    {
+        EmpresaConfiguracaoViewModel empresaConfig = new()
         {
-            EmpresaConfiguracaoViewModel empresaConfig = new()
-            {
-                Id = empresaConfiguracao.Id,
-                CorPrincipalEmpresa = empresaConfiguracao.CorPrincipalEmpresa,
-                NomeDaEmpresa = empresaConfiguracao.NomeDaEmpresa,
-                CorSegundariaEmpresa = empresaConfiguracao.CorSegundariaEmpresa,
-                FooterEmpresa = empresaConfiguracao.FooterEmpresa,
-                LinkLogodaEmpresa = empresaConfiguracao.LinkLogodaEmpresa
-            };
+            Id = empresaConfiguracao.Id,
+            CorPrincipalEmpresa = empresaConfiguracao.CorPrincipalEmpresa,
+            NomeDaEmpresa = empresaConfiguracao.NomeDaEmpresa,
+            CorSegundariaEmpresa = empresaConfiguracao.CorSegundariaEmpresa,
+            FooterEmpresa = empresaConfiguracao.FooterEmpresa,
+            LinkLogodaEmpresa = empresaConfiguracao.LinkLogodaEmpresa
+        };
 
-            return empresaConfig;
-        }
+        return empresaConfig;
+    }
 
 
-        public static IEnumerable<EmpresaLoginViewModel> ConvertToEmpresaLoginViewModel(this List<EmpresaLogin> empresalogin)
+    public static IEnumerable<EmpresaLoginViewModel> ConvertToEmpresaLoginViewModel(this List<EmpresaLogin> empresalogin)
+    {
+        List<EmpresaLoginViewModel> viewlist = [];
+        foreach(var emp in empresalogin)
         {
-            List<EmpresaLoginViewModel> viewlist = [];
-            foreach(var emp in empresalogin)
+            viewlist.Add(new EmpresaLoginViewModel()
             {
-                viewlist.Add(new EmpresaLoginViewModel()
-                {
-                    Id = emp.Id,
-                    IdAdminEmpresa = emp.IdAdminEmpresa,
-                    CNPJ = emp.CNPJ,
-                    EmpresaConfiguracao = emp.EmpresaConfiguracao.ConvertToEmpresaConfiguracaoView(),
-                    EmpresaFilas = emp.EmpresaFilas.ConvertToListFilaViewModel(),
-                    NomeEmpresa = emp.NomeEmpresa,
-                    UsersEmpresa = emp.UsersEmpresa,
-                    Ativo = emp.Ativo
-                });
-            }
-            IEnumerable<EmpresaLoginViewModel> list = viewlist;
-            return list;
+                Id = emp.Id,
+                IdAdminEmpresa = emp.IdAdminEmpresa,
+                CNPJ = emp.CNPJ,
+                EmpresaConfiguracao = emp.EmpresaConfiguracao.ConvertToEmpresaConfiguracaoView(),
+                EmpresaFilas = emp.EmpresaFilas.ConvertToListFilaViewModel(),
+                NomeEmpresa = emp.NomeEmpresa,
+                UsersEmpresa = emp.UsersEmpresa,
+                Ativo = emp.Ativo
+            });
         }
+        IEnumerable<EmpresaLoginViewModel> list = viewlist;
+        return list;
     }
 }

@@ -1,9 +1,8 @@
 ﻿using LCAppFila.Domain.Interfaces;
 using LCFilaApplication.Models;
 
-namespace LCFilaApplication.Interfaces
+namespace LCFilaApplication.Interfaces;
+
+public interface IFilaRepository : IRepository<Fila>
 {
-    public interface IFilaRepository : IRepository<Fila>
-    {
-    }
 }

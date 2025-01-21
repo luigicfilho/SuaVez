@@ -1,24 +1,22 @@
 ﻿using LCFilaApplication.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
-namespace LCFila.Extensions
+namespace LCFila.Extensions;
+
+public class SummaryViewComponent : ViewComponent
 {
-    public class SummaryViewComponent : ViewComponent
+    private readonly INotificador _notificador;
+
+    public SummaryViewComponent(INotificador notificador)
     {
-        private readonly INotificador _notificador;
+        _notificador = notificador;
+    }
 
-        public SummaryViewComponent(INotificador notificador)
-        {
-            _notificador = notificador;
-        }
+    public async Task<IViewComponentResult> InvokeAsync()
+    {
+        var notificacoes = await Task.FromResult(_notificador.ObterNotificacoes());
+        notificacoes.ForEach(c => ViewData.ModelState.AddModelError(string.Empty, c.Mensagem));
 
-        public async Task<IViewComponentResult> InvokeAsync()
-        {
-            var notificacoes = await Task.FromResult(_notificador.ObterNotificacoes());
-            notificacoes.ForEach(c => ViewData.ModelState.AddModelError(string.Empty, c.Mensagem));
-
-            return View();
-        }
+        return View();
     }
 }

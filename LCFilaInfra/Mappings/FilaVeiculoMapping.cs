@@ -2,19 +2,18 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace LCFilaApplication.Mappings
+namespace LCFilaApplication.Mappings;
+
+public class FilaVeiculoMapping : IEntityTypeConfiguration<FilaVeiculo>
 {
-    public class FilaVeiculoMapping : IEntityTypeConfiguration<FilaVeiculo>
+    public void Configure(EntityTypeBuilder<FilaVeiculo> builder)
     {
-        public void Configure(EntityTypeBuilder<FilaVeiculo> builder)
-        {
-            builder.HasKey(p => p.Id);
+        builder.HasKey(p => p.Id);
 
-            builder.HasOne(f => f.FiladeVeiculos);
+        builder.HasOne(f => f.FiladeVeiculos);
 
-            builder.HasMany(f => f.Veiculos);
+        builder.HasMany(f => f.Veiculos);
 
-            builder.ToTable("FilaVeiculos");
-        }
+        builder.ToTable("FilaVeiculos");
     }
 }

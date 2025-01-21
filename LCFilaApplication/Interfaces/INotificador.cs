@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using LCFilaApplication.Notificacoes;
+﻿using LCFilaApplication.Notificacoes;
 
-namespace LCFilaApplication.Interfaces
+namespace LCFilaApplication.Interfaces;
+
+public interface INotificador
 {
-    public interface INotificador
-    {
-        bool TemNotificacao();
-        List<Notificacao> ObterNotificacoes();
-        void Handle(Notificacao notificacao);
-    }
+    bool TemNotificacao();
+    List<Notificacao> ObterNotificacoes();
+    void Handle(Notificacao notificacao);
 }

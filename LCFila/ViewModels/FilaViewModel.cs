@@ -1,7 +1,4 @@
 ﻿using LCFilaApplication.Enums;
-using LCFilaApplication.Models;
-using System;
-using System.Collections.Generic;
 
 namespace LCFila.ViewModels;
 

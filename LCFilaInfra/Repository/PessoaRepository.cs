@@ -2,10 +2,9 @@
 using LCFilaApplication.Interfaces;
 using LCFilaApplication.Models;
 
-namespace LCFilaApplication.Repository
+namespace LCFilaApplication.Repository;
+
+public class PessoaRepository : Repository<Pessoa>, IPessoaRepository
 {
-    public class PessoaRepository : Repository<Pessoa>, IPessoaRepository
-    {
-        public PessoaRepository(FilaDbContext context) : base(context) { }
-    }
+    public PessoaRepository(FilaDbContext context) : base(context) { }
 }

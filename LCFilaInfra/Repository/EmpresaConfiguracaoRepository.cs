@@ -2,10 +2,9 @@
 using LCFilaApplication.Interfaces;
 using LCFilaApplication.Models;
 
-namespace LCFilaApplication.Repository
+namespace LCFilaApplication.Repository;
+
+public class EmpresaConfiguracaoRepository : Repository<EmpresaConfiguracao>, IEmpresaConfiguracaoRepository
 {
-    public class EmpresaConfiguracaoRepository : Repository<EmpresaConfiguracao>, IEmpresaConfiguracaoRepository
-    {
-        public EmpresaConfiguracaoRepository(FilaDbContext context) : base(context) { }
-    }
+    public EmpresaConfiguracaoRepository(FilaDbContext context) : base(context) { }
 }

@@ -1,8 +1,7 @@
-﻿namespace LCFilaApplication.Enums
+﻿namespace LCFilaApplication.Enums;
+
+public enum FilaStatus
 {
-    public enum FilaStatus
-    {
-        Aberta,
-        Finalizada
-    }
+    Aberta,
+    Finalizada
 }
