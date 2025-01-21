@@ -1,7 +1,8 @@
-﻿using AutoMapper;
+﻿using LCFila.Mapping;
 using LCFila.ViewModels;
 using LCFilaApplication.Enums;
 using LCFilaApplication.Interfaces;
+using LCFilaApplication.Mapping;
 using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -21,10 +22,8 @@ namespace LCFila.Controllers
         private readonly IPessoaRepository _pessoaRepository;
         private readonly IFilaRepository _filaRepository;
         private readonly IFilaPessoaRepository _filapessoaRepository;
-        private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
         public FilaController(INotificador notificador,
-                              IMapper mapper,
                               UserManager<AppUser> userManager,
                               IPessoaRepository pessoaRepository,
                               IFilaPessoaRepository filapessoaRepository,
@@ -34,7 +33,6 @@ namespace LCFila.Controllers
             _pessoaRepository = pessoaRepository;
             _filaRepository = filaRepository;
             _filapessoaRepository = filapessoaRepository;
-            _mapper = mapper;
             _userManager = userManager;
         }
 
@@ -56,7 +54,8 @@ namespace LCFila.Controllers
             }
             
             var pessoas = await _pessoaRepository.ObterTodos();
-            var teste = _mapper.Map<IEnumerable<FilaViewModel>>(filasdousuario);
+
+            var teste = filasdousuario.ConvertToListFilaViewModel();
 
             foreach (var item in teste)
             {
@@ -73,7 +72,7 @@ namespace LCFila.Controllers
             var Empresaid = user.empresaLogin.Id;
             var filatoopen = await _filaRepository.ObterPorId(id);
             var pessoas = await _pessoaRepository.Buscar(p => p.FilaId == id);
-            var pessoasdafila = _mapper.Map<IEnumerable<PessoaViewModel>>(pessoas);
+            var pessoasdafila = pessoas.ConvertToPessoaViewModelList();
             ViewBag.idFila = id;
             ViewBag.statusfila = filatoopen.Status.ToString();
             return View(pessoasdafila);
@@ -124,7 +123,7 @@ namespace LCFila.Controllers
             filamodel.DataInicio = DateTime.Now;
             filamodel.Ativo = true;
             filamodel.Status = FilaStatus.Aberta;
-            var fila = _mapper.Map<Fila>(filamodel);
+            var fila = filamodel.ConvertToFila();
             await _filaRepository.Adicionar(fila);
             return RedirectToAction("Index");
         }
@@ -149,7 +148,7 @@ namespace LCFila.Controllers
             novafila.TempoMedio = "30";
             novafila.EmpresaId = Empresaid;
             novafila.UserId = Guid.Parse(user.Id);
-            var fila = _mapper.Map<Fila>(novafila);
+            var fila = novafila.ConvertToFila(); 
             await _filaRepository.Adicionar(fila);
             return RedirectToAction("Index", fila.Id);
 
@@ -168,7 +167,7 @@ namespace LCFila.Controllers
             var pessoas = await _pessoaRepository.ObterTodos();
             var pessoasdafila = pessoas.Where(p => p.FilaId == pessoaViewModel.filaId && p.Ativo == true && p.Status == PessoaStatus.Esperando).ToList();
 
-            var pessoa = _mapper.Map<Pessoa>(pessoaViewModel.pessoa);
+            var pessoa = pessoaViewModel.pessoa.ConvertToPessoa();
 
             if (pessoaViewModel.pessoa.Preferencial)
             {

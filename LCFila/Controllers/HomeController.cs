@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using LCFila.ViewModels;
+﻿using LCFila.ViewModels;
 using LCFilaApplication.Interfaces;
 using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -15,10 +14,8 @@ namespace LCFila.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly IMapper _mapper;
         public HomeController(ILogger<HomeController> logger,
                               SignInManager<AppUser> signInManager,
-                              IMapper mapper,
                               INotificador notificador,
                               UserManager<AppUser> userManager,
                               IEmpresaLoginRepository empresaRepository) : base(notificador, userManager, empresaRepository)
@@ -26,7 +23,6 @@ namespace LCFila.Controllers
 
             _logger = logger;
             _signInManager = signInManager;
-            _mapper = mapper;
 
         }
 

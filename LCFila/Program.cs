@@ -21,8 +21,6 @@ builder.Services.AddIdentityConfiguration(builder.Configuration);
 builder.Services.AddDbContext<FilaDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddAutoMapper(typeof(Program));
-
 
 // builder.Services.AddFeatureManagement();
 builder.Services.AddScopedFeatureManagement(builder.Configuration.GetSection("LCFilaFeatures"));
@@ -45,7 +43,9 @@ if (app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseDeveloperExceptionPage();
-    //app.UseDatabaseErrorPage();
+
+    CreateRoles(serviceProvider).Wait();
+    CreateAdmin(serviceProvider).Wait();
 }
 else
 {
@@ -70,9 +70,6 @@ app.UseEndpoints(endpoints =>
         pattern: "{controller=Home}/{action=Index}/{id?}");
     endpoints.MapRazorPages();
 });
-
-CreateRoles(serviceProvider).Wait();
-CreateAdmin(serviceProvider).Wait();
 
 app.Run();
 

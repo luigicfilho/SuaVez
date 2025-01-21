@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using LCFila.ViewModels;
+﻿using LCFila.ViewModels;
 using LCFilaApplication.Interfaces;
 using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -21,18 +20,15 @@ namespace LCFila.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IEmpresaLoginRepository _empresaRepository;
-        private readonly IMapper _mapper;
 
         public UsuarioController(INotificador notificador,
             SignInManager<AppUser> signInManager,
             UserManager<AppUser> userManager,
-            IMapper mapper,
             IEmpresaLoginRepository empresaRepository) : base(notificador, userManager, empresaRepository)
         {
             _empresaRepository = empresaRepository;
             _userManager = userManager;
             _signInManager = signInManager;
-            _mapper = mapper;
         }
         // GET: UsuarioController
         public async Task<IActionResult> Index()

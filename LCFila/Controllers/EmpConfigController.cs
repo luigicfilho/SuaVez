@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using LCFila.ViewModels;
+﻿using LCFila.ViewModels;
 using LCFilaApplication.Interfaces;
 using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -22,12 +21,10 @@ namespace LCFila.Controllers
         private readonly IEmpresaConfiguracaoRepository _empresaConfigRepository;
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IMapper _mapper;
         const string UploadDirectory = "wwwroot/upload_arq";
         public EmpConfigController(INotificador notificador,
                                   UserManager<AppUser> userManager,
                                   RoleManager<IdentityRole> roleManager,
-                                  IMapper mapper,
                                   IEmpresaLoginRepository empresaRepository,
                                   IEmpresaConfiguracaoRepository empresaConfigRepository) : base(notificador, userManager, empresaRepository)
         {
@@ -35,7 +32,6 @@ namespace LCFila.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
             _empresaConfigRepository = empresaConfigRepository;
-            _mapper = mapper;
         }
         // GET: EmpConfigController
         public async Task<IActionResult> Index()
@@ -46,7 +42,16 @@ namespace LCFila.Controllers
             List<EmpresaLogin> AllEmpresas = await _empresaRepository.ObterTodos();
             EmpresaLogin empresa = AllEmpresas.FirstOrDefault(p => p.IdAdminEmpresa == Guid.Parse(admin.Id));
             IEnumerable<EmpresaConfiguracao> config = await _empresaConfigRepository.Buscar(p => p.NomeDaEmpresa == empresa.NomeEmpresa);
-            EmpresaConfiguracaoViewModel emconfigviewmodel = _mapper.Map<EmpresaConfiguracaoViewModel>(config.FirstOrDefault());
+            EmpresaConfiguracao empcofig = config.FirstOrDefault();
+            EmpresaConfiguracaoViewModel emconfigviewmodel = new EmpresaConfiguracaoViewModel()
+            {
+                Id = empcofig.Id,
+                NomeDaEmpresa = empcofig.NomeDaEmpresa,
+                LinkLogodaEmpresa = empcofig.LinkLogodaEmpresa,
+                CorPrincipalEmpresa = empcofig.CorPrincipalEmpresa,
+                CorSegundariaEmpresa = empcofig.CorSegundariaEmpresa,
+                FooterEmpresa = empcofig.FooterEmpresa
+            };
             return View(emconfigviewmodel);
         }
 
@@ -102,7 +107,15 @@ namespace LCFila.Controllers
                 List<EmpresaLogin> AllEmpresas = await _empresaRepository.ObterTodos();
                 EmpresaLogin empresa = AllEmpresas.FirstOrDefault(p => p.EmpresaConfiguracao.Id == id);
                 empresa.NomeEmpresa = empconfig.NomeDaEmpresa;
-                EmpresaConfiguracao empconfigs = _mapper.Map<EmpresaConfiguracao>(empconfig);
+                EmpresaConfiguracao empconfigs = new EmpresaConfiguracao()
+                {
+                    Id = empconfig.Id,
+                    NomeDaEmpresa = empconfig.NomeDaEmpresa,
+                    LinkLogodaEmpresa = empconfig.LinkLogodaEmpresa,
+                    CorPrincipalEmpresa = empconfig.CorPrincipalEmpresa,
+                    CorSegundariaEmpresa = empconfig.CorSegundariaEmpresa,
+                    FooterEmpresa = empconfig.FooterEmpresa
+                };
                 if(empconfig.file == null)
                 {
                     empconfigs.LinkLogodaEmpresa = empresa.EmpresaConfiguracao.LinkLogodaEmpresa;

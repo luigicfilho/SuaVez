@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using LCFila.ViewModels;
+﻿using LCFila.ViewModels;
 using LCFilaApplication.Interfaces;
 using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -13,6 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LCFilaApplication.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using LCFila.Mapping;
 
 namespace LCFila.Controllers
 {
@@ -23,28 +24,25 @@ namespace LCFila.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<SysadminController> _logger;
-        private readonly IMapper _mapper;
-        private readonly IEmailSender _emailSender;
+        //private readonly IEmailSender _emailSender;
         public SysadminController(INotificador notificador,
                                   UserManager<AppUser> userManager,
                                   RoleManager<IdentityRole> roleManager,
                                   ILogger<SysadminController> logger,
-                                  IEmailSender emailSender,
-                                  IMapper mapper,
+                                  //IEmailSender emailSender,
                                   IEmpresaLoginRepository empresaRepository) : base(notificador, userManager, empresaRepository)
         {
             _empresaRepository = empresaRepository;
             _userManager = userManager;
             _roleManager = roleManager;
             _logger = logger;
-            _mapper = mapper;
-            _emailSender = emailSender;
+           // _emailSender = emailSender;
         }
         // GET: SysadminController
         public async Task<IActionResult> Index()
         {
             var empresaLista = await _empresaRepository.ObterTodos();
-            var empresaviewmodel = _mapper.Map<IEnumerable<EmpresaLoginViewModel>>(empresaLista);
+            var empresaviewmodel = empresaLista.ConvertToEmpresaLoginViewModel();
             return View(empresaviewmodel);
         }
 
@@ -53,7 +51,7 @@ namespace LCFila.Controllers
         {
             var empresa = await _empresaRepository.ObterPorId(id);
             var adminempresa = await _userManager.FindByIdAsync(empresa.IdAdminEmpresa.ToString());
-            var empresaviewmodel = _mapper.Map<EmpresaLoginViewModel>(empresa);
+            var empresaviewmodel = empresa.ConvertToEmpresaLoginViewModel();
             empresaviewmodel.Email = adminempresa.Email;
             return View(empresaviewmodel);
         }
@@ -64,7 +62,7 @@ namespace LCFila.Controllers
             empresa.Ativo = true;
             await _empresaRepository.Atualizar(empresa);
             await _empresaRepository.SaveChanges();
-            var empresaviewmodel = _mapper.Map<EmpresaLoginViewModel>(empresa);
+            var empresaviewmodel = empresa.ConvertToEmpresaLoginViewModel();
             return RedirectToAction(nameof(Index));
         }
 
@@ -74,7 +72,7 @@ namespace LCFila.Controllers
             empresa.Ativo = false;
             await _empresaRepository.Atualizar(empresa);
             await _empresaRepository.SaveChanges();
-            var empresaviewmodel = _mapper.Map<EmpresaLoginViewModel>(empresa);
+            var empresaviewmodel = empresa.ConvertToEmpresaLoginViewModel();
             return RedirectToAction(nameof(Index));
             //return View();
         }
@@ -128,7 +126,7 @@ namespace LCFila.Controllers
                         FooterEmpresa = "no footer"
                     };
                     empresaViewModel.EmpresaConfiguracao = empconfig;
-                    var empresa = _mapper.Map<EmpresaLogin>(empresaViewModel);
+                    var empresa = empresaViewModel.ConvertToEmpresaLogin();
                     await _empresaRepository.Adicionar(empresa);
 
                 }
@@ -149,7 +147,7 @@ namespace LCFila.Controllers
             var empresa = await _empresaRepository.ObterPorId(id);
             var adminempresa = await _userManager.FindByIdAsync(empresa.IdAdminEmpresa.ToString());
             var users = _userManager.Users.Include(p => p.empresaLogin).Where(p => p.empresaLogin.Id == empresa.Id).ToList();
-            var empresaviewmodel = _mapper.Map<EmpresaLoginViewModel>(empresa);
+            var empresaviewmodel = empresa.ConvertToEmpresaLoginViewModel();
             empresaviewmodel.Email = adminempresa.Email;
             var usersQuery = from d in users.Where(p => p.Email != adminempresa.Email).AsEnumerable()
                                    orderby d.Email // Sort by name.
@@ -167,7 +165,7 @@ namespace LCFila.Controllers
             try
             {
                 
-                var empresa = _mapper.Map<EmpresaLogin>(empresaViewModel);
+                var empresa = empresaViewModel.ConvertToEmpresaLogin();
                 await _empresaRepository.Atualizar(empresa);
                 await _empresaRepository.SaveChanges();
                 return RedirectToAction(nameof(Index));
@@ -182,7 +180,7 @@ namespace LCFila.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var empresa = await _empresaRepository.ObterPorId(id);
-            var empresaviewmodel = _mapper.Map<EmpresaLoginViewModel>(empresa);
+            var empresaviewmodel = empresa.ConvertToEmpresaLoginViewModel();
             return View(empresaviewmodel);
         }
 
@@ -193,7 +191,7 @@ namespace LCFila.Controllers
         {
             try
             {
-                var empresa1 = _mapper.Map<EmpresaLogin>(empresaViewModel);
+                var empresa1 = empresaViewModel.ConvertToEmpresaLogin();
                 var empresa = await _empresaRepository.ObterPorId(empresaViewModel.Id);
                 
                 var adminempresa = await _userManager.FindByIdAsync(empresa.IdAdminEmpresa.ToString());

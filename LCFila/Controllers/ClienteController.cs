@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using LCFila.ViewModels;
+﻿using LCFila.ViewModels;
 using LCFilaApplication.Enums;
 using LCFilaApplication.Interfaces;
 using LCFilaApplication.Models;
@@ -20,11 +19,9 @@ namespace LCFila.Controllers
         private readonly IPessoaRepository _pessoaRepository;
         private readonly IFilaRepository _filaRepository;
         private readonly IFilaPessoaRepository _filapessoaRepository;
-        private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
 
         public ClienteController(INotificador notificador,
-                             IMapper mapper,
                              IPessoaRepository pessoaRepository,
                              IFilaPessoaRepository filapessoaRepository,
                              IEmpresaLoginRepository empresaRepository,
@@ -34,7 +31,6 @@ namespace LCFila.Controllers
             _pessoaRepository = pessoaRepository;
             _filaRepository = filaRepository;
             _filapessoaRepository = filapessoaRepository;
-            _mapper = mapper;
             _userManager = userManager;
         }
         [AllowAnonymous]
@@ -50,8 +46,20 @@ namespace LCFila.Controllers
         {
             ConfigEmpresa();
             var pegarpessoa = await _pessoaRepository.ObterPorId(id);
-            var pessoa = _mapper.Map<PessoaViewModel>(pegarpessoa);
-            pessoa.filaid = filaid;
+            var pessoa = new Pessoa()
+            {
+                Ativo = pegarpessoa.Ativo,
+                Celular = pegarpessoa.Celular,
+                Documento = pegarpessoa.Documento,
+                Nome = pegarpessoa.Nome,
+                Id = pegarpessoa.Id,
+                Posicao = pegarpessoa.Posicao,
+                Status = pegarpessoa.Status,
+                Preferencial = pegarpessoa.Preferencial,
+                Fila = pegarpessoa.Fila,
+                FilaId = pegarpessoa.FilaId
+            };
+            pessoa.FilaId = filaid;
             return View(pessoa);
         }
 
