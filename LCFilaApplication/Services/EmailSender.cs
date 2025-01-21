@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 
@@ -37,5 +36,10 @@ namespace LCFilaApplication.Services
                 new MailMessage(userName, email, subject, htmlMessage) { IsBodyHtml = true }
             );
         }
+    }
+
+    public interface IEmailSender
+    {
+        Task SendEmailAsync(string inputEmail, string confirmYourEmail, string s);
     }
 }
