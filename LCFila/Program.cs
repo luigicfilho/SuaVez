@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.FeatureManagement;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +22,16 @@ builder.Services.AddDbContext<FilaDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAutoMapper(typeof(Program));
+
+
+// builder.Services.AddFeatureManagement();
+builder.Services.AddScopedFeatureManagement(builder.Configuration.GetSection("LCFilaFeatures"));
+
+builder.Services.Configure<FeatureManagementOptions>(options =>
+{
+    options.IgnoreMissingFeatureFilters = true;
+    options.IgnoreMissingFeatures = true;
+});
 
 builder.Services.AddMvcConfiguration();
 

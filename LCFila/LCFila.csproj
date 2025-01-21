@@ -6,6 +6,13 @@
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
   </PropertyGroup>
 
+	<!-- Official Version -->
+    <PropertyGroup>
+	    <MajorVersion>1</MajorVersion>
+	    <MinorVersion>0</MinorVersion>
+	    <PatchVersion>0</PatchVersion>
+    </PropertyGroup>
+	
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningLevel>5</WarningLevel>
   </PropertyGroup>
@@ -18,6 +25,7 @@
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.29" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.29" />
+    <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="3.5.0" />
   </ItemGroup>
 
   <ItemGroup>
