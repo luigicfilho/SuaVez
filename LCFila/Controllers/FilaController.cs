@@ -1,4 +1,5 @@
-﻿using LCFila.Mapping;
+﻿using LCFila.Controllers.Sistema;
+using LCFila.Mapping;
 using LCFila.ViewModels;
 using LCFilaApplication.Enums;
 using LCFilaApplication.Interfaces;
@@ -17,6 +18,7 @@ public class FilaController : BaseController
     private readonly IPessoaRepository _pessoaRepository;
     private readonly IFilaRepository _filaRepository;
     private readonly IFilaPessoaRepository _filapessoaRepository;
+    private readonly IEmpresaLoginRepository _empresaRepository;
     private readonly UserManager<AppUser> _userManager;
     public FilaController(INotificador notificador,
                           UserManager<AppUser> userManager,
@@ -29,24 +31,26 @@ public class FilaController : BaseController
         _filaRepository = filaRepository;
         _filapessoaRepository = filapessoaRepository;
         _userManager = userManager;
+        _empresaRepository = empresaRepository;
     }
 
     // GET: FilaController
     public async Task<IActionResult> Index(/*Guid? id*/)
     {
         ConfigEmpresa();
-        var user = await _userManager.Users.Include(p => p.empresaLogin).SingleOrDefaultAsync(p => p.UserName == User.Identity.Name);
-        var allusers = _userManager.Users.Include(p => p.empresaLogin).Where(p => p.empresaLogin.Id == user.empresaLogin.Id).ToList();  
-        var Empresaid = user.empresaLogin.Id;
+        var user = await _userManager.Users.SingleOrDefaultAsync(p => p.UserName == User.Identity.Name);
+        var allusers = _userManager.Users.ToList();
+        var empresalogin = _empresaRepository.Buscar(s => s.IdAdminEmpresa == Guid.Parse(user.Id));
+        var Empresaid = empresalogin.Id;
         var pegarfila = await _filaRepository.ObterTodos();
         List<Fila> filasdousuario = new List<Fila>();
-        if (User.IsInRole("EmpAdmin"))
-        {
-            filasdousuario = pegarfila.Where(p => p.EmpresaId == Empresaid).ToList();
-        } else
-        {
+        //if (User.IsInRole("EmpAdmin"))
+        //{
+        //    filasdousuario = pegarfila.Where(p => p.EmpresaId == Empresaid).ToList();
+        //} else
+        //{
             filasdousuario = pegarfila.Where(p => p.UserId == Guid.Parse(user.Id)).ToList();
-        }
+        //}
         
         var pessoas = await _pessoaRepository.ObterTodos();
 
@@ -63,8 +67,9 @@ public class FilaController : BaseController
     public async Task<IActionResult> Details(Guid id)
     {
         ConfigEmpresa();
-        var user = await _userManager.Users.Include(p => p.empresaLogin).SingleOrDefaultAsync(p => p.UserName == User.Identity.Name);
-        var Empresaid = user.empresaLogin.Id;
+        var user = await _userManager.Users.SingleOrDefaultAsync(p => p.UserName == User.Identity.Name);
+        var empresalogin = _empresaRepository.Buscar(s => s.IdAdminEmpresa == Guid.Parse(user.Id));
+        var Empresaid = empresalogin.Id;
         var filatoopen = await _filaRepository.ObterPorId(id);
         var pessoas = await _pessoaRepository.Buscar(p => p.FilaId == id);
         var pessoasdafila = pessoas.ConvertToPessoaViewModelList();
@@ -99,8 +104,9 @@ public class FilaController : BaseController
     public async Task<IActionResult> CreateFila()
     {
         ConfigEmpresa();
-        var user = await _userManager.Users.Include(p => p.empresaLogin).SingleOrDefaultAsync(p => p.UserName == User.Identity.Name);
-        var Empresaid = user.empresaLogin.Id;
+        var user = await _userManager.Users.SingleOrDefaultAsync(p => p.UserName == User.Identity.Name);
+        var empresalogin = _empresaRepository.Buscar(s => s.IdAdminEmpresa == Guid.Parse(user.Id)).Result.FirstOrDefault();
+        var Empresaid = empresalogin.Id;
 
         FilaViewModel filamodel = new FilaViewModel
         {
@@ -136,8 +142,9 @@ public class FilaController : BaseController
     public async Task<IActionResult> IniciarFila()
     {
         ConfigEmpresa();
-        var user = await _userManager.Users.Include(p => p.empresaLogin).SingleOrDefaultAsync(p => p.UserName == User.Identity.Name);
-        var Empresaid = user.empresaLogin.Id;
+        var user = await _userManager.Users.SingleOrDefaultAsync(p => p.UserName == User.Identity.Name);
+        var empresalogin = _empresaRepository.Buscar(s => s.IdAdminEmpresa == Guid.Parse(user.Id)).Result.FirstOrDefault();
+        var Empresaid = empresalogin.Id;
         FilaViewModel novafila = new FilaViewModel();
         novafila.DataInicio = DateTime.Now;
         novafila.TempoMedio = "30";

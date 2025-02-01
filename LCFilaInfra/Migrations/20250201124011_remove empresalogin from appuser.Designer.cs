@@ -3,6 +3,7 @@ using System;
 using LCFilaApplication.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LCFilaInfra.Migrations
 {
     [DbContext(typeof(FilaDbContext))]
-    partial class FilaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250201124011_remove empresalogin from appuser")]
+    partial class removeempresaloginfromappuser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.12");
@@ -236,7 +239,6 @@ namespace LCFilaInfra.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
                 {
                     b.Property<string>("Id")
-                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("AccessFailedCount")

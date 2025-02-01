@@ -3,6 +3,7 @@ using System;
 using LCFilaApplication.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LCFilaInfra.Migrations
 {
     [DbContext(typeof(FilaDbContext))]
-    partial class FilaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250201112512_Initial Migration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.12");
@@ -236,7 +239,6 @@ namespace LCFilaInfra.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
                 {
                     b.Property<string>("Id")
-                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("AccessFailedCount")
@@ -394,10 +396,10 @@ namespace LCFilaInfra.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<Guid?>("EmpresaLoginId")
+                    b.Property<Guid>("empresaLoginId")
                         .HasColumnType("TEXT");
 
-                    b.HasIndex("EmpresaLoginId");
+                    b.HasIndex("empresaLoginId");
 
                     b.HasDiscriminator().HasValue("AppUser");
                 });
@@ -501,10 +503,13 @@ namespace LCFilaInfra.Migrations
 
             modelBuilder.Entity("LCFilaApplication.Models.AppUser", b =>
                 {
-                    b.HasOne("LCFilaApplication.Models.EmpresaLogin", null)
+                    b.HasOne("LCFilaApplication.Models.EmpresaLogin", "empresaLogin")
                         .WithMany("UsersEmpresa")
-                        .HasForeignKey("EmpresaLoginId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("empresaLoginId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("empresaLogin");
                 });
 
             modelBuilder.Entity("LCFilaApplication.Models.EmpresaLogin", b =>

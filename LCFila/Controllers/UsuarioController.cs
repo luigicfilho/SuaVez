@@ -1,4 +1,5 @@
-﻿using LCFila.ViewModels;
+﻿using LCFila.Controllers.Sistema;
+using LCFila.ViewModels;
 using LCFilaApplication.Interfaces;
 using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -30,8 +31,9 @@ public class UsuarioController : BaseController
     {
         ConfigEmpresa();
         var AllUsers = _userManager.Users;
-        var admin = AllUsers.Include(p => p.empresaLogin).FirstOrDefault(p => p.UserName == User.Identity.Name);
-        var Empresa = await _empresaRepository.ObterPorId(admin.empresaLogin.Id);
+        //var admin = AllUsers.Include(p => p.EmpresaLogin).FirstOrDefault(p => p.UserName == User.Identity.Name);
+        var admin = AllUsers.FirstOrDefault(a => a.UserName == User.Identity.Name);
+        var Empresa = await _empresaRepository.ObterPorId(Guid.Parse(admin.Id));
         var usersempresa = Empresa.UsersEmpresa.Where(p => p.Id != Empresa.IdAdminEmpresa.ToString()).ToList(); 
 
         return View(usersempresa);

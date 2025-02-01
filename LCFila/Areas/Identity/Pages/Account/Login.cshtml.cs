@@ -140,7 +140,7 @@ namespace LCFila.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    var user = await _userManager.Users.Include(p => p.empresaLogin).SingleOrDefaultAsync(p => p.Email == Input.Email);
+                    var user = await _userManager.Users.SingleOrDefaultAsync(p => p.Email == Input.Email);
                     var roles = await _userManager.GetRolesAsync(user);
 
                     var teste = roles.Where(p => p.Contains("SysAdmin")).FirstOrDefault();
@@ -150,7 +150,7 @@ namespace LCFila.Areas.Identity.Pages.Account
                         return RedirectToAction("Index", "Sysadmin");
                     }
                     var AllEmpresas = await _empresaRepository.ObterTodos();
-                    var empresa = AllEmpresas.FirstOrDefault(p => p.Id == user.empresaLogin.Id);
+                    var empresa = AllEmpresas.FirstOrDefault(p => p.IdAdminEmpresa == Guid.Parse(user.Id));
                     if (empresa.Ativo) { 
                         _logger.LogInformation("User logged in.");
                         return LocalRedirect(returnUrl);

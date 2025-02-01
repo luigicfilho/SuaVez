@@ -1,23 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System.Collections;
-using System.Linq.Expressions;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace LCFilaApplication.Models;
 
-public partial class AppUser : IdentityUser, IQueryable
+public class AppUser : IdentityUser
 {
-    [JsonIgnore]
-    public EmpresaLogin empresaLogin { get; set; }
 
-    public Type ElementType => throw new NotImplementedException();
-
-    public Expression Expression => throw new NotImplementedException();
-
-    public IQueryProvider Provider => throw new NotImplementedException();
-
-    public IEnumerator GetEnumerator()
-    {
-        throw new NotImplementedException();
-    }
 }

@@ -3,6 +3,7 @@ using System;
 using LCFilaApplication.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LCFilaInfra.Migrations
 {
     [DbContext(typeof(FilaDbContext))]
-    partial class FilaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250201130636_try fix appuser 1")]
+    partial class tryfixappuser1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.12");

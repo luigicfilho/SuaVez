@@ -1,4 +1,5 @@
-﻿using LCFilaApplication.Enums;
+﻿using LCFila.Controllers.Sistema;
+using LCFilaApplication.Enums;
 using LCFilaApplication.Interfaces;
 using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -12,8 +13,8 @@ namespace LCFila.Controllers;
 public class ClienteController : BaseController
 {
     private readonly IPessoaRepository _pessoaRepository;
-    private readonly IFilaRepository _filaRepository;
-    private readonly IFilaPessoaRepository _filapessoaRepository;
+    //private readonly IFilaRepository _filaRepository;
+    //private readonly IFilaPessoaRepository _filapessoaRepository;
     private readonly UserManager<AppUser> _userManager;
 
     public ClienteController(INotificador notificador,
@@ -24,8 +25,8 @@ public class ClienteController : BaseController
                          IFilaRepository filaRepository) : base(notificador, userManager, empresaRepository)
     {
         _pessoaRepository = pessoaRepository;
-        _filaRepository = filaRepository;
-        _filapessoaRepository = filapessoaRepository;
+        //_filaRepository = filaRepository;
+        //_filapessoaRepository = filapessoaRepository;
         _userManager = userManager;
     }
     [AllowAnonymous]

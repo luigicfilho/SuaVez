@@ -1,5 +1,7 @@
 ﻿using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.VisualBasic;
+using System.Collections;
 using System.ComponentModel.DataAnnotations;
 
 namespace LCFila.ViewModels;
@@ -24,15 +26,15 @@ public class EmpresaLoginViewModel
     public string Password { get; set; }
 
     public Guid IdAdminEmpresa { get; set; }
-    public List<AppUser> UsersEmpresa { get; set; }
+    public List<AppUser>? UsersEmpresa { get; set; }
 
     [Display(Name = "Lista de Usuários")]
-    public SelectList ListaUsers { get; set; }
-    public EmpresaConfiguracaoViewModel EmpresaConfiguracao { get; set; }
-    public List<FilaViewModel> EmpresaFilas { get; set; }
-    
+    public SelectList? ListaUsers { get; set; }
+    public EmpresaConfiguracaoViewModel? EmpresaConfiguracao { get; set; }
+    public List<FilaViewModel>? EmpresaFilas { get; set; } = [];
+
     [Display(Name = "Administrador")]
-    public AppUser AdminEmpresa { get; set; }
+    public AppUser? AdminEmpresa { get; set; }
 
     [Display(Name = "Status ")]
     public bool Ativo { get; set; }

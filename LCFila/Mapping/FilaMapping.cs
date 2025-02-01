@@ -70,23 +70,25 @@ public static class FilaMapping
     {
         List<FilaViewModel> listfila = [];
 
-        foreach (var fila in filalist)
+        if(filalist is not null)
         {
-            listfila.Add(new FilaViewModel
+            foreach (var fila in filalist)
             {
-                Id = fila.Id,
-                Nome = fila.Nome,
-                Status = fila.Status,
-                TempoMedio = fila.TempoMedio,
-                Tipofila = fila.Tipofila,
-                UserId = fila.UserId,
-                Ativo = fila.Ativo,
-                DataFim = fila.DataFim,
-                DataInicio = fila.DataInicio,
-                EmpresaId = fila.EmpresaId
-            });
+                listfila.Add(new FilaViewModel
+                {
+                    Id = fila.Id,
+                    Nome = fila.Nome,
+                    Status = fila.Status,
+                    TempoMedio = fila.TempoMedio,
+                    Tipofila = fila.Tipofila,
+                    UserId = fila.UserId,
+                    Ativo = fila.Ativo,
+                    DataFim = fila.DataFim,
+                    DataInicio = fila.DataInicio,
+                    EmpresaId = fila.EmpresaId
+                });
+            }
         }
-
         return listfila;
     }
 }

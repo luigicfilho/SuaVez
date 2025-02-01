@@ -14,7 +14,7 @@ public static class EmpresaMapping
             IdAdminEmpresa = empresaloginViewModel.IdAdminEmpresa,
             CNPJ = empresaloginViewModel.CNPJ,
             EmpresaConfiguracao = empresaloginViewModel.EmpresaConfiguracao.ConvertToEmpresaConfiguracao(),
-            EmpresaFilas = empresaloginViewModel.EmpresaFilas.ConvertToListFila(),
+            EmpresaFilas = empresaloginViewModel.EmpresaFilas.Any() ? empresaloginViewModel.EmpresaFilas.ConvertToListFila() : [],
             NomeEmpresa = empresaloginViewModel.NomeEmpresa,
             UsersEmpresa = empresaloginViewModel.UsersEmpresa,
             Ativo = empresaloginViewModel.Ativo
@@ -76,17 +76,21 @@ public static class EmpresaMapping
         List<EmpresaLoginViewModel> viewlist = [];
         foreach(var emp in empresalogin)
         {
-            viewlist.Add(new EmpresaLoginViewModel()
+            if (!(emp.NomeEmpresa == "System"))
             {
-                Id = emp.Id,
-                IdAdminEmpresa = emp.IdAdminEmpresa,
-                CNPJ = emp.CNPJ,
-                EmpresaConfiguracao = emp.EmpresaConfiguracao.ConvertToEmpresaConfiguracaoView(),
-                EmpresaFilas = emp.EmpresaFilas.ConvertToListFilaViewModel(),
-                NomeEmpresa = emp.NomeEmpresa,
-                UsersEmpresa = emp.UsersEmpresa,
-                Ativo = emp.Ativo
-            });
+                viewlist.Add(new EmpresaLoginViewModel()
+                {
+                    Id = emp.Id,
+                    IdAdminEmpresa = emp.IdAdminEmpresa,
+                    CNPJ = emp.CNPJ,
+                    EmpresaConfiguracao = emp.EmpresaConfiguracao.ConvertToEmpresaConfiguracaoView(),
+                    EmpresaFilas = emp.EmpresaFilas.ConvertToListFilaViewModel(),
+                    NomeEmpresa = emp.NomeEmpresa,
+                    UsersEmpresa = emp.UsersEmpresa,
+                    Ativo = emp.Ativo
+                });
+            }
+            
         }
         IEnumerable<EmpresaLoginViewModel> list = viewlist;
         return list;
