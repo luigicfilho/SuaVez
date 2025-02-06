@@ -1,7 +1,6 @@
-﻿using LCFilaApplication.Models;
+﻿//TODO: remove this reference in someway
+using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.VisualBasic;
-using System.Collections;
 using System.ComponentModel.DataAnnotations;
 
 namespace LCFila.ViewModels;

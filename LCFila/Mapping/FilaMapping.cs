@@ -1,4 +1,5 @@
 ﻿using LCFila.ViewModels;
+//TODO: how to do it in another way to remove theses references
 using LCFilaApplication.Models;
 
 namespace LCFilaApplication.Mapping;

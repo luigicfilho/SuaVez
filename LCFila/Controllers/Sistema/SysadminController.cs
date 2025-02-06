@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using LCFila.Mapping;
 using LCFilaApplication.MVC;
-using LCFilaApplication.Models;
 
 namespace LCFila.Controllers.Sistema;
 
@@ -88,6 +87,7 @@ public class SysadminController : BaseController
                             onFailure: error => resultados = error);
             }
 
+            //TODO: REVIEW THIS, it's the only thing that makes reference to MVC
             var resultado =  Results.Extensions.MapResult(result);
 
             if (!OperacaoValida()) return View(empresaViewModel);

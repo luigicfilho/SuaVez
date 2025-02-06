@@ -1,23 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+//TODO: This should not be, change to viewmodel, or remove because this file it's not used
 using LCFilaApplication.Models;
-using LCFilaInfra.Context;
+using LCFilaApplication.Interfaces;
 
 namespace LCFila.Controllers;
 
 public class FilaPessoaController : Controller
 {
-    private readonly FilaDbContext _context;
+    private readonly IFilaAppService _filaAppService;
 
-    public FilaPessoaController(FilaDbContext context)
+    public FilaPessoaController(IFilaAppService filaAppService)
     {
-        _context = context;
+        _filaAppService = filaAppService;
     }
 
     // GET: FilaPessoa
     public async Task<IActionResult> Index()
     {
-        return View(await _context.FilaPessoas.ToListAsync());
+        return View(_filaAppService.GetFilaList(User.Identity!.Name!));
     }
 
     // GET: FilaPessoa/Details/5
@@ -28,8 +29,7 @@ public class FilaPessoaController : Controller
             return NotFound();
         }
 
-        var filaPessoa = await _context.FilaPessoas
-            .FirstOrDefaultAsync(m => m.Id == id);
+        var (_ ,filaPessoa) = _filaAppService.GetPessoas(id.Value, User.Identity!.Name!);
         if (filaPessoa == null)
         {
             return NotFound();
@@ -52,8 +52,11 @@ public class FilaPessoaController : Controller
         if (ModelState.IsValid)
         {
             filaPessoa.Id = Guid.NewGuid();
-            _context.Add(filaPessoa);
-            await _context.SaveChangesAsync();
+            Pessoa pessoa = new()
+            {
+                Id = Guid.NewGuid()
+            };
+            _filaAppService.AdicionarPessoa(pessoa, filaPessoa.Id);
             return RedirectToAction(nameof(Index));
         }
         return View(filaPessoa);
@@ -67,7 +70,7 @@ public class FilaPessoaController : Controller
             return NotFound();
         }
 
-        var filaPessoa = await _context.FilaPessoas.FindAsync(id);
+        var filaPessoa = _filaAppService.GetFilaList(User.Identity!.Name!);
         if (filaPessoa == null)
         {
             return NotFound();
@@ -89,8 +92,8 @@ public class FilaPessoaController : Controller
         {
             try
             {
-                _context.Update(filaPessoa);
-                await _context.SaveChangesAsync();
+                Fila fila = filaPessoa.FiladePessoas;
+                _filaAppService.CriarFila(fila);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -116,14 +119,14 @@ public class FilaPessoaController : Controller
             return NotFound();
         }
 
-        var filaPessoa = await _context.FilaPessoas
-            .FirstOrDefaultAsync(m => m.Id == id);
-        if (filaPessoa == null)
+        var result = _filaAppService.RemoverFila(id.Value);
+
+        if (!result)
         {
             return NotFound();
         }
 
-        return View(filaPessoa);
+        return View();
     }
 
     // POST: FilaPessoa/Delete/5
@@ -131,14 +134,12 @@ public class FilaPessoaController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(Guid id)
     {
-        var filaPessoa = await _context.FilaPessoas.FindAsync(id);
-        _context.FilaPessoas.Remove(filaPessoa);
-        await _context.SaveChangesAsync();
+        var result = _filaAppService.RemoverFila(id);
         return RedirectToAction(nameof(Index));
     }
 
     private bool FilaPessoaExists(Guid id)
     {
-        return _context.FilaPessoas.Any(e => e.Id == id);
+        return _filaAppService.GetFilaList(User.Identity!.Name!).Any(e => e.Id == id);
     }
 }

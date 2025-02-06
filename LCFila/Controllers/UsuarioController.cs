@@ -1,10 +1,9 @@
 ﻿using LCFila.Controllers.Sistema;
 using LCFila.ViewModels;
 using LCFilaApplication.Interfaces;
+//TODO: remove this reference in someway
 using LCFilaApplication.Models;
-using LCFilaInfra.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -13,43 +12,34 @@ namespace LCFila.Controllers;
 [Authorize(Roles = "SysAdmin,EmpAdmin")]
 public class UsuarioController : BaseController
 {
-    private readonly UserManager<AppUser> _userManager;
-    private readonly IEmpresaLoginRepository _empresaRepository;
+    private readonly IUserAppService _userAppService;
 
     public UsuarioController(INotificador notificador,
-        UserManager<AppUser> userManager,
-        IEmpresaLoginRepository empresaRepository,
+        IUserAppService userAppService,
         IConfigAppService configAppService) : base(notificador, configAppService)
     {
-        _empresaRepository = empresaRepository;
-        _userManager = userManager;
+        _userAppService = userAppService;
     }
     // GET: UsuarioController
     public async Task<IActionResult> Index()
     {
         ConfigEmpresa();
-        var AllUsers = _userManager.Users;
-        //var admin = AllUsers.Include(p => p.EmpresaLogin).FirstOrDefault(p => p.UserName == User.Identity.Name);
-        var admin = AllUsers.FirstOrDefault(a => a.UserName == User.Identity.Name);
-        var Empresa = await _empresaRepository.ObterPorId(Guid.Parse(admin.Id));
-        var usersempresa = Empresa.UsersEmpresa.Where(p => p.Id != Empresa.IdAdminEmpresa.ToString()).ToList(); 
-
-        return View(usersempresa);
+        var listUsers = _userAppService.GetListUsers(User.Identity!.Name!);
+        return View(listUsers);
     }
 
     // GET: UsuarioController/Details/5
     public async Task<IActionResult> Details(Guid id)
     {
         ConfigEmpresa();
-        var user = await _userManager.FindByIdAsync(id.ToString());
-        var role = await _userManager.GetRolesAsync(user);
+        var (role, user) = _userAppService.GetUserAndRole(id);
         ViewBag.Role = "Houve algum erro ao capturar a função do funcionário";
-        if (role.Count == 1)
+        if (!string.IsNullOrWhiteSpace(role))
         {
-            if(role[0] == "OperatorEmp")
+            if(role == "OperatorEmp")
             {
                 ViewBag.Role = "Funcionário";
-            } else if(role[0] == "EmpAdmin")
+            } else if(role == "EmpAdmin")
             {
                 ViewBag.Role = "Administrador";
             }
@@ -79,43 +69,19 @@ public class UsuarioController : BaseController
         ConfigEmpresa();
         try
         {
-            var user = new AppUser { UserName = Input.Email, Email = Input.Email };
+            var result = _userAppService.CreateNewUser(Input.Email, Input.Password, Input.RoleId);
 
-            user.EmailConfirmed = true;
-            var result = await _userManager.CreateAsync(user, Input.Password);
-            if (result.Succeeded)
+            if (result)
             {
                 var returnUrl = Url.Content("~/");
-                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-                var resultemail = await _userManager.ConfirmEmailAsync(user, code);
-
-                if (!resultemail.Succeeded)
-                {
-                    await _userManager.DeleteAsync(user);
-                    throw new Exception();
-                }
-
-                if(Input.RoleId == 1)
-                {
-                    await _userManager.AddToRoleAsync(user, "EmpAdmin");
-                } else if (Input.RoleId == 2)
-                {
-                    await _userManager.AddToRoleAsync(user, "OperatorEmp");
-                }
+                return RedirectToAction(nameof(Index));
             }
-
-            if(result.Succeeded)
+            else
             {
-                var AllUsers = _userManager.Users;
-                var admin = AllUsers.FirstOrDefault(p => p.UserName == User.Identity.Name);
-                var AllEmpresas = await _empresaRepository.ObterTodos();
-                var empresa = AllEmpresas.FirstOrDefault(p => p.IdAdminEmpresa == Guid.Parse(admin.Id));
-                empresa.UsersEmpresa.Add(user);
-                await _empresaRepository.Atualizar(empresa);
+                return View(Input);
             }
-
-            return RedirectToAction(nameof(Index));
+           
         }
         catch (Exception Ex)
         {
@@ -127,15 +93,14 @@ public class UsuarioController : BaseController
     public async Task<IActionResult> Edit(Guid id)
     {
         ConfigEmpresa();
-        var user = await _userManager.FindByIdAsync(id.ToString());
-        var role = await _userManager.GetRolesAsync(user);
-        if (role.Count == 1)
+        var (role, user) = _userAppService.GetUserAndRole(id);
+        if (!string.IsNullOrWhiteSpace(role))
         {
-            if (role[0] == "OperatorEmp")
+            if (role == "OperatorEmp")
             {
                 ViewBag.Role = "Funcionário";
             }
-            else if (role[0] == "EmpAdmin")
+            else if (role == "EmpAdmin")
             {
                 ViewBag.Role = "Administrador";
             }
@@ -151,38 +116,12 @@ public class UsuarioController : BaseController
         ConfigEmpresa();
         try
         {
-            var user = await _userManager.FindByIdAsync(id.ToString());
-            user.UserName = formUser.Email;
-            user.Email = formUser.Email;
-            user.PhoneNumber = formUser.PhoneNumber;
-
-            var rolefromedit = collection["Funcao"][0];
-            if(rolefromedit == "1")
+            var result = _userAppService.AtualizarUser(id, formUser.ConvertToAppUser(), collection["Funcao"][0]);
+            if (result)
             {
-                rolefromedit = "Administrador";
-            }else if (rolefromedit == "2")
-            {
-                rolefromedit = "Funcionário";
+                return RedirectToAction(nameof(Index));
             }
-            var role = await _userManager.GetRolesAsync(user);
-            if (role.Count == 1)
-            {
-                if (role[0] != rolefromedit) { 
-                    if (rolefromedit == "Funcionário")
-                    {
-                        await _userManager.RemoveFromRoleAsync(user, "EmpAdmin");
-                        await _userManager.AddToRoleAsync(user, "OperatorEmp");
-                    }
-                    else if (rolefromedit == "Administrador")
-                    {
-                        await _userManager.RemoveFromRoleAsync(user, "OperatorEmp");
-                        await _userManager.AddToRoleAsync(user, "EmpAdmin");
-                    }
-                }
-            }
-
-            await _userManager.UpdateAsync(user);
-            return RedirectToAction(nameof(Index));
+            return BadRequest();
         }
         catch
         {
@@ -194,16 +133,15 @@ public class UsuarioController : BaseController
     public async Task<IActionResult> Delete(Guid id)
     {
         ConfigEmpresa();
-        var user = await _userManager.FindByIdAsync(id.ToString());
-        var role = await _userManager.GetRolesAsync(user);
         ViewBag.Role = "Houve algum erro ao capturar a função do funcionário";
-        if (role.Count == 1)
+        var (role, user) = _userAppService.GetUserAndRole(id);
+        if (!string.IsNullOrWhiteSpace(role))
         {
-            if (role[0] == "OperatorEmp")
+            if (role == "OperatorEmp")
             {
                 ViewBag.Role = "Funcionário";
             }
-            else if (role[0] == "EmpAdmin")
+            else if (role == "EmpAdmin")
             {
                 ViewBag.Role = "Administrador";
             }
@@ -219,14 +157,12 @@ public class UsuarioController : BaseController
         ConfigEmpresa();
         try
         {
-            var user = await _userManager.FindByIdAsync(id.ToString());
-            var useroles = await _userManager.GetRolesAsync(user);
-            foreach(var item in useroles)
+            var result = _userAppService.RemoverUser(id, formUser);
+            if (result)
             {
-                await _userManager.RemoveFromRoleAsync(user, item);
+                return RedirectToAction(nameof(Index));
             }
-            await _userManager.DeleteAsync(user);
-            return RedirectToAction(nameof(Index));
+            return BadRequest();
         }
         catch
         {

@@ -1,9 +1,5 @@
-﻿using LCFilaApplication.AppServices;
-using LCFilaApplication.Interfaces;
-using LCFilaApplication.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using LCFilaApplication.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace LCFila.Controllers.Sistema;
 

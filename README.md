@@ -65,6 +65,8 @@ Queue Managment
 >
 -->
 
+![LC Fila Layers](https://github.com/luigicfilho/LCFila/blob/main/docs/LCFila.png?raw=true)
+
 ```mermaid
 stateDiagram-v2
     Stationary --> Moving : Begin moving

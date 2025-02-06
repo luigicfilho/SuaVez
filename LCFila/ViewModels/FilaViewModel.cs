@@ -1,4 +1,5 @@
-﻿using LCFilaApplication.Enums;
+﻿//TODO: remove this reference in someway
+using LCFilaApplication.Enums;
 
 namespace LCFila.ViewModels;
 
