@@ -69,8 +69,11 @@ Queue Managment
 
 ```mermaid
 stateDiagram-v2
-    Stationary --> Moving : Begin moving
-    Moving --> Stationary : Stop moving
+    LCFila.Web --> LCFila.Application 
+    LCFila.Blazor --> LCFila.Application
+    LCFila.Application --> LCFila.Infra
+    LCFila.Application --> LCFila.Domain
+    LCFila.Infra --> LCFila.Domain
 ```
 <!-- 
 - [x] #739
