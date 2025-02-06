@@ -71,27 +71,31 @@ public static class EmpresaMapping
     }
 
 
-    public static IEnumerable<EmpresaLoginViewModel> ConvertToEmpresaLoginViewModel(this List<EmpresaLogin> empresalogin)
+    public static IEnumerable<EmpresaLoginViewModel> ConvertToEmpresaLoginViewModel(this IEnumerable<EmpresaLogin>? empresalogin)
     {
         List<EmpresaLoginViewModel> viewlist = [];
-        foreach(var emp in empresalogin)
+        if(empresalogin is not null)
         {
-            if (!(emp.NomeEmpresa == "System"))
+            foreach (var emp in empresalogin)
             {
-                viewlist.Add(new EmpresaLoginViewModel()
+                if (!(emp.NomeEmpresa == "System"))
                 {
-                    Id = emp.Id,
-                    IdAdminEmpresa = emp.IdAdminEmpresa,
-                    CNPJ = emp.CNPJ,
-                    EmpresaConfiguracao = emp.EmpresaConfiguracao.ConvertToEmpresaConfiguracaoView(),
-                    EmpresaFilas = emp.EmpresaFilas.ConvertToListFilaViewModel(),
-                    NomeEmpresa = emp.NomeEmpresa,
-                    UsersEmpresa = emp.UsersEmpresa,
-                    Ativo = emp.Ativo
-                });
+                    viewlist.Add(new EmpresaLoginViewModel()
+                    {
+                        Id = emp.Id,
+                        IdAdminEmpresa = emp.IdAdminEmpresa,
+                        CNPJ = emp.CNPJ,
+                        EmpresaConfiguracao = emp.EmpresaConfiguracao.ConvertToEmpresaConfiguracaoView(),
+                        EmpresaFilas = emp.EmpresaFilas.ConvertToListFilaViewModel(),
+                        NomeEmpresa = emp.NomeEmpresa,
+                        UsersEmpresa = emp.UsersEmpresa,
+                        Ativo = emp.Ativo
+                    });
+                }
+
             }
-            
         }
+        
         IEnumerable<EmpresaLoginViewModel> list = viewlist;
         return list;
     }

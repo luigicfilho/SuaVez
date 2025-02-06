@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 using LCFilaApplication.Models;
-using LCFilaApplication.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
+using LCFilaInfra.Interfaces;
 
 namespace LCFila.Areas.Identity.Pages.Account
 {

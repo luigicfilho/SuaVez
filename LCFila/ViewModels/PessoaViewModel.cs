@@ -21,7 +21,9 @@ public class PessoaViewModel
     [DisplayName("Preferencial?")]
     public bool Preferencial { get; set; }
     public int Posicao { get; set; }
-    public Guid filaid { get; set; }
+    public Guid FilaId { get; set; }
+
+    public FilaViewModel FilaPertence { get; set; }
     /* EF Relations */
     public IEnumerable<FilaViewModel> Fila { get; set; }
    

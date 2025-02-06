@@ -1,43 +1,30 @@
 ﻿using LCFila.ViewModels;
 using LCFilaApplication.Interfaces;
-using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using LCFila.Mapping;
-using LCFilaApplication.Services;
+using LCFilaApplication.MVC;
+using LCFilaApplication.Models;
 
 namespace LCFila.Controllers.Sistema;
 
 [Authorize(Roles = "SysAdmin")]
 public class SysadminController : BaseController
 {
-    private readonly IEmpresaLoginRepository _empresaRepository;
-    private readonly UserManager<AppUser> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly ILogger<SysadminController> _logger;
-    private readonly IEmailSender _emailSender;
+    private readonly IAdminSysAppService _adminSysAppService;
     public SysadminController(INotificador notificador,
-                              UserManager<AppUser> userManager,
-                              RoleManager<IdentityRole> roleManager,
-                              ILogger<SysadminController> logger,
-                              IEmailSender emailSender,
-                              IEmpresaLoginRepository empresaRepository) : base(notificador, userManager, empresaRepository)
+                              IAdminSysAppService adminSysAppService,
+                              IConfigAppService configAppService) : base(notificador, configAppService)
     {
-        _empresaRepository = empresaRepository;
-        _userManager = userManager;
-        _roleManager = roleManager;
-        _logger = logger;
-        _emailSender = emailSender;
+        _adminSysAppService = adminSysAppService;
     }
     // GET: SysadminController
     public async Task<IActionResult> Index()
     {
         ConfigEmpresa();
-        var empresaLista = await _empresaRepository.ObterTodos();
+        var empresaLista = await _adminSysAppService.GetAllEmpresas();
         var empresaviewmodel = empresaLista.ConvertToEmpresaLoginViewModel();
-        //ViewBag.logo = empresaLista.FirstOrDefault(s => s.NomeEmpresa == "System")!.EmpresaConfiguracao.LinkLogodaEmpresa;
         return View(empresaviewmodel);
     }
 
@@ -45,30 +32,22 @@ public class SysadminController : BaseController
     public async Task<IActionResult> Details(Guid id)
     {
         ConfigEmpresa();
-        var empresa = await _empresaRepository.ObterPorId(id);
-        var adminempresa = await _userManager.FindByIdAsync(empresa.IdAdminEmpresa.ToString());
+        var empresa = await _adminSysAppService.GetEmpresaDetail(id);
         var empresaviewmodel = empresa.ConvertToEmpresaLoginViewModel();
+        var adminempresa = await _adminSysAppService.GetEmpresaAdmin(empresaviewmodel.IdAdminEmpresa.ToString());
         empresaviewmodel.Email = adminempresa.Email;
         return View(empresaviewmodel);
     }
 
     public async Task<IActionResult> AtivarEmpresa(Guid id)
     {
-        var empresa = await _empresaRepository.ObterPorId(id);
-        empresa.Ativo = true;
-        await _empresaRepository.Atualizar(empresa);
-        await _empresaRepository.SaveChanges();
-        var empresaviewmodel = empresa.ConvertToEmpresaLoginViewModel();
+        await _adminSysAppService.ActivateToggleEmpresa(id, true);
         return RedirectToAction(nameof(Index));
     }
 
     public async Task<IActionResult> DesativarEmpresa(Guid id)
     {
-        var empresa = await _empresaRepository.ObterPorId(id);
-        empresa.Ativo = false;
-        await _empresaRepository.Atualizar(empresa);
-        await _empresaRepository.SaveChanges();
-        var empresaviewmodel = empresa.ConvertToEmpresaLoginViewModel();
+        await _adminSysAppService.ActivateToggleEmpresa(id, false);
         return RedirectToAction(nameof(Index));
         //return View();
     }
@@ -90,47 +69,26 @@ public class SysadminController : BaseController
         {
             if (!ModelState.IsValid) return View(empresaViewModel);
 
-            var user = new AppUser
-            {
-                Id = Guid.NewGuid().ToString(),
-                UserName = empresaViewModel.Email,
-                Email = empresaViewModel.Email,
-                EmailConfirmed = true
-            };
-
-            List<AppUser> listausers = new();
-            listausers.Add(user);
-            List<FilaViewModel> EmpresaFilas = new();
-            empresaViewModel.IdAdminEmpresa = Guid.Parse(user.Id);
-            empresaViewModel.UsersEmpresa = listausers;
-            empresaViewModel.EmpresaFilas = EmpresaFilas;
-            EmpresaConfiguracaoViewModel empconfig = new EmpresaConfiguracaoViewModel()
-            {
-                NomeDaEmpresa = empresaViewModel.NomeEmpresa,
-                LinkLogodaEmpresa = "http://",
-                CorPrincipalEmpresa = "black",
-                CorSegundariaEmpresa = "black",
-                FooterEmpresa = "no footer"
-            };
-            empresaViewModel.EmpresaConfiguracao = empconfig;          
             var empresa = empresaViewModel.ConvertToEmpresaLogin();
-            var result = await _userManager.CreateAsync(user, empresaViewModel.Password);
-            if (result.Succeeded)
-            {
-                await _empresaRepository.Adicionar(empresa);
-                var roles = await _userManager.AddToRoleAsync(user, "EmpAdmin");
-                _logger.LogInformation($"User {empresaViewModel.NomeEmpresa} created a new account with password.");
-                var returnUrl = Url.Content("~/");
-                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var returnUrl = Url.Content("~/");
+            var result = _adminSysAppService.CreateEmpresa(empresa, 
+                                                                 empresaViewModel.Email, 
+                                                                 empresaViewModel.Password);
+            result.Match(
+                _ => Console.WriteLine("Operation was successful."),
+                error => Console.WriteLine($"Operation failed with error: {error.Message}"));
+            //result.Match();
 
-                var resultemail = await _userManager.ConfirmEmailAsync(user, code);
-
-                if (!resultemail.Succeeded)
-                {
-                    await _userManager.DeleteAsync(user);
-                    throw new Exception();
-                }
+            object resultados;
+            if (result.IsSuccess) {
+                var s = result.Value;
+                var e = result.Error;
+                var retorno = result.Match(
+                            onSuccess: value => resultados = value,
+                            onFailure: error => resultados = error);
             }
+
+            var resultado =  Results.Extensions.MapResult(result);
 
             if (!OperacaoValida()) return View(empresaViewModel);
 
@@ -146,10 +104,10 @@ public class SysadminController : BaseController
     public async Task<IActionResult> Edit(Guid id)
     {
         ConfigEmpresa();
-        var empresa = await _empresaRepository.ObterPorId(id);
-        var adminempresa = await _userManager.FindByIdAsync(empresa.IdAdminEmpresa.ToString());
-        
-       
+        var empresa = await _adminSysAppService.GetEmpresaDetail(id);
+        var adminempresa = await _adminSysAppService.GetEmpresaAdmin(empresa.IdAdminEmpresa.ToString());
+
+
         // var users = _userManager.Users.Include(p => p.EmpresaLogin).Where(p => p.EmpresaLogin.Id == empresa.Id).ToList();
         var empresaviewmodel = empresa.ConvertToEmpresaLoginViewModel();
         empresaviewmodel.Email = adminempresa.Email;
@@ -169,10 +127,8 @@ public class SysadminController : BaseController
         ConfigEmpresa();
         try
         {
-
             var empresa = empresaViewModel.ConvertToEmpresaLogin();
-            await _empresaRepository.Atualizar(empresa);
-            await _empresaRepository.SaveChanges();
+            var result = _adminSysAppService.EditEmpresa(empresa);
             return RedirectToAction(nameof(Index));
         }
         catch
@@ -185,7 +141,7 @@ public class SysadminController : BaseController
     public async Task<IActionResult> Delete(Guid id)
     {
         ConfigEmpresa();
-        var empresa = await _empresaRepository.ObterPorId(id);
+        var empresa = await _adminSysAppService.GetEmpresaDetail(id);
         var empresaviewmodel = empresa.ConvertToEmpresaLoginViewModel();
         return View(empresaviewmodel);
     }
@@ -198,14 +154,8 @@ public class SysadminController : BaseController
         ConfigEmpresa();
         try
         {
-            var empresa1 = empresaViewModel.ConvertToEmpresaLogin();
-            var empresa = await _empresaRepository.ObterPorId(empresaViewModel.Id);
+            _ = await _adminSysAppService.RemoveEmpresa(id);
 
-            var adminempresa = await _userManager.FindByIdAsync(empresa.IdAdminEmpresa.ToString());
-            await _userManager.RemoveFromRoleAsync(adminempresa, "EmpAdmin");
-            await _userManager.DeleteAsync(adminempresa);
-            await _empresaRepository.Remover(empresa.Id);
-            await _empresaRepository.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
         catch (Exception Ex)

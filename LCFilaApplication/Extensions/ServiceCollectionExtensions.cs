@@ -1,4 +1,5 @@
 ﻿using LCFilaApplication.Configurations;
+using LCFilaApplication.MVC;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FeatureManagement;

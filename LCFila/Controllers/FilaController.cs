@@ -5,6 +5,7 @@ using LCFilaApplication.Enums;
 using LCFilaApplication.Interfaces;
 using LCFilaApplication.Mapping;
 using LCFilaApplication.Models;
+using LCFilaInfra.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,8 @@ public class FilaController : BaseController
                           IPessoaRepository pessoaRepository,
                           IFilaPessoaRepository filapessoaRepository,
                           IFilaRepository filaRepository,
-                          IEmpresaLoginRepository empresaRepository) : base(notificador, userManager, empresaRepository)
+                          IEmpresaLoginRepository empresaRepository,
+                          IConfigAppService configAppService) : base(notificador, configAppService)
     {
         _pessoaRepository = pessoaRepository;
         _filaRepository = filaRepository;

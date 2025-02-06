@@ -1,9 +1,12 @@
 ﻿using LCAppFila.Domain.Notificacoes;
-using LCFilaApplication.Context;
-using LCFilaApplication.Extensions;
+using LCFilaApplication.AppServices;
 using LCFilaApplication.Interfaces;
+using LCFilaApplication.MVC;
 using LCFilaApplication.Repository;
 using LCFilaApplication.Services;
+using LCFilaInfra.Context;
+using LCFilaInfra.Interfaces;
+using LCFilaInfra.Repository;
 using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +23,8 @@ public static class DependencyInjectionConfig
         services.AddScoped<IFilaPessoaRepository, FilaPessoaRepository>();
         services.AddScoped<IEmpresaLoginRepository, EmpresaLoginRepository>();
         services.AddScoped<IEmpresaConfiguracaoRepository, EmpresaConfiguracaoRepository>();
+        services.AddScoped<IConfigAppService, ConfigAppService>();
+        services.AddScoped<IAdminSysAppService, AdminSysAppService>();
         services.AddSingleton<IValidationAttributeAdapterProvider, MoedaValidationAttributeAdapterProvider>();
 
         services.AddTransient<IEmailSender, EmailSender>(i =>

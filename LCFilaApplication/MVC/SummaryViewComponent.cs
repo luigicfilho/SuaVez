@@ -1,7 +1,7 @@
 ﻿using LCFilaApplication.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LCFilaApplication.Extensions;
+namespace LCFilaApplication.MVC;
 
 public class SummaryViewComponent : ViewComponent
 {

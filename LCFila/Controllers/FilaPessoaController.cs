@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using LCFilaApplication.Context;
 using LCFilaApplication.Models;
+using LCFilaInfra.Context;
 
 namespace LCFila.Controllers;
 

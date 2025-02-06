@@ -16,8 +16,7 @@ public class HomeController : BaseController
     public HomeController(ILogger<HomeController> logger,
                           SignInManager<AppUser> signInManager,
                           INotificador notificador,
-                          UserManager<AppUser> userManager,
-                          IEmpresaLoginRepository empresaRepository) : base(notificador, userManager, empresaRepository)
+                          IConfigAppService configAppService) : base(notificador, configAppService)
     {
 
         _logger = logger;

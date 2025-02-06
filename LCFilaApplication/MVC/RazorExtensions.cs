@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
 
-namespace LCFilaApplication.Extensions;
+namespace LCFilaApplication.MVC;
 
 public static class RazorExtensions
 {

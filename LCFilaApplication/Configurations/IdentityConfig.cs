@@ -1,6 +1,6 @@
-﻿using LCFilaApplication.Context;
-using LCFilaApplication.Extensions;
+﻿using LCFilaApplication.Extensions;
 using LCFilaApplication.Models;
+using LCFilaInfra.Context;
 using LCFilaInfra.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -19,10 +19,7 @@ public static class IdentityConfig
             options.MinimumSameSitePolicy = SameSiteMode.None;
         });
 
-        services.AddDbContext<FilaDbContext>(options =>
-        {
-            options.UseDatabase(configuration);
-        });
+        services.AddDatabase(configuration);
 
         //services.AddDbContext<FilaDbContext>(options =>
         //    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));

@@ -1,10 +1,10 @@
-﻿using LCAppFila.Domain.Interfaces;
-using LCFilaApplication.Context;
-using LCFilaApplication.Models;
+﻿using LCFilaApplication.Models;
+using LCFilaInfra.Context;
+using LCFilaInfra.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace LCFilaApplication.Repository;
+namespace LCFilaInfra.Repository;
 
 public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity, new()
 {

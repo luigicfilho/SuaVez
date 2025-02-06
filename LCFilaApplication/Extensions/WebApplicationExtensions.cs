@@ -1,6 +1,6 @@
 ﻿using LCFilaApplication.Configurations;
-using LCFilaApplication.Context;
 using LCFilaApplication.Models;
+using LCFilaInfra.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LCFilaInfra.Context;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LCFilaInfra.Configuration;
 
@@ -29,5 +31,15 @@ public static class ConfigureDatabaseExtensions
         }
 
         return builder;
+    }
+
+    public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddDbContext<FilaDbContext>(options =>
+        {
+            options.UseDatabase(configuration);
+        });
+
+        return services;
     }
 }

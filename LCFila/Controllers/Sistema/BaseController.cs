@@ -1,4 +1,5 @@
-﻿using LCFilaApplication.Interfaces;
+﻿using LCFilaApplication.AppServices;
+using LCFilaApplication.Interfaces;
 using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,25 +10,21 @@ namespace LCFila.Controllers.Sistema;
 public abstract class BaseController : Controller
 {
     private readonly INotificador _notificador;
-    private readonly UserManager<AppUser> _userManager;
-    private readonly IEmpresaLoginRepository _empresaRepository;
+    private readonly IConfigAppService _configAppService;
+
     protected BaseController(INotificador notificador,
-                             UserManager<AppUser> userManager,
-                             IEmpresaLoginRepository empresaRepository)
+                             IConfigAppService configAppService)
     {
         _notificador = notificador;
-        _empresaRepository = empresaRepository;
-        _userManager = userManager;
+        _configAppService = configAppService;
     }
 
     protected void ConfigEmpresa()
     {
-        var userlog = User.Identity!.Name;
-        var user = _userManager.Users.SingleOrDefault(p => p.UserName == User.Identity.Name);
-        if (user != null)
+        string userName = User.Identity is not null ? User.Identity!.Name! : "";
+        var empresa = _configAppService.GetConfigEmpresa(userName);
+        if (empresa != null)
         {
-            //var Empresaid = user.EmpresaLogin.Id;
-            var empresa = _empresaRepository.ObterTodos().Result.SingleOrDefault(p => p.IdAdminEmpresa == Guid.Parse(user.Id));
             ViewBag.bgcolor = empresa!.EmpresaConfiguracao.CorPrincipalEmpresa;
             ViewBag.btcolor = empresa.EmpresaConfiguracao.CorSegundariaEmpresa;
             ViewBag.logo = empresa.EmpresaConfiguracao.LinkLogodaEmpresa;

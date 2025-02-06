@@ -1,8 +1,8 @@
-﻿using LCFilaApplication.Context;
-using LCFilaApplication.Interfaces;
-using LCFilaApplication.Models;
+﻿using LCFilaApplication.Models;
+using LCFilaInfra.Context;
+using LCFilaInfra.Interfaces;
 
-namespace LCFilaApplication.Repository;
+namespace LCFilaInfra.Repository;
 
 public class EmpresaConfiguracaoRepository : Repository<EmpresaConfiguracao>, IEmpresaConfiguracaoRepository
 {

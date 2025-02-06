@@ -1,4 +1,6 @@
-﻿using LCFila.ViewModels;
+﻿using LCFila.Mapping;
+using LCFila.ViewModels;
+using LCFilaApplication.AppServices;
 using LCFilaApplication.Interfaces;
 using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -11,32 +13,21 @@ namespace LCFila.Controllers.Sistema;
 [Authorize(Roles = "EmpAdmin,SysAdmin")]
 public class EmpConfigController : BaseController
 {
-    private readonly IEmpresaLoginRepository _empresaRepository;
-    private readonly IEmpresaConfiguracaoRepository _empresaConfigRepository;
-    private readonly UserManager<AppUser> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly IAdminSysAppService _adminSysAppService;
+
     const string UploadDirectory = "wwwroot/upload_arq";
     public EmpConfigController(INotificador notificador,
-                              UserManager<AppUser> userManager,
-                              RoleManager<IdentityRole> roleManager,
-                              IEmpresaLoginRepository empresaRepository,
-                              IEmpresaConfiguracaoRepository empresaConfigRepository) : base(notificador, userManager, empresaRepository)
+                               IAdminSysAppService adminSysAppService,
+                               IConfigAppService configAppService) : base(notificador, configAppService)
     {
-        _empresaRepository = empresaRepository;
-        _userManager = userManager;
-        _roleManager = roleManager;
-        _empresaConfigRepository = empresaConfigRepository;
+        _adminSysAppService = adminSysAppService;       
     }
     // GET: EmpConfigController
     public async Task<IActionResult> Index()
     {
         ConfigEmpresa();
-        IQueryable<AppUser> AllUsers = _userManager.Users;
-        AppUser admin = AllUsers.FirstOrDefault(p => p.UserName == User.Identity.Name);
-        List<EmpresaLogin> AllEmpresas = await _empresaRepository.ObterTodos();
-        EmpresaLogin empresa = AllEmpresas.FirstOrDefault(p => p.IdAdminEmpresa == Guid.Parse(admin.Id));
-        IEnumerable<EmpresaConfiguracao> config = await _empresaConfigRepository.Buscar(p => p.NomeDaEmpresa == empresa.NomeEmpresa);
-        EmpresaConfiguracao empcofig = config.FirstOrDefault();
+        var userName = User.Identity.Name;
+        var empcofig = await _adminSysAppService.GetEmpresaConfiguracao(userName);
         EmpresaConfiguracaoViewModel emconfigviewmodel = new EmpresaConfiguracaoViewModel()
         {
             Id = empcofig.Id,
@@ -98,25 +89,7 @@ public class EmpConfigController : BaseController
             {
                 uploadFile(empconfig.file, empconfig);
             }
-            List<EmpresaLogin> AllEmpresas = await _empresaRepository.ObterTodos();
-            EmpresaLogin empresa = AllEmpresas.FirstOrDefault(p => p.EmpresaConfiguracao.Id == id);
-            empresa.NomeEmpresa = empconfig.NomeDaEmpresa;
-            EmpresaConfiguracao empconfigs = new EmpresaConfiguracao()
-            {
-                Id = empconfig.Id,
-                NomeDaEmpresa = empconfig.NomeDaEmpresa,
-                LinkLogodaEmpresa = empconfig.LinkLogodaEmpresa,
-                CorPrincipalEmpresa = empconfig.CorPrincipalEmpresa,
-                CorSegundariaEmpresa = empconfig.CorSegundariaEmpresa,
-                FooterEmpresa = empconfig.FooterEmpresa
-            };
-            if (empconfig.file == null)
-            {
-                empconfigs.LinkLogodaEmpresa = empresa.EmpresaConfiguracao.LinkLogodaEmpresa;
-            }
-            empresa.EmpresaConfiguracao = empconfigs;
-            await _empresaRepository.Atualizar(empresa);
-            await _empresaRepository.SaveChanges();
+            var empcofig = await _adminSysAppService.UpdateEmpresaConfiguracao(id, empconfig.ConvertToEmpresaConfiguracao(), empconfig.LinkLogodaEmpresa);
 
             return RedirectToAction(nameof(Index));
         }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace LCFilaApplication.Context;
+namespace LCFilaInfra.Context;
 
 public class FilaDbContext : IdentityDbContext
 {

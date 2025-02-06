@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LCFilaApplication.Configurations;
+namespace LCFilaApplication.MVC;
 
 public static class MvcConfig
 {

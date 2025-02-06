@@ -1,6 +1,7 @@
-﻿using LCFilaApplication.Context;
-using LCFilaApplication.Interfaces;
-using LCFilaApplication.Models;
+﻿using LCFilaApplication.Models;
+using LCFilaInfra.Context;
+using LCFilaInfra.Interfaces;
+using LCFilaInfra.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace LCFilaApplication.Repository;

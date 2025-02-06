@@ -1,7 +1,7 @@
 ﻿using LCFilaApplication.Models;
 using System.Linq.Expressions;
 
-namespace LCAppFila.Domain.Interfaces;
+namespace LCFilaInfra.Interfaces;
 
 public interface IRepository<TEntity> : IDisposable where TEntity : Entity
 {

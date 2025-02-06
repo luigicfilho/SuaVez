@@ -4,7 +4,7 @@ using Microsoft.Extensions.Localization;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
-namespace LCFilaApplication.Extensions;
+namespace LCFilaApplication.MVC;
 
 public class MoedaAttribute : ValidationAttribute
 {

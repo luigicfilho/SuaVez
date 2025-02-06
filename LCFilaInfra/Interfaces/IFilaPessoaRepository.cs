@@ -1,7 +1,6 @@
-﻿using LCAppFila.Domain.Interfaces;
-using LCFilaApplication.Models;
+﻿using LCFilaApplication.Models;
 
-namespace LCFilaApplication.Interfaces;
+namespace LCFilaInfra.Interfaces;
 
 public interface IFilaPessoaRepository : IRepository<FilaPessoa>
 {

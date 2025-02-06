@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using System.Security.Claims;
 
-namespace LCFilaApplication.Extensions;
+namespace LCFilaApplication.MVC;
 
 public class CustomAuthorization
 {

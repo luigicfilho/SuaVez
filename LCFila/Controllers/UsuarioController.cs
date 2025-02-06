@@ -2,11 +2,11 @@
 using LCFila.ViewModels;
 using LCFilaApplication.Interfaces;
 using LCFilaApplication.Models;
+using LCFilaInfra.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
 namespace LCFila.Controllers;
 
@@ -14,17 +14,15 @@ namespace LCFila.Controllers;
 public class UsuarioController : BaseController
 {
     private readonly UserManager<AppUser> _userManager;
-    private readonly SignInManager<AppUser> _signInManager;
     private readonly IEmpresaLoginRepository _empresaRepository;
 
     public UsuarioController(INotificador notificador,
-        SignInManager<AppUser> signInManager,
         UserManager<AppUser> userManager,
-        IEmpresaLoginRepository empresaRepository) : base(notificador, userManager, empresaRepository)
+        IEmpresaLoginRepository empresaRepository,
+        IConfigAppService configAppService) : base(notificador, configAppService)
     {
         _empresaRepository = empresaRepository;
         _userManager = userManager;
-        _signInManager = signInManager;
     }
     // GET: UsuarioController
     public async Task<IActionResult> Index()
