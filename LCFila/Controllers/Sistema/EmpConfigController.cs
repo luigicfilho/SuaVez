@@ -1,10 +1,7 @@
 ﻿using LCFila.Mapping;
 using LCFila.ViewModels;
-using LCFilaApplication.AppServices;
 using LCFilaApplication.Interfaces;
-using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LCFila.Controllers.Sistema;

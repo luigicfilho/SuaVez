@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿//TODO: remove this reference in someway
+using LCFilaApplication.Models;
+using System.Text.Json.Serialization;
 
 namespace LCFila.ViewModels;
 
@@ -28,4 +30,20 @@ public class AppUserViewModel
     public Guid Id { get; set; }
     [JsonIgnore]
     public EmpresaLoginViewModel empresaLogin { get; set; }
+
+};
+
+//TODO: Review This, send idenity stuff to app
+public static class PessoaMapping
+{
+    public static AppUser ConvertToAppUser(this AppUserViewModel appUserViewModel)
+    {
+        return new AppUser()
+        {
+            UserName = appUserViewModel.Email,
+            Email = appUserViewModel.Email,
+            PhoneNumber = appUserViewModel.PhoneNumber
+        };
+    }
 }
+

@@ -1,4 +1,5 @@
 ﻿using LCFila.Controllers.Sistema;
+//TODO: There is a way to send the Feature stuff to app?
 using LCFilaApplication.Consts;
 using LCFilaApplication.Interfaces;
 using Microsoft.FeatureManagement.Mvc;

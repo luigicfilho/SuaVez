@@ -1,9 +1,7 @@
 ﻿using LCFila.Controllers.Sistema;
 using LCFila.ViewModels;
 using LCFilaApplication.Interfaces;
-using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LCFila.Controllers;
@@ -12,15 +10,16 @@ namespace LCFila.Controllers;
 public class HomeController : BaseController
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly SignInManager<AppUser> _signInManager;
+    private readonly IUserAppService _userAppService;
+
     public HomeController(ILogger<HomeController> logger,
-                          SignInManager<AppUser> signInManager,
+                          IUserAppService userAppService,
                           INotificador notificador,
                           IConfigAppService configAppService) : base(notificador, configAppService)
     {
 
         _logger = logger;
-        _signInManager = signInManager;
+        _userAppService = userAppService;
 
     }
 
@@ -41,9 +40,14 @@ public class HomeController : BaseController
     public async Task<IActionResult> Logout(string returnUrl = null)
     {
         ConfigEmpresa();
-        await _signInManager.SignOutAsync();
-        _logger.LogInformation("User logged out.");
-        return RedirectToAction("Index", "Home");
+        var result = _userAppService.Logout();
+        if (result)
+        {
+            _logger.LogInformation("User logged out.");
+            return RedirectToAction("Index", "Home");
+        }
+        return BadRequest();
+        
     }
 
     [Route("erro/{id:length(3,3)}")]
