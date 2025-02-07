@@ -1,6 +1,5 @@
 ﻿//TODO: remove this reference in someway
 using LCFilaApplication.Models;
-using Microsoft.AspNetCore.Identity;
 using System.Text.Json.Serialization;
 
 namespace LCFila.ViewModels;
