@@ -1,4 +1,6 @@
 ﻿using LCAppFila.Domain.Notificacoes;
+using LCFila.Application.IdentityService;
+using LCFila.Application.Interfaces.Identity;
 using LCFilaApplication.AppServices;
 using LCFilaApplication.Interfaces;
 using LCFilaApplication.MVC;
@@ -28,6 +30,7 @@ public static class DependencyInjectionConfig
         services.AddScoped<IUserAppService, UserAppService>();
         services.AddScoped<IPessoaAppService, PessoaAppService>();
         services.AddScoped<IFilaAppService, FilaAppService>();
+        services.AddScoped<IIdentityService, IdentityService>();
         services.AddSingleton<IValidationAttributeAdapterProvider, MoedaValidationAttributeAdapterProvider>();
 
         services.AddTransient<IEmailSender, EmailSender>(i =>
