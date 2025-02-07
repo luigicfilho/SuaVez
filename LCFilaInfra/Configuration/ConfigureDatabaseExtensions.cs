@@ -16,13 +16,13 @@ public static class ConfigureDatabaseExtensions
                 builder.UseSqlite(configuration.GetConnectionString("SqliteCS"), opt =>
                 {
                     opt.CommandTimeout((int)TimeSpan.FromSeconds(60).TotalSeconds);
-                    opt.MigrationsAssembly("LCFilaInfra");
+                    opt.MigrationsAssembly("LCFila.Infra");
                 });
                 break;
             case "sqlserver":
                 builder.UseSqlServer(configuration.GetConnectionString("DefaultConnection")!, opt =>
                 {
-                    opt.MigrationsAssembly("LCFilaInfra");
+                    opt.MigrationsAssembly("LCFila.Infra");
                 });
                 break;
             default:
