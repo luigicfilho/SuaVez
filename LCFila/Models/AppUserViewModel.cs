@@ -1,5 +1,6 @@
 ﻿//TODO: remove this reference in someway
 using LCFilaApplication.Models;
+using Microsoft.AspNetCore.Identity;
 using System.Text.Json.Serialization;
 
 namespace LCFila.ViewModels;
@@ -12,6 +13,8 @@ public class AppUserViewModel
 
     public bool PhoneNumberConfirmed { get; set; }
 
+    //[ProtectedPersonalData]
+    //[PersonalData]
     public string PhoneNumber { get; set; }
 
     public string ConcurrencyStamp { get; set; }

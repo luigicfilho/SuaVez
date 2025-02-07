@@ -1,8 +1,9 @@
 ﻿@using System.Collections.Generic
+@using LCFilaApplication.Models
 @using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Authentication
 @model LoginViewModel
-@inject SignInManager<ApplicationUser> SignInManager
+@inject SignInManager<AppUser> SignInManager
 
 @{
     ViewData["Title"] = "Log in";

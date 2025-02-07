@@ -30,6 +30,9 @@ public static class IdentityConfig
             .AddRoleManager<RoleManager<IdentityRole>>()
             .AddEntityFrameworkStores<FilaDbContext>();
 
+        //services.AddIdentityApiEndpoints<IdentityUser>()
+        //                .AddEntityFrameworkStores<FilaDbContext>();
+
         services.Configure<IdentityOptions>(opts => {
             opts.User.RequireUniqueEmail = true;
             //opts.SignIn.RequireConfirmedEmail = true;

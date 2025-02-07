@@ -3,9 +3,10 @@
 
 using IdentitySample.Models;
 using IdentitySample.Models.ManageViewModels;
-using IdentitySample.Services;
+using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdentitySamples.Controllers;
@@ -13,23 +14,23 @@ namespace IdentitySamples.Controllers;
 [Authorize]
 public class ManageController : Controller
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<AppUser> _userManager;
+    private readonly SignInManager<AppUser> _signInManager;
     private readonly IEmailSender _emailSender;
-    private readonly ISmsSender _smsSender;
+    //private readonly ISmsSender _smsSender;
     private readonly ILogger _logger;
 
     public ManageController(
-    UserManager<ApplicationUser> userManager,
-    SignInManager<ApplicationUser> signInManager,
+    UserManager<AppUser> userManager,
+    SignInManager<AppUser> signInManager,
     IEmailSender emailSender,
-    ISmsSender smsSender,
+    //ISmsSender smsSender,
     ILoggerFactory loggerFactory)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _emailSender = emailSender;
-        _smsSender = smsSender;
+        //_smsSender = smsSender;
         _logger = loggerFactory.CreateLogger<ManageController>();
     }
 
@@ -100,7 +101,7 @@ public class ManageController : Controller
         // Generate the token and send it
         var user = await GetCurrentUserAsync();
         var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, model.PhoneNumber);
-        await _smsSender.SendSmsAsync(model.PhoneNumber, "Your security code is: " + code);
+        //await _smsSender.SendSmsAsync(model.PhoneNumber, "Your security code is: " + code);
         return RedirectToAction(nameof(VerifyPhoneNumber), new { PhoneNumber = model.PhoneNumber });
     }
 
@@ -306,7 +307,7 @@ public class ManageController : Controller
         var userLogins = await _userManager.GetLoginsAsync(user);
         var schemes = await _signInManager.GetExternalAuthenticationSchemesAsync();
         var otherLogins = schemes.Where(auth => userLogins.All(ul => auth.Name != ul.LoginProvider)).ToList();
-        ViewData["ShowRemoveButton"] = user.PasswordHash != null || userLogins.Count > 1;
+        ViewData["ShowRemoveButton"] = user.PasswordHash != null;// || userLogins.Count > 1;
         return View(new ManageLoginsViewModel
         {
             CurrentLogins = userLogins,
@@ -368,7 +369,7 @@ public class ManageController : Controller
         Error
     }
 
-    private Task<ApplicationUser> GetCurrentUserAsync()
+    private Task<AppUser> GetCurrentUserAsync()
     {
         return _userManager.GetUserAsync(HttpContext.User);
     }

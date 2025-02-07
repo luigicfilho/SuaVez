@@ -3,8 +3,10 @@ using LCFilaApplication.Models;
 using LCFilaInfra.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Security.Claims;
 
 namespace LCFilaApplication.Extensions;
 
@@ -48,6 +50,10 @@ public static class WebApplicationExtensions
 
         app.UseGlobalizationConfig();
 
+        //app.MapGet("/", () => "Hello, World!");
+        //app.MapGet("/requires-auth", (ClaimsPrincipal user) => $"Hello, {user.Identity?.Name}!").RequireAuthorization();
+
+        //app.MapGroup("/identity").MapIdentityApi<IdentityUser>();
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");

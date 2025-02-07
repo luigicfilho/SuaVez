@@ -4,9 +4,11 @@
 using System.Security.Claims;
 using IdentitySample.Models;
 using IdentitySample.Models.AccountViewModels;
-using IdentitySample.Services;
+using LCFila.Controllers;
+using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -15,23 +17,23 @@ namespace IdentitySample.Controllers;
 [Authorize]
 public class AccountController : Controller
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<AppUser> _userManager;
+    private readonly SignInManager<AppUser> _signInManager;
     private readonly IEmailSender _emailSender;
-    private readonly ISmsSender _smsSender;
+    //private readonly ISmsSender _smsSender;
     private readonly ILogger _logger;
 
     public AccountController(
-        UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager,
+        UserManager<AppUser> userManager,
+        SignInManager<AppUser> signInManager,
         IEmailSender emailSender,
-        ISmsSender smsSender,
+        //ISmsSender smsSender,
         ILoggerFactory loggerFactory)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _emailSender = emailSender;
-        _smsSender = smsSender;
+        //_smsSender = smsSender;
         _logger = loggerFactory.CreateLogger<AccountController>();
     }
 
@@ -103,7 +105,7 @@ public class AccountController : Controller
         ViewData["ReturnUrl"] = returnUrl;
         if (ModelState.IsValid)
         {
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+            var user = new AppUser { UserName = model.Email, Email = model.Email };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
@@ -208,7 +210,7 @@ public class AccountController : Controller
             {
                 return View("ExternalLoginFailure");
             }
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+            var user = new AppUser { UserName = model.Email, Email = model.Email };
             var result = await _userManager.CreateAsync(user);
             if (result.Succeeded)
             {
@@ -393,7 +395,7 @@ public class AccountController : Controller
         }
         else if (model.SelectedProvider == "Phone")
         {
-            await _smsSender.SendSmsAsync(await _userManager.GetPhoneNumberAsync(user), message);
+            //await _smsSender.SendSmsAsync(await _userManager.GetPhoneNumberAsync(user), message);
         }
 
         return RedirectToAction(nameof(VerifyCode), new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
@@ -542,7 +544,7 @@ public class AccountController : Controller
         }
     }
 
-    private Task<ApplicationUser> GetCurrentUserAsync()
+    private Task<AppUser> GetCurrentUserAsync()
     {
         return _userManager.GetUserAsync(HttpContext.User);
     }
