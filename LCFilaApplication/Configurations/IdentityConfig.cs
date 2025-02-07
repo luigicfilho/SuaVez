@@ -34,6 +34,8 @@ public static class IdentityConfig
 
         services.AddIdentityCore<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddRoles<IdentityRole>()
+            .AddSignInManager<SignInManager<AppUser>>()
+            .AddUserManager<UserManager<AppUser>>()
             .AddErrorDescriber<AppErrorDescriber>()
             .AddRoleManager<RoleManager<IdentityRole>>()
             .AddEntityFrameworkStores<FilaDbContext>()

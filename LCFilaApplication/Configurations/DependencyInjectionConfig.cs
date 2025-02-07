@@ -25,6 +25,9 @@ public static class DependencyInjectionConfig
         services.AddScoped<IEmpresaConfiguracaoRepository, EmpresaConfiguracaoRepository>();
         services.AddScoped<IConfigAppService, ConfigAppService>();
         services.AddScoped<IAdminSysAppService, AdminSysAppService>();
+        services.AddScoped<IUserAppService, UserAppService>();
+        services.AddScoped<IPessoaAppService, PessoaAppService>();
+        services.AddScoped<IFilaAppService, FilaAppService>();
         services.AddSingleton<IValidationAttributeAdapterProvider, MoedaValidationAttributeAdapterProvider>();
 
         services.AddTransient<IEmailSender, EmailSender>(i =>
