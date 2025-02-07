@@ -29,4 +29,8 @@
     <ProjectReference Include="..\LCFilaInfra\LCFila.Infra.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Identity\" />
+  </ItemGroup>
+
 </Project>

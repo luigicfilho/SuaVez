@@ -37,7 +37,7 @@ public class HomeController : BaseController
         return View();
     }
 
-    public async Task<IActionResult> Logout(string returnUrl = null)
+    public IActionResult Logout(string? returnUrl)
     {
         ConfigEmpresa();
         var result = _userAppService.Logout();

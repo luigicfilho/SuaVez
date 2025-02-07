@@ -2,9 +2,9 @@
 
 public class EmpresaConfiguracao : Entity
 {
-    public string NomeDaEmpresa { get; set; }
-    public string LinkLogodaEmpresa { get; set; }
-    public string CorPrincipalEmpresa { get; set; }
-    public string CorSegundariaEmpresa { get; set; }
-    public string FooterEmpresa { get; set; }
+    public string NomeDaEmpresa { get; set; } = string.Empty;
+    public string LinkLogodaEmpresa { get; set; } = string.Empty;
+    public string CorPrincipalEmpresa { get; set; } = string.Empty;
+    public string CorSegundariaEmpresa { get; set; } = string.Empty;
+    public string FooterEmpresa { get; set; } = string.Empty;
 }

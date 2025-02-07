@@ -3,8 +3,8 @@
 namespace LCFilaApplication.Helpers.testes;
 public class Result<T, TError>
 {
-    private readonly T? _value;
-    private readonly TError? _error;
+    //private readonly T? _value;
+    //private readonly TError? _error;
 }
 
 public class StrictResult<TValue> //: IResult<TValue>

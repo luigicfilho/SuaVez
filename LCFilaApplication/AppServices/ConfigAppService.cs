@@ -24,7 +24,7 @@ public class ConfigAppService : IConfigAppService
             //var Empresaid = user.EmpresaLogin.Id;
             
         }
-        var empresa = _empresaRepository.ObterTodos().Result.SingleOrDefault(p => p.IdAdminEmpresa == Guid.Parse(user.Id));
-        return empresa;
+        var empresa = _empresaRepository.ObterTodos().Result.SingleOrDefault(p => p.IdAdminEmpresa == Guid.Parse(user!.Id));
+        return empresa!;
     }
 }

@@ -24,7 +24,7 @@ public static class MvcConfig
             o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
         });
 
-        services.AddRazorPages();
+        //services.AddRazorPages();
 
         return services;
     }

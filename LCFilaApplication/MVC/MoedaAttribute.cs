@@ -8,7 +8,7 @@ namespace LCFilaApplication.MVC;
 
 public class MoedaAttribute : ValidationAttribute
 {
-    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
     {
         try
         {
@@ -19,7 +19,7 @@ public class MoedaAttribute : ValidationAttribute
             return new ValidationResult("Moeda em formato inválido");
         }
 
-        return ValidationResult.Success;
+        return ValidationResult.Success!;
     }
 }
 
@@ -49,13 +49,13 @@ public class MoedaAttributeAdapter : AttributeAdapterBase<MoedaAttribute>
 public class MoedaValidationAttributeAdapterProvider : IValidationAttributeAdapterProvider
 {
     private readonly IValidationAttributeAdapterProvider _baseProvider = new ValidationAttributeAdapterProvider();
-    public IAttributeAdapter GetAttributeAdapter(ValidationAttribute attribute, IStringLocalizer stringLocalizer)
+    public IAttributeAdapter? GetAttributeAdapter(ValidationAttribute attribute, IStringLocalizer? stringLocalizer)
     {
         if (attribute is MoedaAttribute moedaAttribute)
         {
-            return new MoedaAttributeAdapter(moedaAttribute, stringLocalizer);
+            return new MoedaAttributeAdapter(moedaAttribute, stringLocalizer!);
         }
 
-        return _baseProvider.GetAttributeAdapter(attribute, stringLocalizer);
+        return _baseProvider.GetAttributeAdapter(attribute!, stringLocalizer);
     }
 }

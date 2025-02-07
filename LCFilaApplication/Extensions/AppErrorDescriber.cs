@@ -30,11 +30,11 @@ public class AppErrorDescriber : IdentityErrorDescriber
     /// <summary>
     ///    Usuário inválido
     /// </summary>
-    public override IdentityError InvalidUserName(string userName) { return new IdentityError { Code = nameof(InvalidUserName), Description = $"Login '{userName}' é inválido, pode conter apenas letras ou dígitos." }; }
+    public override IdentityError InvalidUserName(string? userName) { return new IdentityError { Code = nameof(InvalidUserName), Description = $"Login '{userName}' é inválido, pode conter apenas letras ou dígitos." }; }
     /// <summary>
     ///    Email inválido
     /// </summary>
-    public override IdentityError InvalidEmail(string email) { return new IdentityError { Code = nameof(InvalidEmail), Description = $"Email '{email}' é inválido." }; }
+    public override IdentityError InvalidEmail(string? email) { return new IdentityError { Code = nameof(InvalidEmail), Description = $"Email '{email}' é inválido." }; }
     /// <summary>
     ///    Valida se o usuário está duplicado ou não
     /// </summary>
@@ -46,7 +46,7 @@ public class AppErrorDescriber : IdentityErrorDescriber
     /// <summary>
     ///    Permissão inválida
     /// </summary>
-    public override IdentityError InvalidRoleName(string role) { return new IdentityError { Code = nameof(InvalidRoleName), Description = $"A permissão '{role}' é inválida." }; }
+    public override IdentityError InvalidRoleName(string? role) { return new IdentityError { Code = nameof(InvalidRoleName), Description = $"A permissão '{role}' é inválida." }; }
     /// <summary>
     ///    Permissão duplicada
     /// </summary>

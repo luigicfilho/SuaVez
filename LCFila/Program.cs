@@ -1,11 +1,11 @@
-using LCFilaApplication.Extensions;
+using LCFila.Web.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.ConfigureLCFila(builder.Configuration);
+builder.ConfigureApplication();
 
 var app = builder.Build();
 
-app.UseLCFila();
+app.InitializeApplication();
 
 app.Run();

@@ -36,7 +36,7 @@ public class AdminSysAppService : IAdminSysAppService
     public async Task ActivateToggleEmpresa(Guid Id, bool toggle)
     {
         var empresa = await _empresaRepository.ObterPorId(Id);
-        empresa.Ativo = toggle;
+        empresa!.Ativo = toggle;
         await _empresaRepository.Atualizar(empresa);
         await _empresaRepository.SaveChanges();
         return;
@@ -107,21 +107,23 @@ public class AdminSysAppService : IAdminSysAppService
     }
 
     public async Task<EmpresaLogin> GetEmpresaDetail(Guid Id)
-    {        
-        return await _empresaRepository.ObterPorId(Id);
+    {
+        var retorno = await _empresaRepository!.ObterPorId(Id);
+        return retorno!;
     }
 
     public async Task<AppUser> GetEmpresaAdmin(string IdAdminEmpresa)
     {
-        return await _userManager.FindByIdAsync(IdAdminEmpresa);
+        var retorno = await _userManager.FindByIdAsync(IdAdminEmpresa);
+        return retorno!;
     }
     public async Task<EmpresaLogin> RemoveEmpresa(Guid Id)
     {
         var empresa = await _empresaRepository.ObterPorId(Id);
 
-        var adminempresa = await _userManager.FindByIdAsync(empresa.IdAdminEmpresa.ToString());
-        await _userManager.RemoveFromRoleAsync(adminempresa, "EmpAdmin");
-        await _userManager.DeleteAsync(adminempresa);
+        var adminempresa = await _userManager.FindByIdAsync(empresa!.IdAdminEmpresa.ToString());
+        await _userManager.RemoveFromRoleAsync(adminempresa!, "EmpAdmin");
+        await _userManager.DeleteAsync(adminempresa!);
         await _empresaRepository.Remover(empresa.Id);
         await _empresaRepository.SaveChanges();
         return empresa;
@@ -130,18 +132,18 @@ public class AdminSysAppService : IAdminSysAppService
     public async Task<EmpresaConfiguracao> GetEmpresaConfiguracao(string userName)
     {
         IQueryable<AppUser> AllUsers = _userManager.Users;
-        AppUser admin = AllUsers.FirstOrDefault(p => p.UserName == userName);
+        AppUser admin = AllUsers.FirstOrDefault(p => p.UserName == userName)!;
         List<EmpresaLogin> AllEmpresas = await _empresaRepository.ObterTodos();
-        EmpresaLogin empresa = AllEmpresas.FirstOrDefault(p => p.IdAdminEmpresa == Guid.Parse(admin.Id));
+        EmpresaLogin empresa = AllEmpresas.FirstOrDefault(p => p.IdAdminEmpresa == Guid.Parse(admin.Id))!;
         IEnumerable<EmpresaConfiguracao> config = await _empresaConfigRepository.Buscar(p => p.NomeDaEmpresa == empresa.NomeEmpresa);
-        EmpresaConfiguracao empcofig = config.FirstOrDefault();
+        EmpresaConfiguracao empcofig = config.FirstOrDefault()!;
         return empcofig;
     }
 
     public async Task<EmpresaConfiguracao> UpdateEmpresaConfiguracao(Guid Id, EmpresaConfiguracao empresaConfiguracao, string filePath)
     {
         List<EmpresaLogin> AllEmpresas = await _empresaRepository.ObterTodos();
-        EmpresaLogin empresa = AllEmpresas.FirstOrDefault(p => p.EmpresaConfiguracao.Id == Id);
+        EmpresaLogin empresa = AllEmpresas.FirstOrDefault(p => p.EmpresaConfiguracao.Id == Id)!;
         //empresa.NomeEmpresa = empconfig.NomeDaEmpresa;
         //EmpresaConfiguracao empconfigs = new EmpresaConfiguracao()
         //{

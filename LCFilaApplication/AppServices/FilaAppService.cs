@@ -81,7 +81,7 @@ internal class FilaAppService : IFilaAppService
         {
             var filatoopen = _filaRepository.ObterPorId(Id).Result;
 
-            filatoopen.Status = FilaStatus.Finalizada;
+            filatoopen!.Status = FilaStatus.Finalizada;
             _filaRepository.Atualizar(filatoopen);
             _filaRepository.SaveChanges();
             return true;
@@ -96,15 +96,15 @@ internal class FilaAppService : IFilaAppService
     public (Guid userid, Guid empresaid) GetUserIdEmpId(string UserName)
     {
         var user = _userManager.Users.SingleOrDefaultAsync(p => p.UserName == UserName).Result;
-        var empresalogin = _empresaRepository.Buscar(s => s.IdAdminEmpresa == Guid.Parse(user.Id)).Result.FirstOrDefault();
-        return (Guid.Parse(user.Id), empresalogin.Id);
+        var empresalogin = _empresaRepository.Buscar(s => s.IdAdminEmpresa == Guid.Parse(user!.Id)).Result.FirstOrDefault();
+        return (Guid.Parse(user!.Id), empresalogin!.Id);
     }
 
     public List<Fila> GetFilaList(string UserName)
     {
         var user = _userManager.Users.SingleOrDefaultAsync(p => p.UserName == UserName).Result;
         //var allusers = GetAllUsers();
-        var empresalogin = _empresaRepository.Buscar(s => s.IdAdminEmpresa == Guid.Parse(user.Id));
+        var empresalogin = _empresaRepository.Buscar(s => s.IdAdminEmpresa == Guid.Parse(user!.Id));
         var Empresaid = empresalogin.Id;
         var pegarfila = _filaRepository.ObterTodos().Result;
         List<Fila> filasdousuario = new List<Fila>();
@@ -113,7 +113,7 @@ internal class FilaAppService : IFilaAppService
         //    filasdousuario = pegarfila.Where(p => p.EmpresaId == Empresaid).ToList();
         //} else
         //{
-        return filasdousuario = pegarfila.Where(p => p.UserId == Guid.Parse(user.Id)).ToList();
+        return filasdousuario = pegarfila.Where(p => p.UserId == Guid.Parse(user!.Id)).ToList();
         //}
 
         //var pessoas = _pessoaRepository.ObterTodos().Result;
@@ -122,7 +122,7 @@ internal class FilaAppService : IFilaAppService
     public (Fila, List<Pessoa>) GetPessoas(Guid Id, string UserName)
     {
         var user = _userManager.Users.SingleOrDefaultAsync(p => p.UserName == UserName).Result;
-        var empresalogin = _empresaRepository.Buscar(s => s.IdAdminEmpresa == Guid.Parse(user.Id)).Result;
+        var empresalogin = _empresaRepository.Buscar(s => s.IdAdminEmpresa == Guid.Parse(user!.Id)).Result;
         var Empresaid = empresalogin.SingleOrDefault()!.Id;
         var filatoopen = _filaRepository.ObterPorId(Id).Result;
         return (filatoopen!, _pessoaRepository.Buscar(p => p.FilaId == Id).Result.ToList());
@@ -131,13 +131,13 @@ internal class FilaAppService : IFilaAppService
     public Guid IniciarFila(string UserName)
     {
         var user = _userManager.Users.SingleOrDefaultAsync(p => p.UserName == UserName).Result;
-        var empresalogin = _empresaRepository.Buscar(s => s.IdAdminEmpresa == Guid.Parse(user.Id)).Result.FirstOrDefault();
-        var Empresaid = empresalogin.Id;
+        var empresalogin = _empresaRepository.Buscar(s => s.IdAdminEmpresa == Guid.Parse(user!.Id)).Result.FirstOrDefault();
+        var Empresaid = empresalogin!.Id;
         Fila novafila = new Fila();
         novafila.DataInicio = DateTime.Now;
         novafila.TempoMedio = "30";
         novafila.EmpresaId = Empresaid;
-        novafila.UserId = Guid.Parse(user.Id);
+        novafila.UserId = Guid.Parse(user!.Id);
         var result = CriarFila(novafila);
         return novafila.Id;
     }
@@ -148,7 +148,7 @@ internal class FilaAppService : IFilaAppService
         {
             var filatoopen = _filaRepository.ObterPorId(Id).Result;
 
-            filatoopen.Status = FilaStatus.Aberta;
+            filatoopen!.Status = FilaStatus.Aberta;
             _filaRepository.Atualizar(filatoopen);
             _filaRepository.SaveChanges();
             return true;
@@ -166,7 +166,7 @@ internal class FilaAppService : IFilaAppService
         {
             var filatoopen = _filaRepository.ObterPorId(Id).Result;
 
-            filatoopen.Ativo = false;
+            filatoopen!.Ativo = false;
             _filaRepository.Atualizar(filatoopen);
             _filaRepository.SaveChanges();
             return true;

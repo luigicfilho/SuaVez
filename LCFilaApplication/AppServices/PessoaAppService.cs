@@ -17,7 +17,7 @@ namespace LCFilaApplication.AppServices
         public bool Atender(Guid id, Guid filaid)
         {
             var pessoa = _pessoaRepository.ObterPorId(id).Result;
-            pessoa.Ativo = false;
+            pessoa!.Ativo = false;
             pessoa.Status = PessoaStatus.Atendido;
             var result = _pessoaRepository.Atualizar(pessoa);
             if (result.IsCompletedSuccessfully)
@@ -144,7 +144,7 @@ namespace LCFilaApplication.AppServices
 
         internal Pessoa ObterPorId(Guid Id) 
         {
-            return _pessoaRepository.ObterPorId(Id).Result;
+            return _pessoaRepository.ObterPorId(Id).Result!;
         }
 
         internal IEnumerable<Pessoa> Buscar(Expression<Func<Pessoa, bool>> predicate)
