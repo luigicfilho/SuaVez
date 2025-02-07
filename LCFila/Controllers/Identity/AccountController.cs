@@ -2,6 +2,7 @@ using System.Security.Claims;
 using IdentitySample.Models.AccountViewModels;
 using LCFila.Application.Interfaces.Identity;
 using LCFila.Controllers;
+//TODO: Remove this reference
 using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;

@@ -1,8 +1,5 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
-using IdentitySample.Models;
 using IdentitySample.Models.ManageViewModels;
+//TODO: Remove this reference
 using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
