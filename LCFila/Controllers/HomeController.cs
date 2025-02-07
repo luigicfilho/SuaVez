@@ -1,5 +1,5 @@
 ﻿using LCFila.Controllers.Sistema;
-using LCFila.ViewModels;
+using LCFila.Models;
 using LCFilaApplication.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
