@@ -5,7 +5,7 @@
 namespace LCFilaInfra.Migrations
 {
     /// <inheritdoc />
-    public partial class removeempresaloginfromappuser : Migration
+    public partial class Removeempresaloginfromappuser : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

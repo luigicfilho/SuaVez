@@ -2,7 +2,7 @@
 
 public class FilaVeiculo : Entity
 {
-    public Fila FiladeVeiculos { get; set; }
+    public Fila FiladeVeiculos { get; set; } = new();
     /* EF Relations */
-    public IEnumerable<Veiculo> Veiculos { get; set; }
+    public IEnumerable<Veiculo> Veiculos { get; set; } = [];
 }

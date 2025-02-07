@@ -8,15 +8,14 @@
     ".NETCoreApp,Version=v8.0": {
       "LCFila.Infra/1.0.0": {
         "dependencies": {
-          "LCFilaDomain": "1.0.0",
+          "LCFila.Domain": "1.0.0",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.12",
           "Microsoft.EntityFrameworkCore": "8.0.12",
           "Microsoft.EntityFrameworkCore.Design": "8.0.12",
           "Microsoft.EntityFrameworkCore.InMemory": "8.0.12",
           "Microsoft.EntityFrameworkCore.SqlServer": "8.0.12",
           "Microsoft.EntityFrameworkCore.Sqlite": "8.0.12",
-          "Microsoft.EntityFrameworkCore.Tools": "8.0.12",
-          "LCFila.Domain": "1.0.0.0"
+          "Microsoft.EntityFrameworkCore.Tools": "8.0.12"
         },
         "runtime": {
           "LCFila.Infra.dll": {}
@@ -1166,10 +1165,13 @@
           }
         }
       },
-      "LCFila.Domain/1.0.0.0": {
+      "LCFila.Domain/1.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.12"
+        },
         "runtime": {
           "LCFila.Domain.dll": {
-            "assemblyVersion": "1.0.0.0",
+            "assemblyVersion": "1.0.0",
             "fileVersion": "1.0.0.0"
           }
         }
@@ -1805,8 +1807,8 @@
       "path": "system.windows.extensions/6.0.0",
       "hashPath": "system.windows.extensions.6.0.0.nupkg.sha512"
     },
-    "LCFila.Domain/1.0.0.0": {
-      "type": "reference",
+    "LCFila.Domain/1.0.0": {
+      "type": "project",
       "serviceable": false,
       "sha512": ""
     }

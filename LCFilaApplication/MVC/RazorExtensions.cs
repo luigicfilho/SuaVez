@@ -28,6 +28,6 @@ public static class RazorExtensions
 
     public static IHtmlContent IfClaimShow(this IHtmlContent page, HttpContext context, string claimName, string claimValue)
     {
-        return CustomAuthorization.ValidarClaimsUsuario(context, claimName, claimValue) ? page : null;
+        return CustomAuthorization.ValidarClaimsUsuario(context, claimName, claimValue) ? page : null!;
     }
 }

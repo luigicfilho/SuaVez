@@ -10,7 +10,7 @@ public class CustomAuthorization
 {
     public static bool ValidarClaimsUsuario(HttpContext context, string claimName, string claimValue)
     {
-        return context.User.Identity.IsAuthenticated &&
+        return context.User.Identity!.IsAuthenticated &&
                context.User.Claims.Any(c => c.Type == claimName && c.Value.Contains(claimValue));
     }
 
@@ -35,7 +35,7 @@ public class RequisitoClaimFilter : IAuthorizationFilter
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        if (!context.HttpContext.User.Identity.IsAuthenticated)
+        if (!context.HttpContext.User.Identity!.IsAuthenticated)
         {
             context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { area = "Identity", page = "/Account/Login", ReturnUrl = context.HttpContext.Request.Path.ToString() }));
             return;

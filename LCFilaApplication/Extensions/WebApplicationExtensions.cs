@@ -58,7 +58,7 @@ public static class WebApplicationExtensions
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
 
-        app.MapRazorPages();
+        //app.MapRazorPages();
         //app.UseEndpoints(endpoints =>
         //{
         //    endpoints.MapControllerRoute(

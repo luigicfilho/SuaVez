@@ -23,7 +23,7 @@ internal class UserAppService : IUserAppService
         try
         {
             var user = _userManager.FindByIdAsync(id.ToString()).Result;
-            user.UserName = formUser.Email;
+            user!.UserName = formUser.Email;
             user.Email = formUser.Email;
             user.PhoneNumber = formUser.PhoneNumber;
 
@@ -99,8 +99,8 @@ internal class UserAppService : IUserAppService
                 var AllUsers = _userManager.Users;
                 var admin = AllUsers.FirstOrDefault(p => p.UserName == UserEmail);
                 var AllEmpresas = _empresaRepository.ObterTodos().Result;
-                var empresa = AllEmpresas.FirstOrDefault(p => p.IdAdminEmpresa == Guid.Parse(admin.Id));
-                empresa.UsersEmpresa.Add(user);
+                var empresa = AllEmpresas.FirstOrDefault(p => p.IdAdminEmpresa == Guid.Parse(admin!.Id));
+                empresa!.UsersEmpresa.Add(user);
                 _empresaRepository.Atualizar(empresa);
             }
             return true;
@@ -121,16 +121,16 @@ internal class UserAppService : IUserAppService
         //var user = User.Identity.Name;
         //var admin = AllUsers.Include(p => p.EmpresaLogin).FirstOrDefault(p => p.UserName == User.Identity.Name);
         var admin = AllUsers.FirstOrDefault(a => a.UserName == UserName);
-        var Empresa = _empresaRepository.ObterPorId(Guid.Parse(admin.Id)).Result;
-        var usersempresa = Empresa.UsersEmpresa.Where(p => p.Id != Empresa.IdAdminEmpresa.ToString()).ToList();
+        var Empresa = _empresaRepository.ObterPorId(Guid.Parse(admin!.Id)).Result;
+        var usersempresa = Empresa!.UsersEmpresa.Where(p => p.Id != Empresa.IdAdminEmpresa.ToString()).ToList();
         return usersempresa;
     }
 
     public (string, AppUser) GetUserAndRole(Guid id)
     {
         var user = _userManager.FindByIdAsync(id.ToString()).Result;
-        var role = _userManager.GetRolesAsync(user).Result;
-        return (role[0],user);
+        var role = _userManager.GetRolesAsync(user!).Result;
+        return (role[0],user)!;
     }
 
     public bool Logout()
@@ -144,12 +144,12 @@ internal class UserAppService : IUserAppService
         try
         {
             var user = _userManager.FindByIdAsync(id.ToString()).Result;
-            var useroles = _userManager.GetRolesAsync(user).Result;
+            var useroles = _userManager.GetRolesAsync(user!).Result;
             foreach (var item in useroles)
             {
-                _userManager.RemoveFromRoleAsync(user, item);
+                _userManager.RemoveFromRoleAsync(user!, item);
             }
-            _userManager.DeleteAsync(user);
+            _userManager.DeleteAsync(user!);
             return true;
         }
         catch (Exception)

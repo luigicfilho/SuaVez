@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LCFilaApplication.Configurations;
 public static class IdentityConfig
@@ -24,11 +25,19 @@ public static class IdentityConfig
         //services.AddDbContext<FilaDbContext>(options =>
         //    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-        services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
+        services.AddAuthentication(o =>
+        {
+            o.DefaultScheme = IdentityConstants.ApplicationScheme;
+            o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+        })
+       .AddIdentityCookies(o => { });
+
+        services.AddIdentityCore<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddRoles<IdentityRole>()
             .AddErrorDescriber<AppErrorDescriber>()
             .AddRoleManager<RoleManager<IdentityRole>>()
-            .AddEntityFrameworkStores<FilaDbContext>();
+            .AddEntityFrameworkStores<FilaDbContext>()
+            .AddDefaultTokenProviders();
 
         //services.AddIdentityApiEndpoints<IdentityUser>()
         //                .AddEntityFrameworkStores<FilaDbContext>();

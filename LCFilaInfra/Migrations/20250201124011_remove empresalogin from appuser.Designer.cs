@@ -12,7 +12,7 @@ namespace LCFilaInfra.Migrations
 {
     [DbContext(typeof(FilaDbContext))]
     [Migration("20250201124011_remove empresalogin from appuser")]
-    partial class removeempresaloginfromappuser
+    partial class Removeempresaloginfromappuser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

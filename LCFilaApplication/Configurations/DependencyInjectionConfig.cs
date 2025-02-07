@@ -29,11 +29,11 @@ public static class DependencyInjectionConfig
 
         services.AddTransient<IEmailSender, EmailSender>(i =>
             new EmailSender(
-                configuration["EmailSender:Host"],
+                configuration["EmailSender:Host"]!,
                 configuration.GetValue<int>("EmailSender:Port"),
                 configuration.GetValue<bool>("EmailSender:EnableSSL"),
-                configuration["EmailSender:UserName"],
-                configuration["EmailSender:Password"]
+                configuration["EmailSender:UserName"]!,
+                configuration["EmailSender:Password"]!
             )
         );
 
