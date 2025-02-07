@@ -63,17 +63,31 @@ Queue Managment
 >
 > .. simply use an empty `>` line
 >
--->
 
 ![LC Fila Layers](https://github.com/luigicfilho/LCFila/blob/main/docs/LCFila.png?raw=true)
+-->
+
 
 ```mermaid
-stateDiagram-v2
+---
+title: LCFila Architecture Diagram
+---
+stateDiagram
+    accTitle: Layers Diagram of LC Fila Application
+    accDescr: Layers Diagram of LC Fila Application
+
+    classDef notImplemented fill:white, font-style:italic
+
     LCFila.Web --> LCFila.Application 
-    LCFila.Blazor --> LCFila.Application
+    LCFila.Blazor:::notImplemented --> LCFila.Application
     LCFila.Application --> LCFila.Infra
     LCFila.Application --> LCFila.Domain
     LCFila.Infra --> LCFila.Domain
+
+    note left of LCFila.Blazor
+        This is not implemented.
+        It's to ilustrate only (1).
+    end note
 ```
 <!-- 
 - [x] #739
