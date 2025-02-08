@@ -1,3 +1,2 @@
-*.cs linguist-detectable=true
-*.css linguist-detectable=false
+LCFila/wwwroot/* linguist-vendored
 *.cshtml linguist-language=HTML+Razor
