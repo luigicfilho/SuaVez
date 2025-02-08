@@ -1,17 +1,14 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
+﻿using System.ComponentModel.DataAnnotations;
 
-using System.ComponentModel.DataAnnotations;
-
-namespace IdentitySample.Models.ManageViewModels;
+namespace LCFila.Web.Models.Identity.ManageViewModels;
 
 public class VerifyPhoneNumberViewModel
 {
     [Required]
-    public string Code { get; set; }
+    public string Code { get; set; } = string.Empty;
 
     [Required]
     [Phone]
     [Display(Name = "Phone number")]
-    public string PhoneNumber { get; set; }
+    public string PhoneNumber { get; set; } = string.Empty;
 }

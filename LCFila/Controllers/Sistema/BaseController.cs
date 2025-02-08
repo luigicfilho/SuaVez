@@ -1,5 +1,5 @@
-﻿using LCFilaApplication.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using LCFilaApplication.Interfaces;
 
 namespace LCFila.Controllers.Sistema;
 

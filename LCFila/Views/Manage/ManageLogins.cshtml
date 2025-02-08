@@ -17,7 +17,7 @@
                 <tr>
                     <td>@Model.CurrentLogins[index].ProviderDisplayName</td>
                     <td>
-                        @if ((bool)ViewData["ShowRemoveButton"])
+                        @if ((bool)ViewData["ShowRemoveButton"]!)
                         {
                             <form asp-controller="Manage" asp-action="RemoveLogin" method="post" class="form-horizontal" role="form">
                                 <div>

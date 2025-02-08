@@ -2,6 +2,7 @@
 
 public class FilaPessoaViewModel
 {
-    public FilaViewModel FiladePessoas { get; set; }
-    public IEnumerable<PessoaViewModel> Pessoas { get; set; }
+    public Guid Id { get; set; }
+    public FilaViewModel FiladePessoas { get; set; } = new();
+    public IEnumerable<PessoaViewModel> Pessoas { get; set; } = [];
 }

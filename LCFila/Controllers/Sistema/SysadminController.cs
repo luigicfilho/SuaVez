@@ -1,10 +1,9 @@
-﻿using LCFila.ViewModels;
-using LCFilaApplication.Interfaces;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using LCFila.ViewModels;
 using LCFila.Mapping;
-using LCFilaApplication.MVC;
+using LCFilaApplication.Interfaces;
 
 namespace LCFila.Controllers.Sistema;
 
@@ -34,7 +33,7 @@ public class SysadminController : BaseController
         var empresa = await _adminSysAppService.GetEmpresaDetail(id);
         var empresaviewmodel = empresa.ConvertToEmpresaLoginViewModel();
         var adminempresa = await _adminSysAppService.GetEmpresaAdmin(empresaviewmodel.IdAdminEmpresa.ToString());
-        empresaviewmodel.Email = adminempresa.Email;
+        empresaviewmodel.Email = adminempresa.Email!;
         return View(empresaviewmodel);
     }
 
@@ -61,7 +60,7 @@ public class SysadminController : BaseController
     // POST: SysadminController/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(EmpresaLoginViewModel empresaViewModel)
+    public IActionResult Create(EmpresaLoginViewModel empresaViewModel)
     {
         ConfigEmpresa();
         try
@@ -70,8 +69,8 @@ public class SysadminController : BaseController
 
             var empresa = empresaViewModel.ConvertToEmpresaLogin();
             var returnUrl = Url.Content("~/");
-            var result = _adminSysAppService.CreateEmpresa(empresa, 
-                                                                 empresaViewModel.Email, 
+            var result = _adminSysAppService.CreateEmpresa(empresa,
+                                                                 empresaViewModel.Email,
                                                                  empresaViewModel.Password);
             result.Match(
                 _ => Console.WriteLine("Operation was successful."),
@@ -79,7 +78,8 @@ public class SysadminController : BaseController
             //result.Match();
 
             object resultados;
-            if (result.IsSuccess) {
+            if (result.IsSuccess)
+            {
                 var s = result.Value;
                 var e = result.Error;
                 var retorno = result.Match(
@@ -88,13 +88,13 @@ public class SysadminController : BaseController
             }
 
             //TODO: REVIEW THIS, it's the only thing that makes reference to MVC
-            var resultado =  Results.Extensions.MapResult(result);
+            //var resultado =  Results.Extensions.MapResult(result);
 
             if (!OperacaoValida()) return View(empresaViewModel);
 
             return RedirectToAction(nameof(Index));
         }
-        catch (Exception Ex)
+        catch (Exception)
         {
             return View(empresaViewModel);
         }
@@ -110,7 +110,7 @@ public class SysadminController : BaseController
 
         // var users = _userManager.Users.Include(p => p.EmpresaLogin).Where(p => p.EmpresaLogin.Id == empresa.Id).ToList();
         var empresaviewmodel = empresa.ConvertToEmpresaLoginViewModel();
-        empresaviewmodel.Email = adminempresa.Email;
+        empresaviewmodel.Email = adminempresa.Email!;
         var usersQuery = from d in empresa.UsersEmpresa.Where(p => p.Email != adminempresa.Email).AsEnumerable()
                          orderby d.Email // Sort by name.
                          select d;
@@ -122,7 +122,7 @@ public class SysadminController : BaseController
     // POST: SysadminController/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(Guid id, EmpresaLoginViewModel empresaViewModel)
+    public IActionResult Edit(Guid id, EmpresaLoginViewModel empresaViewModel)
     {
         ConfigEmpresa();
         try
@@ -158,7 +158,7 @@ public class SysadminController : BaseController
 
             return RedirectToAction(nameof(Index));
         }
-        catch (Exception Ex)
+        catch (Exception)
         {
             return View(empresaViewModel);
         }
