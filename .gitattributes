@@ -1,6 +1,6 @@
 LCFila/wwwroot/** linguist-vendored
 *.css linguist-detectable=false
-*.cshtml linguist-language=HTML+Razor
+*.cshtml linguist-language=Razor
 docs/* linguist-documentation
 *          text=auto
 
