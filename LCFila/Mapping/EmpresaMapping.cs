@@ -1,6 +1,7 @@
 ﻿using LCFila.ViewModels;
+using LCFila.Web.Mapping;
+
 //TODO: how to do it in another way to remove theses references
-using LCFilaApplication.Mapping;
 using LCFilaApplication.Models;
 
 namespace LCFila.Mapping;
@@ -14,10 +15,10 @@ public static class EmpresaMapping
             Id = empresaloginViewModel.Id,
             IdAdminEmpresa = empresaloginViewModel.IdAdminEmpresa,
             CNPJ = empresaloginViewModel.CNPJ,
-            EmpresaConfiguracao = empresaloginViewModel.EmpresaConfiguracao.ConvertToEmpresaConfiguracao(),
-            EmpresaFilas = empresaloginViewModel.EmpresaFilas.Any() ? empresaloginViewModel.EmpresaFilas.ConvertToListFila() : [],
+            EmpresaConfiguracao = empresaloginViewModel.EmpresaConfiguracao!.ConvertToEmpresaConfiguracao(),
+            EmpresaFilas = empresaloginViewModel.EmpresaFilas!.Any() ? empresaloginViewModel.EmpresaFilas!.ConvertToListFila() : [],
             NomeEmpresa = empresaloginViewModel.NomeEmpresa,
-            UsersEmpresa = empresaloginViewModel.UsersEmpresa,
+            UsersEmpresa = empresaloginViewModel.UsersEmpresa!,
             Ativo = empresaloginViewModel.Ativo
         };
 
@@ -32,7 +33,7 @@ public static class EmpresaMapping
             IdAdminEmpresa = empresalogin.IdAdminEmpresa,
             CNPJ = empresalogin.CNPJ,
             EmpresaConfiguracao = empresalogin.EmpresaConfiguracao.ConvertToEmpresaConfiguracaoView(),
-            EmpresaFilas = empresalogin.EmpresaFilas.ConvertToListFilaViewModel(),
+            EmpresaFilas = empresalogin.EmpresaFilas.ConvertoToFilaViewModel(),
             NomeEmpresa = empresalogin.NomeEmpresa,
             UsersEmpresa = empresalogin.UsersEmpresa,
             Ativo = empresalogin.Ativo
@@ -87,7 +88,7 @@ public static class EmpresaMapping
                         IdAdminEmpresa = emp.IdAdminEmpresa,
                         CNPJ = emp.CNPJ,
                         EmpresaConfiguracao = emp.EmpresaConfiguracao.ConvertToEmpresaConfiguracaoView(),
-                        EmpresaFilas = emp.EmpresaFilas.ConvertToListFilaViewModel(),
+                        EmpresaFilas = emp.EmpresaFilas.ConvertoToFilaViewModel(),
                         NomeEmpresa = emp.NomeEmpresa,
                         UsersEmpresa = emp.UsersEmpresa,
                         Ativo = emp.Ativo
@@ -99,5 +100,15 @@ public static class EmpresaMapping
         
         IEnumerable<EmpresaLoginViewModel> list = viewlist;
         return list;
+    }
+
+    public static List<FilaViewModel> ConvertoToFilaViewModel(this List<Fila> list)
+    {
+        List<FilaViewModel> listview = [];
+        foreach(var fila in list)
+        {
+            listview.Add(fila.ConvertToFilaViewModel());
+        }
+        return listview;
     }
 }

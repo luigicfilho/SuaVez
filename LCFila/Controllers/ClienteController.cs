@@ -1,8 +1,8 @@
-﻿using LCFila.Controllers.Sistema;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using LCFila.Controllers.Sistema;
 using LCFila.Mapping;
 using LCFilaApplication.Interfaces;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace LCFila.Controllers;
 
@@ -27,7 +27,7 @@ public class ClienteController : BaseController
     }
     [AllowAnonymous]
     // GET: ClienteController/Details/5
-    public async Task<IActionResult> Details(Guid id, Guid filaid)
+    public IActionResult Details(Guid id, Guid filaid)
     {
         ConfigEmpresa();
         var pegarpessoa = _pessoaAppService.GetDetails(id, filaid);
@@ -37,7 +37,7 @@ public class ClienteController : BaseController
     }
 
 
-    public async Task<IActionResult> Call(Guid id, Guid filaid)
+    public IActionResult Call(Guid id, Guid filaid)
     {
         ConfigEmpresa();
         var result = _pessoaAppService.Chamar(id, filaid);
@@ -48,7 +48,7 @@ public class ClienteController : BaseController
         return RedirectToAction("Error", new { id = filaid });
     }
 
-    public async Task<IActionResult> Attend(Guid id, Guid filaid)
+    public ActionResult Attend(Guid id, Guid filaid)
     {
         ConfigEmpresa();
         var result = _pessoaAppService.Atender(id, filaid);
@@ -59,7 +59,7 @@ public class ClienteController : BaseController
         return RedirectToAction("Error", new { id = filaid });
     }
 
-    public async Task<IActionResult> Skip(Guid id, Guid filaid)
+    public IActionResult Skip(Guid id, Guid filaid)
     {
         ConfigEmpresa();
         var result = _pessoaAppService.Pular(id, filaid);
@@ -70,7 +70,7 @@ public class ClienteController : BaseController
         return RedirectToAction("Error", new { id = filaid });
     }
 
-    public async Task<IActionResult> Remove(Guid id, Guid filaid)
+    public IActionResult Remove(Guid id, Guid filaid)
     {
         ConfigEmpresa();
         var result = _pessoaAppService.Remover(id, filaid);

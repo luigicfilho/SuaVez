@@ -1,40 +1,30 @@
-using IdentitySample.Models.ManageViewModels;
-//TODO: Remove this reference
-using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using LCFila.Application.Interfaces.Identity;
+using LCFila.ViewModels;
+using LCFila.Web.Models;
+using LCFila.Web.Models.Identity.ManageViewModels;
 
 namespace IdentitySamples.Controllers;
 
 [Authorize]
 public class ManageController : Controller
 {
-    private readonly UserManager<AppUser> _userManager;
-    private readonly SignInManager<AppUser> _signInManager;
-    private readonly IEmailSender _emailSender;
-    //private readonly ISmsSender _smsSender;
+    private readonly IIdentityManagerService _identityManagerService;
     private readonly ILogger _logger;
 
     public ManageController(
-    UserManager<AppUser> userManager,
-    SignInManager<AppUser> signInManager,
-    IEmailSender emailSender,
-    //ISmsSender smsSender,
-    ILoggerFactory loggerFactory)
+            IIdentityManagerService identityManagerService,
+            ILoggerFactory loggerFactory)
     {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _emailSender = emailSender;
-        //_smsSender = smsSender;
+        _identityManagerService = identityManagerService;
         _logger = loggerFactory.CreateLogger<ManageController>();
     }
 
     //
     // GET: /Manage/Index
     [HttpGet]
-    public async Task<IActionResult> Index(ManageMessageId? message = null)
+    public IActionResult Index(ManageMessageId? message = null)
     {
         ViewData["StatusMessage"] =
             message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
@@ -45,15 +35,15 @@ public class ManageController : Controller
             : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
             : "";
 
-        var user = await GetCurrentUserAsync();
+        var user = GetCurrentUserAsync();
         var model = new IndexViewModel
         {
-            HasPassword = await _userManager.HasPasswordAsync(user),
-            PhoneNumber = await _userManager.GetPhoneNumberAsync(user),
-            TwoFactor = await _userManager.GetTwoFactorEnabledAsync(user),
-            Logins = await _userManager.GetLoginsAsync(user),
-            BrowserRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user),
-            AuthenticatorKey = await _userManager.GetAuthenticatorKeyAsync(user)
+            HasPassword = _identityManagerService.HasPasswordAsync(user.ConvertToAppUser()),
+            PhoneNumber = _identityManagerService.GetPhoneNumberAsync(user.ConvertToAppUser()),
+            TwoFactor = _identityManagerService.GetTwoFactorEnabledAsync(user.ConvertToAppUser()),
+            Logins = _identityManagerService.GetLoginsAsync(user.ConvertToAppUser()),
+            BrowserRemembered = _identityManagerService.IsTwoFactorClientRememberedAsync(user.ConvertToAppUser()),
+            AuthenticatorKey = _identityManagerService.GetAuthenticatorKeyAsync(user.ConvertToAppUser())
         };
         return View(model);
     }
@@ -62,16 +52,16 @@ public class ManageController : Controller
     // POST: /Manage/RemoveLogin
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> RemoveLogin(RemoveLoginViewModel account)
+    public IActionResult RemoveLogin(RemoveLoginViewModel account)
     {
         ManageMessageId? message = ManageMessageId.Error;
-        var user = await GetCurrentUserAsync();
+        var user = GetCurrentUserAsync();
         if (user != null)
         {
-            var result = await _userManager.RemoveLoginAsync(user, account.LoginProvider, account.ProviderKey);
+            var result = _identityManagerService.RemoveLoginAsync(user.ConvertToAppUser(), account.LoginProvider, account.ProviderKey);
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                _identityManagerService.SignInAsync(user.ConvertToAppUser(), isPersistent: false);
                 message = ManageMessageId.RemoveLoginSuccess;
             }
         }
@@ -89,15 +79,15 @@ public class ManageController : Controller
     // POST: /Manage/AddPhoneNumber
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AddPhoneNumber(AddPhoneNumberViewModel model)
+    public IActionResult AddPhoneNumber(AddPhoneNumberViewModel model)
     {
         if (!ModelState.IsValid)
         {
             return View(model);
         }
         // Generate the token and send it
-        var user = await GetCurrentUserAsync();
-        var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, model.PhoneNumber);
+        var user = GetCurrentUserAsync();
+        var code = _identityManagerService.GenerateChangePhoneNumberTokenAsync(user.ConvertToAppUser(), model.PhoneNumber);
         //await _smsSender.SendSmsAsync(model.PhoneNumber, "Your security code is: " + code);
         return RedirectToAction(nameof(VerifyPhoneNumber), new { PhoneNumber = model.PhoneNumber });
     }
@@ -106,12 +96,12 @@ public class ManageController : Controller
     // POST: /Manage/ResetAuthenticatorKey
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ResetAuthenticatorKey()
+    public IActionResult ResetAuthenticatorKey()
     {
-        var user = await GetCurrentUserAsync();
+        var user = GetCurrentUserAsync();
         if (user != null)
         {
-            await _userManager.ResetAuthenticatorKeyAsync(user);
+            _identityManagerService.ResetAuthenticatorKeyAsync(user.ConvertToAppUser());
             _logger.LogInformation(1, "User reset authenticator key.");
         }
         return RedirectToAction(nameof(Index), "Manage");
@@ -121,12 +111,12 @@ public class ManageController : Controller
     // POST: /Manage/GenerateRecoveryCode
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> GenerateRecoveryCode()
+    public IActionResult GenerateRecoveryCode()
     {
-        var user = await GetCurrentUserAsync();
+        var user = GetCurrentUserAsync();
         if (user != null)
         {
-            var codes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 5);
+            var codes = _identityManagerService.GenerateNewTwoFactorRecoveryCodesAsync(user.ConvertToAppUser(), 5);
             _logger.LogInformation(1, "User generated new recovery code.");
             return View("DisplayRecoveryCodes", new DisplayRecoveryCodesViewModel { Codes = codes });
         }
@@ -137,13 +127,13 @@ public class ManageController : Controller
     // POST: /Manage/EnableTwoFactorAuthentication
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> EnableTwoFactorAuthentication()
+    public IActionResult EnableTwoFactorAuthentication()
     {
-        var user = await GetCurrentUserAsync();
+        var user = GetCurrentUserAsync();
         if (user != null)
         {
-            await _userManager.SetTwoFactorEnabledAsync(user, true);
-            await _signInManager.SignInAsync(user, isPersistent: false);
+            _identityManagerService.SetTwoFactorEnabledAsync(user.ConvertToAppUser(), true);
+            _identityManagerService.SignInAsync(user.ConvertToAppUser(), isPersistent: false);
             _logger.LogInformation(1, "User enabled two-factor authentication.");
         }
         return RedirectToAction(nameof(Index), "Manage");
@@ -153,13 +143,13 @@ public class ManageController : Controller
     // POST: /Manage/DisableTwoFactorAuthentication
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DisableTwoFactorAuthentication()
+    public IActionResult DisableTwoFactorAuthentication()
     {
-        var user = await GetCurrentUserAsync();
+        var user = GetCurrentUserAsync();
         if (user != null)
         {
-            await _userManager.SetTwoFactorEnabledAsync(user, false);
-            await _signInManager.SignInAsync(user, isPersistent: false);
+            _identityManagerService.SetTwoFactorEnabledAsync(user.ConvertToAppUser(), false);
+            _identityManagerService.SignInAsync(user.ConvertToAppUser(), isPersistent: false);
             _logger.LogInformation(2, "User disabled two-factor authentication.");
         }
         return RedirectToAction(nameof(Index), "Manage");
@@ -168,9 +158,9 @@ public class ManageController : Controller
     //
     // GET: /Manage/VerifyPhoneNumber
     [HttpGet]
-    public async Task<IActionResult> VerifyPhoneNumber(string phoneNumber)
+    public IActionResult VerifyPhoneNumber(string phoneNumber)
     {
-        var code = await _userManager.GenerateChangePhoneNumberTokenAsync(await GetCurrentUserAsync(), phoneNumber);
+        var code = _identityManagerService.GenerateChangePhoneNumberTokenAsync(GetCurrentUserAsync().ConvertToAppUser(), phoneNumber);
         // Send an SMS to verify the phone number
         return phoneNumber == null ? View("Error") : View(new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });
     }
@@ -179,19 +169,19 @@ public class ManageController : Controller
     // POST: /Manage/VerifyPhoneNumber
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> VerifyPhoneNumber(VerifyPhoneNumberViewModel model)
+    public IActionResult VerifyPhoneNumber(VerifyPhoneNumberViewModel model)
     {
         if (!ModelState.IsValid)
         {
             return View(model);
         }
-        var user = await GetCurrentUserAsync();
+        var user = GetCurrentUserAsync();
         if (user != null)
         {
-            var result = await _userManager.ChangePhoneNumberAsync(user, model.PhoneNumber, model.Code);
+            var result = _identityManagerService.ChangePhoneNumberAsync(user.ConvertToAppUser(), model.PhoneNumber, model.Code);
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                _identityManagerService.SignInAsync(user.ConvertToAppUser(), isPersistent: false);
                 return RedirectToAction(nameof(Index), new { Message = ManageMessageId.AddPhoneSuccess });
             }
         }
@@ -204,15 +194,15 @@ public class ManageController : Controller
     // GET: /Manage/RemovePhoneNumber
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> RemovePhoneNumber()
+    public IActionResult RemovePhoneNumber()
     {
-        var user = await GetCurrentUserAsync();
+        var user = GetCurrentUserAsync();
         if (user != null)
         {
-            var result = await _userManager.SetPhoneNumberAsync(user, null);
+            var result = _identityManagerService.SetPhoneNumberAsync(user.ConvertToAppUser(), null);
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                _identityManagerService.SignInAsync(user.ConvertToAppUser(), isPersistent: false);
                 return RedirectToAction(nameof(Index), new { Message = ManageMessageId.RemovePhoneSuccess });
             }
         }
@@ -231,23 +221,23 @@ public class ManageController : Controller
     // POST: /Manage/ChangePassword
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+    public IActionResult ChangePassword(ChangePasswordViewModel model)
     {
         if (!ModelState.IsValid)
         {
             return View(model);
         }
-        var user = await GetCurrentUserAsync();
+        var user = GetCurrentUserAsync();
         if (user != null)
         {
-            var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            var result = _identityManagerService.ChangePasswordAsync(user.ConvertToAppUser(), model.OldPassword, model.NewPassword);
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                _identityManagerService.SignInAsync(user.ConvertToAppUser(), isPersistent: false);
                 _logger.LogInformation(3, "User changed their password successfully.");
                 return RedirectToAction(nameof(Index), new { Message = ManageMessageId.ChangePasswordSuccess });
             }
-            AddErrors(result);
+            AddErrors(result.ConvertToIdentityResult());
             return View(model);
         }
         return RedirectToAction(nameof(Index), new { Message = ManageMessageId.Error });
@@ -265,23 +255,23 @@ public class ManageController : Controller
     // POST: /Manage/SetPassword
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> SetPassword(SetPasswordViewModel model)
+    public IActionResult SetPassword(SetPasswordViewModel model)
     {
         if (!ModelState.IsValid)
         {
             return View(model);
         }
 
-        var user = await GetCurrentUserAsync();
+        var user = GetCurrentUserAsync();
         if (user != null)
         {
-            var result = await _userManager.AddPasswordAsync(user, model.NewPassword);
+            var result = _identityManagerService.AddPasswordAsync(user.ConvertToAppUser(), model.NewPassword);
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                _identityManagerService.SignInAsync(user.ConvertToAppUser(), isPersistent: false);
                 return RedirectToAction(nameof(Index), new { Message = ManageMessageId.SetPasswordSuccess });
             }
-            AddErrors(result);
+            AddErrors(result.ConvertToIdentityResult());
             return View(model);
         }
         return RedirectToAction(nameof(Index), new { Message = ManageMessageId.Error });
@@ -289,20 +279,20 @@ public class ManageController : Controller
 
     //GET: /Manage/ManageLogins
     [HttpGet]
-    public async Task<IActionResult> ManageLogins(ManageMessageId? message = null)
+    public IActionResult ManageLogins(ManageMessageId? message = null)
     {
         ViewData["StatusMessage"] =
             message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
             : message == ManageMessageId.AddLoginSuccess ? "The external login was added."
             : message == ManageMessageId.Error ? "An error has occurred."
             : "";
-        var user = await GetCurrentUserAsync();
+        var user = GetCurrentUserAsync();
         if (user == null)
         {
             return View("Error");
         }
-        var userLogins = await _userManager.GetLoginsAsync(user);
-        var schemes = await _signInManager.GetExternalAuthenticationSchemesAsync();
+        var userLogins = _identityManagerService.GetLoginsAsync(user.ConvertToAppUser());
+        var schemes = _identityManagerService.GetExternalAuthenticationSchemesAsync();
         var otherLogins = schemes.Where(auth => userLogins.All(ul => auth.Name != ul.LoginProvider)).ToList();
         ViewData["ShowRemoveButton"] = user.PasswordHash != null;// || userLogins.Count > 1;
         return View(new ManageLoginsViewModel
@@ -320,35 +310,35 @@ public class ManageController : Controller
     {
         // Request a redirect to the external login provider to link a login for the current user
         var redirectUrl = Url.Action("LinkLoginCallback", "Manage");
-        var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, _userManager.GetUserId(User));
+        var properties = _identityManagerService.ConfigureExternalAuthenticationProperties(provider, redirectUrl, _identityManagerService.GetUserId(User));
         return Challenge(properties, provider);
     }
 
     //
     // GET: /Manage/LinkLoginCallback
     [HttpGet]
-    public async Task<ActionResult> LinkLoginCallback()
+    public ActionResult LinkLoginCallback()
     {
-        var user = await GetCurrentUserAsync();
+        var user = GetCurrentUserAsync();
         if (user == null)
         {
             return View("Error");
         }
-        var info = await _signInManager.GetExternalLoginInfoAsync(await _userManager.GetUserIdAsync(user));
+        var info = _identityManagerService.GetExternalLoginInfoAsync(_identityManagerService.GetUserIdAsync(user.ConvertToAppUser()));
         if (info == null)
         {
             return RedirectToAction(nameof(ManageLogins), new { Message = ManageMessageId.Error });
         }
-        var result = await _userManager.AddLoginAsync(user, info);
+        var result = _identityManagerService.AddLoginAsync(user.ConvertToAppUser(), info);
         var message = result.Succeeded ? ManageMessageId.AddLoginSuccess : ManageMessageId.Error;
         return RedirectToAction(nameof(ManageLogins), new { Message = message });
     }
 
     #region Helpers
 
-    private void AddErrors(IdentityResult result)
+    private void AddErrors(List<IdentityResultViewModel> result)
     {
-        foreach (var error in result.Errors)
+        foreach (var error in result)
         {
             ModelState.AddModelError(string.Empty, error.Description);
         }
@@ -366,9 +356,11 @@ public class ManageController : Controller
         Error
     }
 
-    private Task<AppUser> GetCurrentUserAsync()
+    private AppUserViewModel GetCurrentUserAsync()
     {
-        return _userManager.GetUserAsync(HttpContext.User);
+        AppUserViewModel user = new();
+        user.ConvertToViewModel(_identityManagerService.GetUserAsync(HttpContext.User));
+        return user;
     }
 
     #endregion

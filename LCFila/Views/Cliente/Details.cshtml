@@ -6,7 +6,7 @@
 <div class="h-100" style="">
     <div class="pt-5"></div>
 
-    @if (Model.Status == LCFilaApplication.Enums.PessoaStatus.Esperando)
+    @if (Model.Status.ToString() == LCFilaApplication.Enums.PessoaStatus.Esperando.ToString())
     {
         <div class="pt-5 pb-5 lcfilabackground">
             <div class="row justify-content-center valign">

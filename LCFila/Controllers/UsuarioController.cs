@@ -1,11 +1,9 @@
-﻿using LCFila.Controllers.Sistema;
-using LCFila.ViewModels;
-using LCFilaApplication.Interfaces;
-//TODO: remove this reference in someway
-using LCFilaApplication.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using LCFila.Controllers.Sistema;
+using LCFila.ViewModels;
+using LCFilaApplication.Interfaces;
 
 namespace LCFila.Controllers;
 
@@ -21,7 +19,7 @@ public class UsuarioController : BaseController
         _userAppService = userAppService;
     }
     // GET: UsuarioController
-    public async Task<IActionResult> Index()
+    public IActionResult Index()
     {
         ConfigEmpresa();
         var listUsers = _userAppService.GetListUsers(User.Identity!.Name!);
@@ -29,17 +27,18 @@ public class UsuarioController : BaseController
     }
 
     // GET: UsuarioController/Details/5
-    public async Task<IActionResult> Details(Guid id)
+    public IActionResult Details(Guid id)
     {
         ConfigEmpresa();
         var (role, user) = _userAppService.GetUserAndRole(id);
         ViewBag.Role = "Houve algum erro ao capturar a função do funcionário";
         if (!string.IsNullOrWhiteSpace(role))
         {
-            if(role == "OperatorEmp")
+            if (role == "OperatorEmp")
             {
                 ViewBag.Role = "Funcionário";
-            } else if(role == "EmpAdmin")
+            }
+            else if (role == "EmpAdmin")
             {
                 ViewBag.Role = "Administrador";
             }
@@ -48,7 +47,7 @@ public class UsuarioController : BaseController
     }
 
     // GET: UsuarioController/Create
-    public async Task<IActionResult> Create()
+    public IActionResult Create()
     {
         ConfigEmpresa();
         var userviewmodel = new UserCreateViewModel();
@@ -64,7 +63,7 @@ public class UsuarioController : BaseController
     // POST: UsuarioController/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(UserCreateViewModel Input)
+    public IActionResult Create(UserCreateViewModel Input)
     {
         ConfigEmpresa();
         try
@@ -81,16 +80,16 @@ public class UsuarioController : BaseController
             {
                 return View(Input);
             }
-           
+
         }
-        catch (Exception Ex)
+        catch (Exception)
         {
             return View(Input);
         }
     }
 
     // GET: UsuarioController/Edit/5
-    public async Task<IActionResult> Edit(Guid id)
+    public IActionResult Edit(Guid id)
     {
         ConfigEmpresa();
         var (role, user) = _userAppService.GetUserAndRole(id);
@@ -111,12 +110,12 @@ public class UsuarioController : BaseController
     // POST: UsuarioController/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(Guid id, AppUserViewModel formUser, IFormCollection collection)
+    public IActionResult Edit(Guid id, AppUserViewModel formUser, IFormCollection collection)
     {
         ConfigEmpresa();
         try
         {
-            var result = _userAppService.AtualizarUser(id, formUser.ConvertToAppUser(), collection["Funcao"][0]);
+            var result = _userAppService.AtualizarUser(id, formUser.ConvertToAppUser(), collection["Funcao"][0]!);
             if (result)
             {
                 return RedirectToAction(nameof(Index));
@@ -130,7 +129,8 @@ public class UsuarioController : BaseController
     }
 
     // GET: UsuarioController/Delete/5
-    public async Task<IActionResult> Delete(Guid id)
+    [HttpGet]
+    public IActionResult Delete(Guid id)
     {
         ConfigEmpresa();
         ViewBag.Role = "Houve algum erro ao capturar a função do funcionário";
@@ -152,12 +152,12 @@ public class UsuarioController : BaseController
     // POST: UsuarioController/Delete/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Delete(Guid id, AppUser formUser)
+    public IActionResult Delete(Guid id, string? returnurl = null)
     {
         ConfigEmpresa();
         try
         {
-            var result = _userAppService.RemoverUser(id, formUser);
+            var result = _userAppService.RemoverUser(id);
             if (result)
             {
                 return RedirectToAction(nameof(Index));

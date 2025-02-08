@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-//TODO: This should not be, change to viewmodel, or remove because this file it's not used
-using LCFilaApplication.Models;
 using LCFilaApplication.Interfaces;
+using LCFila.ViewModels;
+using LCFila.Mapping;
+using LCFila.Web.Mapping;
 
 namespace LCFila.Controllers;
 
@@ -16,13 +17,13 @@ public class FilaPessoaController : Controller
     }
 
     // GET: FilaPessoa
-    public async Task<IActionResult> Index()
+    public IActionResult Index()
     {
         return View(_filaAppService.GetFilaList(User.Identity!.Name!));
     }
 
     // GET: FilaPessoa/Details/5
-    public async Task<IActionResult> Details(Guid? id)
+    public IActionResult Details(Guid? id)
     {
         if (id == null)
         {
@@ -47,23 +48,24 @@ public class FilaPessoaController : Controller
     // POST: FilaPessoa/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id")] FilaPessoa filaPessoa)
+    public IActionResult Create([Bind("Id")] FilaPessoaViewModel filaPessoa)
     {
+        //TODO: This should be ViewModel!!!
         if (ModelState.IsValid)
         {
             filaPessoa.Id = Guid.NewGuid();
-            Pessoa pessoa = new()
+            PessoaViewModel pessoa = new()
             {
                 Id = Guid.NewGuid()
             };
-            _filaAppService.AdicionarPessoa(pessoa, filaPessoa.Id);
+            _filaAppService.AdicionarPessoa(pessoa.ConvertToPessoa(), filaPessoa.Id);
             return RedirectToAction(nameof(Index));
         }
         return View(filaPessoa);
     }
 
     // GET: FilaPessoa/Edit/5
-    public async Task<IActionResult> Edit(Guid? id)
+    public IActionResult Edit(Guid? id)
     {
         if (id == null)
         {
@@ -81,8 +83,9 @@ public class FilaPessoaController : Controller
     // POST: FilaPessoa/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(Guid id, [Bind("Id")] FilaPessoa filaPessoa)
+    public IActionResult Edit(Guid id, [Bind("Id")] FilaPessoaViewModel filaPessoa)
     {
+        //TODO: This should be ViewModel!!!
         if (id != filaPessoa.Id)
         {
             return NotFound();
@@ -92,8 +95,7 @@ public class FilaPessoaController : Controller
         {
             try
             {
-                Fila fila = filaPessoa.FiladePessoas;
-                _filaAppService.CriarFila(fila);
+                _filaAppService.CriarFila(filaPessoa.FiladePessoas.ConvertToFila());
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -112,7 +114,7 @@ public class FilaPessoaController : Controller
     }
 
     // GET: FilaPessoa/Delete/5
-    public async Task<IActionResult> Delete(Guid? id)
+    public IActionResult Delete(Guid? id)
     {
         if (id == null)
         {
@@ -132,7 +134,7 @@ public class FilaPessoaController : Controller
     // POST: FilaPessoa/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(Guid id)
+    public IActionResult DeleteConfirmed(Guid id)
     {
         var result = _filaAppService.RemoverFila(id);
         return RedirectToAction(nameof(Index));

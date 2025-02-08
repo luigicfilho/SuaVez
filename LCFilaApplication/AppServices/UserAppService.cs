@@ -158,4 +158,23 @@ internal class UserAppService : IUserAppService
         }
 
     }
+
+    public bool RemoverUser(Guid id)
+    {
+        try
+        {
+            var user = _userManager.FindByIdAsync(id.ToString()).Result;
+            var useroles = _userManager.GetRolesAsync(user!).Result;
+            foreach (var item in useroles)
+            {
+                _userManager.RemoveFromRoleAsync(user!, item);
+            }
+            _userManager.DeleteAsync(user!);
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
 }

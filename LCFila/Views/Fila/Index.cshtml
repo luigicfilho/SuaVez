@@ -106,7 +106,7 @@
                                         </a>
                                         @if (User.IsInRole("EmpAdmin") || User.IsInRole("SysAdmin"))
                                         {
-                                            @if (item.Status == LCFilaApplication.Enums.FilaStatus.Finalizada)
+                                            @if (item.Status.ToString() == LCFilaApplication.Enums.FilaStatus.Finalizada.ToString())
                                             {
                                                 <a class="btn btn-info btn-sm" asp-area="" asp-controller="Fila" asp-action="ReAbrir" asp-route-id="@item.Id" data-id="@item.Id">
                                                     <i class="fas fa-history"></i>
@@ -125,7 +125,7 @@
                                         else
                                         {
 
-                                            @if (item.Status == LCFilaApplication.Enums.FilaStatus.Finalizada)
+                                            @if (item.Status.ToString() == LCFilaApplication.Enums.FilaStatus.Finalizada.ToString())
                                             {
                                                 <a class="btn btn-danger btn-sm disabled">
                                                     <i class="far fa-window-close"></i>

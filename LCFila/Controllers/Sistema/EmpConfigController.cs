@@ -1,8 +1,8 @@
-﻿using LCFila.Mapping;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using LCFila.Mapping;
 using LCFila.ViewModels;
 using LCFilaApplication.Interfaces;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace LCFila.Controllers.Sistema;
 
@@ -23,8 +23,8 @@ public class EmpConfigController : BaseController
     public async Task<IActionResult> Index()
     {
         ConfigEmpresa();
-        var userName = User.Identity.Name;
-        var empcofig = await _adminSysAppService.GetEmpresaConfiguracao(userName);
+        var userName = User.Identity!.Name;
+        var empcofig = await _adminSysAppService.GetEmpresaConfiguracao(userName!);
         EmpresaConfiguracaoViewModel emconfigviewmodel = new EmpresaConfiguracaoViewModel()
         {
             Id = empcofig.Id,
@@ -38,14 +38,14 @@ public class EmpConfigController : BaseController
     }
 
     // GET: EmpConfigController/Details/5
-    public async Task<IActionResult> Details(Guid id)
+    public IActionResult Details(Guid id)
     {
         ConfigEmpresa();
         return View();
     }
 
     // GET: EmpConfigController/Create
-    public async Task<IActionResult> Create()
+    public IActionResult Create()
     {
         ConfigEmpresa();
         return View();
@@ -54,7 +54,7 @@ public class EmpConfigController : BaseController
     // POST: EmpConfigController/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(IFormCollection collection)
+    public IActionResult Create(IFormCollection collection)
     {
         ConfigEmpresa();
         try
@@ -68,7 +68,7 @@ public class EmpConfigController : BaseController
     }
 
     // GET: EmpConfigController/Edit/5
-    public async Task<IActionResult> Edit(Guid id)
+    public IActionResult Edit(Guid id)
     {
         ConfigEmpresa();
         return View();
@@ -90,14 +90,14 @@ public class EmpConfigController : BaseController
 
             return RedirectToAction(nameof(Index));
         }
-        catch (Exception Ex)
+        catch (Exception)
         {
             return View(id);
         }
     }
 
     // GET: EmpConfigController/Delete/5
-    public async Task<IActionResult> Delete(Guid id)
+    public IActionResult Delete(Guid id)
     {
         ConfigEmpresa();
         return View();
@@ -106,7 +106,7 @@ public class EmpConfigController : BaseController
     // POST: EmpConfigController/Delete/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Delete(Guid id, IFormCollection collection)
+    public IActionResult Delete(Guid id, IFormCollection collection)
     {
         ConfigEmpresa();
         try
@@ -135,7 +135,7 @@ public class EmpConfigController : BaseController
             absolutefullFilePath = Path.Combine(Environment.CurrentDirectory, relativefilePath);
         }
 
-        Directory.CreateDirectory(Path.GetDirectoryName(absolutefullFilePath));
+        Directory.CreateDirectory(Path.GetDirectoryName(absolutefullFilePath)!);
         using (var fileStream = new FileStream(absolutefullFilePath, FileMode.CreateNew, FileAccess.Write))
         {
             files.CopyTo(fileStream);

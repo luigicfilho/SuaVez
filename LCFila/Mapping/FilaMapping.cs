@@ -1,8 +1,10 @@
 ﻿using LCFila.ViewModels;
+using LCFila.Web.Models;
 //TODO: how to do it in another way to remove theses references
 using LCFilaApplication.Models;
+using LCFilaApplication.Enums;
 
-namespace LCFilaApplication.Mapping;
+namespace LCFila.Web.Mapping;
 
 public static class FilaMapping
 {
@@ -12,9 +14,9 @@ public static class FilaMapping
         {
             Id = filaViewModel.Id,
             Nome = filaViewModel.Nome,
-            Status = filaViewModel.Status,
+            Status = Enum.Parse<FilaStatus>(Enum.GetName(filaViewModel.Status)!),
             TempoMedio = filaViewModel.TempoMedio,
-            Tipofila = filaViewModel.Tipofila,
+            Tipofila = Enum.Parse<TiposFilas>(Enum.GetName(filaViewModel.Tipofila)!),
             UserId = filaViewModel.UserId,
             Ativo = filaViewModel.Ativo,
             DataFim = filaViewModel.DataFim,
@@ -34,9 +36,9 @@ public static class FilaMapping
             {
                 Id = fila.Id,
                 Nome = fila.Nome,
-                Status = fila.Status,
+                Status = Enum.Parse<FilaStatus>(Enum.GetName(fila.Status)!),
                 TempoMedio = fila.TempoMedio,
-                Tipofila = fila.Tipofila,
+                Tipofila = Enum.Parse<TiposFilas>(Enum.GetName(fila.Tipofila)!),
                 UserId = fila.UserId,
                 Ativo = fila.Ativo,
                 DataFim = fila.DataFim,
@@ -54,9 +56,9 @@ public static class FilaMapping
         {
             Id = fila.Id,
             Nome = fila.Nome,
-            Status = fila.Status,
+            Status = Enum.Parse<FilaStatusViewModel>(Enum.GetName(fila.Status)!),
             TempoMedio = fila.TempoMedio,
-            Tipofila = fila.Tipofila,
+            Tipofila = Enum.Parse<TiposFilaViewModel>(Enum.GetName(fila.Tipofila)!),
             UserId = fila.UserId,
             Ativo = fila.Ativo,
             DataFim = fila.DataFim,
@@ -67,7 +69,7 @@ public static class FilaMapping
         return filaViewModel;
     }
 
-    public static List<FilaViewModel> ConvertToListFilaViewModel(this List<Fila> filalist)
+    public static List<FilaViewModel> ConvertToListFilaViewModel(List<Fila> filalist)
     {
         List<FilaViewModel> listfila = [];
 
@@ -79,9 +81,9 @@ public static class FilaMapping
                 {
                     Id = fila.Id,
                     Nome = fila.Nome,
-                    Status = fila.Status,
+                    Status = Enum.Parse<FilaStatusViewModel>(Enum.GetName(fila.Status)!),
                     TempoMedio = fila.TempoMedio,
-                    Tipofila = fila.Tipofila,
+                    Tipofila = Enum.Parse<TiposFilaViewModel>(Enum.GetName(fila.Tipofila)!),
                     UserId = fila.UserId,
                     Ativo = fila.Ativo,
                     DataFim = fila.DataFim,

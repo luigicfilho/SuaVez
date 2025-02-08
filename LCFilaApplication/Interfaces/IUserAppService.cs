@@ -10,5 +10,6 @@ public interface IUserAppService
    bool CreateNewUser(string UserEmail, string Password, int Role);
    bool AtualizarUser(Guid id, AppUser formUser, string Role);
    bool RemoverUser(Guid id, AppUser formUser);
+   bool RemoverUser(Guid id);
    bool Logout();
 }

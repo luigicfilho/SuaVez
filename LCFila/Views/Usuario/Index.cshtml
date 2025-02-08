@@ -68,7 +68,7 @@
                         {
                             @foreach (var item in Model)
                             {
-                                @if (item.Email != User.Identity.Name)
+                                @if (item.Email != User.Identity!.Name)
                                 {
                                     <tr>
                                         <td>

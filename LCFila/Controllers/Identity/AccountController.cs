@@ -1,14 +1,13 @@
-using System.Security.Claims;
-using IdentitySample.Models.AccountViewModels;
-using LCFila.Application.Interfaces.Identity;
-using LCFila.Controllers;
-//TODO: Remove this reference
-using LCFilaApplication.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
+using LCFila.Application.Interfaces.Identity;
+using LCFila.Controllers;
+using LCFila.ViewModels;
+using LCFila.Web.Models;
+using LCFila.Web.Models.Identity.AccountViewModels;
 
 namespace IdentitySample.Controllers;
 
@@ -40,7 +39,7 @@ public class AccountController : Controller
         returnUrl = returnUrl ?? Url.Content("~/");
 
         // Clear the existing external cookie to ensure a clean login process
-        HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+        HttpContext.SignOutAsync("Identity.External");
 
         //ExternalLogins = (_signInManager.GetExternalAuthenticationSchemesAsync()).Result.ToList();
 
@@ -53,7 +52,7 @@ public class AccountController : Controller
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
+    public IActionResult Login(LoginViewModel model, string? returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl ?? "";
         if (ModelState.IsValid)
@@ -174,13 +173,13 @@ public class AccountController : Controller
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Register(RegisterViewModel model, string? returnUrl = null)
+    public IActionResult Register(RegisterViewModel model, string? returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
         if (ModelState.IsValid)
         {
-            var user = new AppUser { UserName = model.Email, Email = model.Email };
-            var result = _identityService.CreateAsync(user, model.Password);
+            var user = new AppUserViewModel { UserName = model.Email, Email = model.Email };
+            var result = _identityService.CreateAsync(user.ConvertToAppUser(), model.Password);
             if (result.Succeeded)
             {
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
@@ -189,11 +188,11 @@ public class AccountController : Controller
                 //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
                 //await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
                 //    "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
-                _identityService.SignInAsync(user, isPersistent: false);
+                _identityService.SignInAsync(user.ConvertToAppUser(), isPersistent: false);
                 _logger.LogInformation(3, "User created a new account with password.");
                 return RedirectToLocal(returnUrl!);
             }
-            AddErrors(result);
+            AddErrors(result.ConvertToIdentityResult());
         }
 
         // If we got this far, something failed, redisplay form
@@ -248,7 +247,7 @@ public class AccountController : Controller
     // POST: /Account/LogOff
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> LogOff(string? returnUrl = null)
+    public IActionResult LogOff(string? returnUrl = null)
     {
         _identityService.SignOutAsync();
         _logger.LogInformation(4, "User logged out.");
@@ -271,7 +270,7 @@ public class AccountController : Controller
     {
         // Request a redirect to the external login provider.
         var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
-        var properties = _identityService.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+        var properties = _identityService.ConfigureExternalAuthenticationProperties(provider, redirectUrl!);
         return Challenge(properties, provider);
 
         /*
@@ -339,7 +338,7 @@ public class AccountController : Controller
     // GET: /Account/ExternalLoginCallback
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IActionResult> ExternalLoginCallback(string? returnUrl = null, string? remoteError = null)
+    public IActionResult ExternalLoginCallback(string? returnUrl = null, string? remoteError = null)
     {
         if (remoteError != null)
         {
@@ -426,7 +425,7 @@ public class AccountController : Controller
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string? returnUrl = null)
+    public IActionResult ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string? returnUrl = null)
     {
         if (ModelState.IsValid)
         {
@@ -436,14 +435,14 @@ public class AccountController : Controller
             {
                 return View("ExternalLoginFailure");
             }
-            var user = new AppUser { UserName = model.Email, Email = model.Email };
-            var result = _identityService.CreateAsync(user);
+            var user = new AppUserViewModel { UserName = model.Email, Email = model.Email };
+            var result = _identityService.CreateAsync(user.ConvertToAppUser());
             if (result.Succeeded)
             {
-                result = _identityService.AddLoginAsync(user, info);
+                result = _identityService.AddLoginAsync(user.ConvertToAppUser(), info);
                 if (result.Succeeded)
                 {
-                    _identityService.SignInAsync(user, isPersistent: false);
+                    _identityService.SignInAsync(user.ConvertToAppUser(), isPersistent: false);
                     _logger.LogInformation(6, "User created an account using {Name} provider.", info.LoginProvider);
 
                     // Update any authentication tokens as well
@@ -452,7 +451,7 @@ public class AccountController : Controller
                     return RedirectToLocal(returnUrl!);
                 }
             }
-            AddErrors(result);
+            AddErrors(result.ConvertToIdentityResult());
         }
 
         ViewData["ReturnUrl"] = returnUrl;
@@ -462,7 +461,7 @@ public class AccountController : Controller
     // GET: /Account/ConfirmEmail
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IActionResult> ConfirmEmail(string userId, string code)
+    public IActionResult ConfirmEmail(string userId, string code)
     {
         if (userId == null || code == null)
         {
@@ -491,7 +490,7 @@ public class AccountController : Controller
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+    public IActionResult ForgotPassword(ForgotPasswordViewModel model)
     {
         if (ModelState.IsValid)
         {
@@ -570,7 +569,7 @@ public class AccountController : Controller
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+    public IActionResult ResetPassword(ResetPasswordViewModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -587,7 +586,7 @@ public class AccountController : Controller
         {
             return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
         }
-        AddErrors(result);
+        AddErrors(result.ConvertToIdentityResult());
         return View();
     }
 
@@ -604,7 +603,7 @@ public class AccountController : Controller
     // GET: /Account/SendCode
     [HttpGet]
     [AllowAnonymous]
-    public async Task<ActionResult> SendCode(string? returnUrl = null, bool rememberMe = false)
+    public ActionResult SendCode(string? returnUrl = null, bool rememberMe = false)
     {
         var user = _identityService.GetTwoFactorAuthenticationUserAsync();
         if (user == null)
@@ -621,7 +620,7 @@ public class AccountController : Controller
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> SendCode(SendCodeViewModel model)
+    public IActionResult SendCode(SendCodeViewModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -656,7 +655,7 @@ public class AccountController : Controller
     // GET: /Account/VerifyCode
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IActionResult> VerifyCode(string provider, bool rememberMe, string? returnUrl = null)
+    public IActionResult VerifyCode(string provider, bool rememberMe, string? returnUrl = null)
     {
         // Require that the user has already logged in via username/password or external login
         var user = _identityService.GetTwoFactorAuthenticationUserAsync();
@@ -672,7 +671,7 @@ public class AccountController : Controller
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> VerifyCode(VerifyCodeViewModel model)
+    public IActionResult VerifyCode(VerifyCodeViewModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -703,7 +702,7 @@ public class AccountController : Controller
     // GET: /Account/VerifyAuthenticatorCode
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IActionResult> VerifyAuthenticatorCode(bool rememberMe, string? returnUrl = null)
+    public IActionResult VerifyAuthenticatorCode(bool rememberMe, string? returnUrl = null)
     {
         // Require that the user has already logged in via username/password or external login
         var user = _identityService.GetTwoFactorAuthenticationUserAsync();
@@ -719,7 +718,7 @@ public class AccountController : Controller
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> VerifyAuthenticatorCode(VerifyAuthenticatorCodeViewModel model)
+    public IActionResult VerifyAuthenticatorCode(VerifyAuthenticatorCodeViewModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -750,7 +749,7 @@ public class AccountController : Controller
     // GET: /Account/UseRecoveryCode
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IActionResult> UseRecoveryCode(string? returnUrl = null)
+    public IActionResult UseRecoveryCode(string? returnUrl = null)
     {
         // Require that the user has already logged in via username/password or external login
         var user = _identityService.GetTwoFactorAuthenticationUserAsync();
@@ -766,7 +765,7 @@ public class AccountController : Controller
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> UseRecoveryCode(UseRecoveryCodeViewModel model)
+    public IActionResult UseRecoveryCode(UseRecoveryCodeViewModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -787,17 +786,18 @@ public class AccountController : Controller
 
     #region Helpers
 
-    private void AddErrors(IdentityResult result)
+    private void AddErrors(List<IdentityResultViewModel> result)
     {
-        foreach (var error in result.Errors)
+        foreach (var error in result)
         {
             ModelState.AddModelError(string.Empty, error.Description);
         }
     }
 
-    private AppUser GetCurrentUserAsync()
+    private AppUserViewModel GetCurrentUserAsync()
     {
-        return _identityService.GetUserAsync(HttpContext.User)!;
+        AppUserViewModel appUser = new();
+        return appUser.ConvertToViewModel(_identityService.GetUserAsync(HttpContext.User));
     }
 
     private IActionResult RedirectToLocal(string returnUrl)

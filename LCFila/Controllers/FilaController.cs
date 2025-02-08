@@ -1,11 +1,11 @@
-﻿using LCFila.Controllers.Sistema;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using LCFila.Controllers.Sistema;
 using LCFila.Mapping;
 using LCFila.ViewModels;
-using LCFilaApplication.Enums;
+using LCFila.Web.Mapping;
+using LCFila.Web.Models;
 using LCFilaApplication.Interfaces;
-using LCFilaApplication.Mapping;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace LCFila.Controllers;
 
@@ -21,7 +21,7 @@ public class FilaController : BaseController
     }
 
     // GET: FilaController
-    public async Task<IActionResult> Index(/*Guid? id*/)
+    public IActionResult Index(/*Guid? id*/)
     {
         ConfigEmpresa();
 
@@ -31,16 +31,16 @@ public class FilaController : BaseController
         var filasdousuario = _filaAppService.GetFilaList(User.Identity!.Name!);
 
         //TODO: Review this conversion, it' a reference to APP
-        var teste = filasdousuario.ConvertToListFilaViewModel();
+        var teste = FilaMapping.ConvertToListFilaViewModel(filasdousuario);
         foreach (var item in teste)
         {
-            item.NomeUser = allusers.SingleOrDefault(p => p.Id == item.UserId.ToString()).UserName;
+            item.NomeUser = allusers.SingleOrDefault(p => p.Id == item.UserId.ToString())!.UserName!;
         }
         return View(teste.ToList());
     }
 
     // GET: FilaController/Details/5
-    public async Task<IActionResult> Details(Guid id)
+    public IActionResult Details(Guid id)
     {
         ConfigEmpresa();
 
@@ -52,7 +52,7 @@ public class FilaController : BaseController
         return View(pessoasdafila);
     }
 
-    public async Task<IActionResult> ReAbrir(Guid id)
+    public IActionResult ReAbrir(Guid id)
     {
         ConfigEmpresa();
         var result = _filaAppService.ReabrirFila(id);
@@ -62,7 +62,7 @@ public class FilaController : BaseController
         return BadRequest();
     }
 
-    public async Task<IActionResult> Finalizar(Guid id)
+    public IActionResult Finalizar(Guid id)
     {
         ConfigEmpresa();
 
@@ -74,7 +74,7 @@ public class FilaController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> CreateFila()
+    public IActionResult CreateFila()
     {
         ConfigEmpresa();
         var (userId, empresaid) = _filaAppService.GetUserIdEmpId(User.Identity!.Name!);
@@ -89,13 +89,13 @@ public class FilaController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateFila(FilaViewModel filamodel)
+    public IActionResult CreateFila(FilaViewModel filamodel)
     {
         ConfigEmpresa();
         filamodel.DataInicio = DateTime.Now;
         filamodel.Ativo = true;
         //Review ENUM, really need to be a reference to App?
-        filamodel.Status = FilaStatus.Aberta;
+        filamodel.Status = FilaStatusViewModel.Aberta;
         //TODO: Review this conversion, it' a reference to APP
         var fila = filamodel.ConvertToFila();
         var result = _filaAppService.CriarFila(fila);
@@ -106,7 +106,7 @@ public class FilaController : BaseController
     // GET: FilaController/Create
     //[ClaimsAuthorize("Funcionário", "Criar")]
     [HttpGet]
-    public async Task<IActionResult> Create(Guid id)
+    public IActionResult Create(Guid id)
     {
         ConfigEmpresa();
         AdicionarpessoasViewModel pessoasviewmodel = new AdicionarpessoasViewModel();
@@ -114,7 +114,7 @@ public class FilaController : BaseController
         return View(pessoasviewmodel);
     }
 
-    public async Task<IActionResult> IniciarFila()
+    public IActionResult IniciarFila()
     {
         ConfigEmpresa();
         
@@ -125,7 +125,7 @@ public class FilaController : BaseController
 
     // POST: FilaController/Create
     [HttpPost]
-    public async Task<IActionResult> Create(AdicionarpessoasViewModel pessoaViewModel)
+    public IActionResult Create(AdicionarpessoasViewModel pessoaViewModel)
     {
         ConfigEmpresa();
         if (!ModelState.IsValid) return View(pessoaViewModel);
@@ -134,7 +134,7 @@ public class FilaController : BaseController
         pessoaViewModel.pessoa.Ativo = true;
 
         //Review ENUM, really need to be a reference to App?
-        pessoaViewModel.pessoa.Status = PessoaStatus.Esperando;
+        pessoaViewModel.pessoa.Status = PessoaStatusViewModel.Esperando;
 
         var result = _filaAppService.AdicionarPessoa(pessoaViewModel.pessoa.ConvertToPessoa(), 
                                                      pessoaViewModel.filaId);
@@ -172,7 +172,7 @@ public class FilaController : BaseController
     }
 
     // GET: FilaController/Delete/5
-    public async Task<IActionResult> Delete(Guid id)
+    public IActionResult Delete(Guid id)
     {
         ConfigEmpresa();
         var result = _filaAppService.RemoverFila(id);
@@ -184,7 +184,7 @@ public class FilaController : BaseController
     // POST: FilaController/Delete/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Delete(Guid id, IFormCollection collection)
+    public IActionResult Delete(Guid id, IFormCollection collection)
     {
         ConfigEmpresa();
         try
