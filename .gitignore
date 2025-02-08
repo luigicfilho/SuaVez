@@ -2,13 +2,13 @@
 # Este arquivo .gitignore foi criado automaticamente pelo Microsoft(R) Visual Studio.
 ################################################################################
 
-/LCFila/bin/*
+/LCFila.Web/bin/*
 /.vs/*
-/LCFila/obj/*
-/LCFilaApplication/bin/*
-/LCFilaApplication/obj/*
-/LCFilaApplication/obj
-/LCFilaDomain/bin/Debug/net6.0
-/LCFilaDomain/obj
-/LCFilaInfra/bin/Debug/net6.0
-/LCFilaInfra/obj
+/LCFila.Web/obj/*
+/LCFila.Application/bin/*
+/LCFila.Application/obj/*
+/LCFila.Domain/bin/*
+/LCFila.Domain/obj/*
+/LCFila.Infra/bin/*
+/LCFila.Infra/obj/*
+**/obj/*

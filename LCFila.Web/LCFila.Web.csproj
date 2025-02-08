@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LCFilaApplication\LCFila.Application.csproj" />
+    <ProjectReference Include="..\LCFila.Application\LCFila.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LCFila.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+128889913d1873c0c9a5c2084091132b8718045e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+88c1c45e3681d34876a523cf3942b291edc8cd0e")]
 [assembly: System.Reflection.AssemblyProductAttribute("LCFila.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LCFila.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

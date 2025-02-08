@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LCFilaDomain\LCFila.Domain.csproj" />
-    <ProjectReference Include="..\LCFilaInfra\LCFila.Infra.csproj" />
+    <ProjectReference Include="..\LCFila.Domain\LCFila.Domain.csproj" />
+    <ProjectReference Include="..\LCFila.Infra\LCFila.Infra.csproj" />
   </ItemGroup>
 
 </Project>
