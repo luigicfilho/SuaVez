@@ -48,6 +48,12 @@ git clone https://github.com/luigicfilho/LCFila.git
 cd LCFila
 ```
 
+### Run the migrations to create database
+
+```bash
+dotnet ef migrations add Initial --startup-project .\LCFila.Web\LCFila.Web.csproj --assembly .\LCFila.Infra\LCFila.Infra.csproj
+```
+
 ### Run the development server:
 
 ```bash
