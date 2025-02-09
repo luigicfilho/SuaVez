@@ -52,6 +52,7 @@ cd LCFila
 
 ```bash
 dotnet ef migrations add Initial --startup-project .\LCFila.Web\LCFila.Web.csproj --assembly .\LCFila.Infra\LCFila.Infra.csproj
+dotnet ef database update --project .\LCFila.Infra\LCFila.Infra.csproj -s .\LCFila.Web\LCFila.Web.csproj
 ```
 
 ### Run the development server:
