@@ -1,7 +1,7 @@
 # Remove vendor static files from the statistics
 LCFila/wwwroot/lib/** linguist-vendored
 # Don't take .css files into consideration
-# *.css linguist-detectable=false
+*.css linguist-detectable=false
 LCFila/wwwroot/lib/** linguist-detectable=false
 # This should classify correct the razor pages, but it's not
 *.cshtml linguist-language=HTML+Razor
