@@ -20,7 +20,6 @@ public class FilaController : BaseController
         _filaAppService = filaAppService;
     }
 
-    // GET: FilaController
     public IActionResult Index(/*Guid? id*/)
     {
         ConfigEmpresa();
@@ -39,7 +38,6 @@ public class FilaController : BaseController
         return View(teste.ToList());
     }
 
-    // GET: FilaController/Details/5
     public IActionResult Details(Guid id)
     {
         ConfigEmpresa();
@@ -103,8 +101,7 @@ public class FilaController : BaseController
             return RedirectToAction(nameof(Index));
         return BadRequest();
     }
-    // GET: FilaController/Create
-    //[ClaimsAuthorize("Funcionário", "Criar")]
+
     [HttpGet]
     public IActionResult Create(Guid id)
     {
@@ -123,7 +120,6 @@ public class FilaController : BaseController
 
     }
 
-    // POST: FilaController/Create
     [HttpPost]
     public IActionResult Create(AdicionarpessoasViewModel pessoaViewModel)
     {
@@ -148,14 +144,12 @@ public class FilaController : BaseController
         return BadRequest();
     }
 
-    // GET: FilaController/Edit/5
     public ActionResult Edit(int id)
     {
         ConfigEmpresa();
         return View();
     }
 
-    // POST: FilaController/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     public ActionResult Edit(int id, IFormCollection collection)
@@ -171,7 +165,6 @@ public class FilaController : BaseController
         }
     }
 
-    // GET: FilaController/Delete/5
     public IActionResult Delete(Guid id)
     {
         ConfigEmpresa();
@@ -181,7 +174,6 @@ public class FilaController : BaseController
         return BadRequest();
     }
 
-    // POST: FilaController/Delete/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Delete(Guid id, IFormCollection collection)

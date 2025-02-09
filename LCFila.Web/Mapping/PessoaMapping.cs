@@ -3,6 +3,8 @@ using LCFila.Web.Mapping;
 using LCFila.Web.Models;
 
 //TODO: how to do it in another way to remove theses references
+//Don't need all this information in this layer, just the informations
+//that need to be passed down
 using LCFila.Domain.Models;
 using LCFila.Domain.Enums;
 

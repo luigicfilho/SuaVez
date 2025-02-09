@@ -16,18 +16,6 @@ public static class WebApplicationExtensions
         if (componentType != null) // Important to check if componentType is found
         {
             builder.Services.AddScoped(typeof(ILCFilaConfigurator), componentType);
-            //builder.Services.AddScoped(typeof(ILCFilaConfigurator), sp =>
-            //{
-            //    // Use Activator.CreateInstance to create an instance:
-            //    object? implementation = Activator.CreateInstance(componentType!);
-            //    if (implementation is not null)
-            //    {
-            //        return implementation;
-            //    }
-            //    throw new InvalidOperationException($"Cannot create instance of {componentType}");
-            //    // Or, if your type has constructor dependencies:
-            //    // return Activator.CreateInstance(componentType, /* your dependencies here */);
-            //});
         }
         else
         {
@@ -41,15 +29,6 @@ public static class WebApplicationExtensions
         if (initializerType != null)
         {
             builder.Services.AddScoped(typeof(ILCFilaInitializer), initializerType);
-            //builder.Services.AddScoped(typeof(ILCFilaInitializer), sp =>
-            //{
-            //    object? implementation = Activator.CreateInstance(initializerType!);
-            //    if (implementation is not null)
-            //    {
-            //        return implementation;
-            //    }
-            //    throw new InvalidOperationException($"Cannot create instance of {initializerType}");
-            //});
         }
         else
         {
@@ -64,6 +43,7 @@ public static class WebApplicationExtensions
         return builder;
     }
 
+    //TODO: Don't need that, can use startup filters, but it's more "hidden"
     public static WebApplication InitializeApplication(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();

@@ -4,7 +4,6 @@ using LCFila.Application.Interfaces;
 
 namespace LCFila.Controllers;
 
-
 [FeatureGate("Scheduling")]
 public class SchedulerController : BaseController
 {

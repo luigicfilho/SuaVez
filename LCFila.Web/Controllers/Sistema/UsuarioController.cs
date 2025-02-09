@@ -5,7 +5,7 @@ using LCFila.Controllers.Sistema;
 using LCFila.ViewModels;
 using LCFila.Application.Interfaces;
 
-namespace LCFila.Controllers;
+namespace LCFila.Web.Controllers.Sistema;
 
 [Authorize(Roles = "SysAdmin,EmpAdmin")]
 public class UsuarioController : BaseController
@@ -13,12 +13,13 @@ public class UsuarioController : BaseController
     private readonly IUserAppService _userAppService;
 
     public UsuarioController(INotificador notificador,
-        IUserAppService userAppService,
-        IConfigAppService configAppService) : base(notificador, configAppService)
+                             IUserAppService userAppService,
+                             IConfigAppService configAppService)
+                           : base(notificador, configAppService)
     {
         _userAppService = userAppService;
     }
-    // GET: UsuarioController
+
     public IActionResult Index()
     {
         ConfigEmpresa();
@@ -26,7 +27,6 @@ public class UsuarioController : BaseController
         return View(listUsers);
     }
 
-    // GET: UsuarioController/Details/5
     public IActionResult Details(Guid id)
     {
         ConfigEmpresa();
@@ -46,7 +46,6 @@ public class UsuarioController : BaseController
         return View(user);
     }
 
-    // GET: UsuarioController/Create
     public IActionResult Create()
     {
         ConfigEmpresa();
@@ -60,7 +59,6 @@ public class UsuarioController : BaseController
         return View(userviewmodel);
     }
 
-    // POST: UsuarioController/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Create(UserCreateViewModel Input)
@@ -88,7 +86,6 @@ public class UsuarioController : BaseController
         }
     }
 
-    // GET: UsuarioController/Edit/5
     public IActionResult Edit(Guid id)
     {
         ConfigEmpresa();
@@ -107,7 +104,6 @@ public class UsuarioController : BaseController
         return View(user);
     }
 
-    // POST: UsuarioController/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Edit(Guid id, AppUserViewModel formUser, IFormCollection collection)
@@ -128,7 +124,6 @@ public class UsuarioController : BaseController
         }
     }
 
-    // GET: UsuarioController/Delete/5
     [HttpGet]
     public IActionResult Delete(Guid id)
     {
@@ -149,7 +144,6 @@ public class UsuarioController : BaseController
         return View(user);
     }
 
-    // POST: UsuarioController/Delete/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Delete(Guid id, string? returnurl = null)

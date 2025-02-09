@@ -17,10 +17,8 @@ public class HomeController : BaseController
                           INotificador notificador,
                           IConfigAppService configAppService) : base(notificador, configAppService)
     {
-
         _logger = logger;
         _userAppService = userAppService;
-
     }
 
     public IActionResult Index()

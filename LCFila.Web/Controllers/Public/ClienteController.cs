@@ -4,29 +4,28 @@ using LCFila.Controllers.Sistema;
 using LCFila.Mapping;
 using LCFila.Application.Interfaces;
 
-namespace LCFila.Controllers;
+namespace LCFila.Web.Controllers.Public;
 
-//[Authorize(Roles = "User")]
-//[AllowAnonymous]
 public class ClienteController : BaseController
 {
     private readonly IPessoaAppService _pessoaAppService;
 
     public ClienteController(INotificador notificador,
-                         IPessoaAppService pessoaAppService,
-                         IConfigAppService configAppService) : base(notificador, configAppService)
+                             IPessoaAppService pessoaAppService,
+                             IConfigAppService configAppService)
+                           : base(notificador, configAppService)
     {
         _pessoaAppService = pessoaAppService;
     }
+
     [AllowAnonymous]
-    // GET: ClienteController
     public ActionResult Index()
     {
         ConfigEmpresa();
         return View();
     }
+
     [AllowAnonymous]
-    // GET: ClienteController/Details/5
     public IActionResult Details(Guid id, Guid filaid)
     {
         ConfigEmpresa();
@@ -35,7 +34,6 @@ public class ClienteController : BaseController
         pessoa.FilaId = filaid;
         return View(pessoa);
     }
-
 
     public IActionResult Call(Guid id, Guid filaid)
     {
@@ -79,74 +77,5 @@ public class ClienteController : BaseController
             return RedirectToAction("Details", "Fila", new { id = filaid });
         }
         return RedirectToAction("Error", new { id = filaid });
-    }
-
-    // GET: ClienteController/Create
-    public ActionResult Create()
-    {
-        ConfigEmpresa();
-        return View();
-    }
-
-    // POST: ClienteController/Create
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public ActionResult Create(IFormCollection collection)
-    {
-        ConfigEmpresa();
-        try
-        {
-            return RedirectToAction(nameof(Index));
-        }
-        catch
-        {
-            return View();
-        }
-    }
-
-    // GET: ClienteController/Edit/5
-    public ActionResult Edit(int id)
-    {
-        ConfigEmpresa();
-        return View();
-    }
-
-    // POST: ClienteController/Edit/5
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public ActionResult Edit(int id, IFormCollection collection)
-    {
-        ConfigEmpresa();
-        try
-        {
-            return RedirectToAction(nameof(Index));
-        }
-        catch
-        {
-            return View();
-        }
-    }
-
-    // GET: ClienteController/Delete/5
-    public ActionResult Delete(int id)
-    {
-        ConfigEmpresa();
-        return View();
-    }
-
-    // POST: ClienteController/Delete/5
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public ActionResult Delete(int id, IFormCollection collection)
-    {
-        ConfigEmpresa();
-        try
-        {
-            return RedirectToAction(nameof(Index));
-        }
-        catch
-        {
-            return View();
-        }
     }
 }
