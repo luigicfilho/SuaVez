@@ -32,8 +32,10 @@ internal class FilaAppService : IFilaAppService
         try
         {
             var pessoas = _pessoaRepository.ObterTodos().Result;
+            var fila = _filaRepository.ObterPorId(FilaId).Result;
             var pessoasdafila = pessoas.Where(p => p.FilaId == FilaId && p.Ativo == true && p.Status == PessoaStatus.Esperando).ToList();
 
+            //Pessoa.Fila = fila!;
             if (Pessoa.Preferencial)
             {
                 Pessoa.Posicao = 1;
@@ -59,7 +61,7 @@ internal class FilaAppService : IFilaAppService
                 Pessoa.Posicao = pessoasdafila.Count + 1;
             }
             Pessoa.FilaId = FilaId;
-
+            //Pessoa.Fila = fila!;
             _pessoaRepository.Adicionar(Pessoa);
             return true;
         }

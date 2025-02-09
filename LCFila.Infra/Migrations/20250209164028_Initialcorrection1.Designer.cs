@@ -3,6 +3,7 @@ using System;
 using LCFila.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LCFila.Infra.Migrations
 {
     [DbContext(typeof(FilaDbContext))]
-    partial class FilaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250209164028_Initialcorrection1")]
+    partial class Initialcorrection1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.12");
@@ -176,6 +179,8 @@ namespace LCFila.Infra.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FilaId");
 
                     b.HasIndex("FilaPessoaId");
 
@@ -428,10 +433,18 @@ namespace LCFila.Infra.Migrations
 
             modelBuilder.Entity("LCFila.Domain.Models.Pessoa", b =>
                 {
+                    b.HasOne("LCFila.Domain.Models.Fila", "Fila")
+                        .WithMany()
+                        .HasForeignKey("FilaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("LCFila.Domain.Models.FilaPessoa", null)
                         .WithMany("Pessoas")
                         .HasForeignKey("FilaPessoaId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Fila");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

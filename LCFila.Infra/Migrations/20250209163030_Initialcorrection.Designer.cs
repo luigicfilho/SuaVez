@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LCFila.Infra.Migrations
 {
     [DbContext(typeof(FilaDbContext))]
-    [Migration("20250201124011_remove empresalogin from appuser")]
-    partial class Removeempresaloginfromappuser
+    [Migration("20250209163030_Initialcorrection")]
+    partial class Initialcorrection
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,7 +20,7 @@ namespace LCFila.Infra.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.12");
 
-            modelBuilder.Entity("LCFilaApplication.Models.EmpresaConfiguracao", b =>
+            modelBuilder.Entity("LCFila.Domain.Models.EmpresaConfiguracao", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -51,7 +51,7 @@ namespace LCFila.Infra.Migrations
                     b.ToTable("EmpresaConfigs");
                 });
 
-            modelBuilder.Entity("LCFilaApplication.Models.EmpresaLogin", b =>
+            modelBuilder.Entity("LCFila.Domain.Models.EmpresaLogin", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -81,7 +81,7 @@ namespace LCFila.Infra.Migrations
                     b.ToTable("EmpresasLogin");
                 });
 
-            modelBuilder.Entity("LCFilaApplication.Models.Fila", b =>
+            modelBuilder.Entity("LCFila.Domain.Models.Fila", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -126,7 +126,7 @@ namespace LCFila.Infra.Migrations
                     b.ToTable("Filas");
                 });
 
-            modelBuilder.Entity("LCFilaApplication.Models.FilaPessoa", b =>
+            modelBuilder.Entity("LCFila.Domain.Models.FilaPessoa", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -142,7 +142,7 @@ namespace LCFila.Infra.Migrations
                     b.ToTable("FilaPessoas");
                 });
 
-            modelBuilder.Entity("LCFilaApplication.Models.Pessoa", b =>
+            modelBuilder.Entity("LCFila.Domain.Models.Pessoa", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -239,6 +239,7 @@ namespace LCFila.Infra.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
                 {
                     b.Property<string>("Id")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("AccessFailedCount")
@@ -335,11 +336,9 @@ namespace LCFila.Infra.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderDisplayName")
@@ -377,11 +376,9 @@ namespace LCFila.Infra.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Value")
@@ -392,7 +389,7 @@ namespace LCFila.Infra.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("LCFilaApplication.Models.AppUser", b =>
+            modelBuilder.Entity("LCFila.Domain.Models.AppUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
@@ -404,9 +401,9 @@ namespace LCFila.Infra.Migrations
                     b.HasDiscriminator().HasValue("AppUser");
                 });
 
-            modelBuilder.Entity("LCFilaApplication.Models.EmpresaLogin", b =>
+            modelBuilder.Entity("LCFila.Domain.Models.EmpresaLogin", b =>
                 {
-                    b.HasOne("LCFilaApplication.Models.EmpresaConfiguracao", "EmpresaConfiguracao")
+                    b.HasOne("LCFila.Domain.Models.EmpresaConfiguracao", "EmpresaConfiguracao")
                         .WithMany()
                         .HasForeignKey("EmpresaConfiguracaoId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -415,17 +412,17 @@ namespace LCFila.Infra.Migrations
                     b.Navigation("EmpresaConfiguracao");
                 });
 
-            modelBuilder.Entity("LCFilaApplication.Models.Fila", b =>
+            modelBuilder.Entity("LCFila.Domain.Models.Fila", b =>
                 {
-                    b.HasOne("LCFilaApplication.Models.EmpresaLogin", null)
+                    b.HasOne("LCFila.Domain.Models.EmpresaLogin", null)
                         .WithMany("EmpresaFilas")
                         .HasForeignKey("EmpresaLoginId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("LCFilaApplication.Models.FilaPessoa", b =>
+            modelBuilder.Entity("LCFila.Domain.Models.FilaPessoa", b =>
                 {
-                    b.HasOne("LCFilaApplication.Models.Fila", "FiladePessoas")
+                    b.HasOne("LCFila.Domain.Models.Fila", "FiladePessoas")
                         .WithMany()
                         .HasForeignKey("FiladePessoasId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -434,15 +431,15 @@ namespace LCFila.Infra.Migrations
                     b.Navigation("FiladePessoas");
                 });
 
-            modelBuilder.Entity("LCFilaApplication.Models.Pessoa", b =>
+            modelBuilder.Entity("LCFila.Domain.Models.Pessoa", b =>
                 {
-                    b.HasOne("LCFilaApplication.Models.Fila", "Fila")
+                    b.HasOne("LCFila.Domain.Models.Fila", "Fila")
                         .WithMany()
                         .HasForeignKey("FilaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LCFilaApplication.Models.FilaPessoa", null)
+                    b.HasOne("LCFila.Domain.Models.FilaPessoa", null)
                         .WithMany("Pessoas")
                         .HasForeignKey("FilaPessoaId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -501,22 +498,22 @@ namespace LCFila.Infra.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("LCFilaApplication.Models.AppUser", b =>
+            modelBuilder.Entity("LCFila.Domain.Models.AppUser", b =>
                 {
-                    b.HasOne("LCFilaApplication.Models.EmpresaLogin", null)
+                    b.HasOne("LCFila.Domain.Models.EmpresaLogin", null)
                         .WithMany("UsersEmpresa")
                         .HasForeignKey("EmpresaLoginId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("LCFilaApplication.Models.EmpresaLogin", b =>
+            modelBuilder.Entity("LCFila.Domain.Models.EmpresaLogin", b =>
                 {
                     b.Navigation("EmpresaFilas");
 
                     b.Navigation("UsersEmpresa");
                 });
 
-            modelBuilder.Entity("LCFilaApplication.Models.FilaPessoa", b =>
+            modelBuilder.Entity("LCFila.Domain.Models.FilaPessoa", b =>
                 {
                     b.Navigation("Pessoas");
                 });

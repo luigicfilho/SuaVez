@@ -132,7 +132,7 @@ public class FilaController : BaseController
 
         pessoaViewModel.pessoa.DataEntradaNaFila = DateTime.Now;
         pessoaViewModel.pessoa.Ativo = true;
-
+        pessoaViewModel.pessoa.FilaId = pessoaViewModel.filaId;
         //Review ENUM, really need to be a reference to App?
         pessoaViewModel.pessoa.Status = PessoaStatusViewModel.Esperando;
 

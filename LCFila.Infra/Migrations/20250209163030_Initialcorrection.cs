@@ -5,7 +5,7 @@
 namespace LCFila.Infra.Migrations
 {
     /// <inheritdoc />
-    public partial class tryfixappuser1 : Migration
+    public partial class Initialcorrection : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

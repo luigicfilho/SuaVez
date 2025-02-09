@@ -1,6 +1,6 @@
 ﻿namespace LCFila.Application.Helpers;
 
-public sealed record Results<TValue> //: IResults //Not implemented as interface, will be next
+public sealed record Results<TValue> //where TValue : class? //: IResults //Not implemented as interface, will be next
 {
     // If you want theses objects be accessible only on math()
     // make them private otherwise let them public
@@ -37,7 +37,7 @@ public sealed record Results<TValue> //: IResults //Not implemented as interface
 
     public void Match(Action<TValue>? success = null, Action<Error>? failure = null)
     {
-        if (this.IsSuccess)
+        if (IsSuccess)
         {
             success?.Invoke(Value!);
         }
@@ -50,3 +50,28 @@ public sealed record Results<TValue> //: IResults //Not implemented as interface
     public static Results<TValue> Failure(Error error) => new(error);
     public static Results<TValue> Success(TValue value) => new(value);
 }
+
+// Invert this, result<T> implements Result not this way
+//public record Results : Results<NoResult>
+//{
+//    internal Results()
+//        : base(NoResult.Create())
+//    {
+//    }
+
+//    internal Results(Error errors)
+//        : base(errors)
+//    {
+//    }
+
+//    internal static Results FromResult<T>(Results<T> result)
+//        where T : class
+//    {
+//        if (result.IsSuccess)
+//        {
+//            return new Results();
+//        }
+
+//        return new Results(result.Error!);
+//    }
+//}

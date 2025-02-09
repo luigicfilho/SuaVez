@@ -10,12 +10,25 @@ public static class EmpresaMapping
 {
     public static EmpresaLogin ConvertToEmpresaLogin(this EmpresaLoginViewModel empresaloginViewModel)
     {
+        EmpresaConfiguracao empconfig = new()
+        {
+            CorSegundariaEmpresa = "",
+            CorPrincipalEmpresa = "",
+            FooterEmpresa = "",
+            LinkLogodaEmpresa = "http://",
+            NomeDaEmpresa = empresaloginViewModel.NomeEmpresa
+        };
+        if (empresaloginViewModel.EmpresaConfiguracao is not null)
+        {
+            empconfig = empresaloginViewModel.EmpresaConfiguracao.ConvertToEmpresaConfiguracao();
+        }
+
         EmpresaLogin empresaLogin = new()
         {
             Id = empresaloginViewModel.Id,
             IdAdminEmpresa = empresaloginViewModel.IdAdminEmpresa,
             CNPJ = empresaloginViewModel.CNPJ,
-            EmpresaConfiguracao = empresaloginViewModel.EmpresaConfiguracao!.ConvertToEmpresaConfiguracao(),
+            EmpresaConfiguracao = empconfig,
             EmpresaFilas = empresaloginViewModel.EmpresaFilas!.Any() ? empresaloginViewModel.EmpresaFilas!.ConvertToListFila() : [],
             NomeEmpresa = empresaloginViewModel.NomeEmpresa,
             UsersEmpresa = empresaloginViewModel.UsersEmpresa!,

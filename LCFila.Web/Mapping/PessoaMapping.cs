@@ -13,13 +13,23 @@ public static class PessoaMapping
     public static Pessoa ConvertToPessoa(this PessoaViewModel? pessoaViewModel)
     {
         Pessoa pessoa = new();
+        Fila fila = new();
+        if (pessoaViewModel!.Fila is not null)
+        {
+            var filapessoa = pessoaViewModel.Fila.FirstOrDefault();
+            if(filapessoa is not null)
+            {
+                fila = filapessoa.ConvertToFila();
+            }
+        }
+               
         if (pessoaViewModel is not null) {
             pessoa.Id = pessoaViewModel.Id;
             pessoa.Nome = pessoaViewModel.Nome;
             pessoa.Status = Enum.Parse<PessoaStatus>(Enum.GetName(pessoaViewModel.Status)!);
             pessoa.Celular = pessoaViewModel.Celular;
             pessoa.Documento = pessoaViewModel.Documento;
-            pessoa.Fila = pessoaViewModel.Fila.FirstOrDefault()!.ConvertToFila();
+            //pessoa.Fila = fila;
             pessoa.FilaId = pessoaViewModel.FilaId;
             pessoa.Posicao = pessoaViewModel.Posicao;
             pessoa.Preferencial = pessoaViewModel.Preferencial;
@@ -42,7 +52,7 @@ public static class PessoaMapping
                 Status = Enum.Parse<PessoaStatusViewModel>(Enum.GetName(pessoa.Status)!),
                 Celular = pessoa.Celular,
                 Documento = pessoa.Documento,
-                Fila = [pessoa.Fila.ConvertToFilaViewModel()],
+                //Fila = [pessoa.Fila.ConvertToFilaViewModel()],
                 FilaId = pessoa.FilaId,
                 Posicao = pessoa.Posicao,
                 Preferencial = pessoa.Preferencial,
@@ -63,7 +73,7 @@ public static class PessoaMapping
             pessoaViewModel.Status = Enum.Parse<PessoaStatusViewModel>(Enum.GetName(pessoa.Status)!);
             pessoaViewModel.Celular = pessoa.Celular;
             pessoaViewModel.Documento = pessoa.Documento;
-            pessoaViewModel.FilaPertence = pessoa.Fila.ConvertToFilaViewModel();
+            //pessoaViewModel.FilaPertence = pessoa.Fila.ConvertToFilaViewModel();
             pessoaViewModel.FilaId = pessoa.FilaId;
             pessoaViewModel.Posicao = pessoa.Posicao;
             pessoaViewModel.Preferencial = pessoa.Preferencial;

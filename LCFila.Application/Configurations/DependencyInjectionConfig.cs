@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using LCFila.Application.IdentityService;
+using LCFila.Application.Helpers;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace LCFila.Application.Configurations;
 
@@ -32,6 +34,20 @@ public static class DependencyInjectionConfig
         services.AddScoped<IIdentityService, IdentitysService>();
         services.AddScoped<IIdentityManagerService, IdentityManagerService>();
         services.AddSingleton<IValidationAttributeAdapterProvider, MoedaValidationAttributeAdapterProvider>();
+
+        //services.AddTransient<IProductRepository, InMemoryProductRepository>();
+        //services.AddTransient<ICommandHandler<CreateProductCommand>, CreateProductCommandHandler>();
+        //services.AddTransient<IQueryHandler<GetProductByIdQuery, Product>, GetProductByIdQueryHandler>();
+        
+        //mediator.RegisterHandler<CreateProductCommand, Unit>(new CreateProductCommandHandler(productRepository)); // Unit is like void for command handlers
+        //mediator.RegisterHandler<GetProductByIdQuery, Product>(new GetProductByIdQueryHandler(productRepository));
+
+        services.AddTransient<IMediator, Mediator>(); // Register the Mediator
+        //services.AddMediator(cfg =>
+        //{
+        //    cfg.AddHandler<MyQuery, MyQueryHandler>();
+        //    cfg.AddHandler<MyCommand, MyCommandHandler>();
+        //});
 
         services.AddTransient<IEmailSender, EmailSender>(i =>
             new EmailSender(
