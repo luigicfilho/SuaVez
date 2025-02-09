@@ -97,6 +97,8 @@ The diagram above shows the major components and how they interact within the sy
 - **LCFila.Infra** - The Infrastructure logic to connect to database and external services
 - **LCFila.Domain** - The domain logic (e.g., queue management, priority logic).
 
+You can check the ADRs:
+ADR-1: [Using MVC Web App](https://github.com/luigicfilho/LCFila/blob/main/docs/adr/adr-001-implement-LC-Fila-as-dotnet-mvc.md)
 
 **1. Queue Creation for Multiple Companies**
 - Each company can have its own queue.
