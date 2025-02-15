@@ -16,7 +16,7 @@ public class SysadminController : BaseController
     {
         _adminSysAppService = adminSysAppService;
     }
-    // GET: SysadminController
+
     public async Task<IActionResult> Index()
     {
         ConfigEmpresa();
@@ -25,7 +25,6 @@ public class SysadminController : BaseController
         return View(empresaviewmodel);
     }
 
-    // GET: SysadminController/Details/5
     public async Task<IActionResult> Details(Guid id)
     {
         ConfigEmpresa();
@@ -49,14 +48,12 @@ public class SysadminController : BaseController
         //return View();
     }
 
-    // GET: SysadminController/Create
     public ActionResult Create()
     {
         ConfigEmpresa();
         return View();
     }
 
-    // POST: SysadminController/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Create(EmpresaLoginViewModel empresaViewModel)
@@ -97,7 +94,6 @@ public class SysadminController : BaseController
         }
     }
 
-    // GET: SysadminController/Edit/5
     public async Task<IActionResult> Edit(Guid id)
     {
         ConfigEmpresa();
@@ -116,7 +112,6 @@ public class SysadminController : BaseController
         return View(empresaviewmodel);
     }
 
-    // POST: SysadminController/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Edit(Guid id, EmpresaLoginViewModel empresaViewModel)
@@ -134,7 +129,6 @@ public class SysadminController : BaseController
         }
     }
 
-    // GET: SysadminController/Delete/5
     public async Task<IActionResult> Delete(Guid id)
     {
         ConfigEmpresa();
@@ -143,7 +137,6 @@ public class SysadminController : BaseController
         return View(empresaviewmodel);
     }
 
-    // POST: SysadminController/Delete/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(Guid id, EmpresaLoginViewModel empresaViewModel)

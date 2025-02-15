@@ -25,12 +25,12 @@ public class AccountController : Controller
         _logger = loggerFactory.CreateLogger<AccountController>();
     }
 
-    //
-    // GET: /Account/Login
     [HttpGet]
     [AllowAnonymous]
     public IActionResult Login(string? returnUrl)
     {
+        //TODO: Review
+        
         //if (!string.IsNullOrEmpty(ErrorMessage))
         //{
         //    ModelState.AddModelError(string.Empty, ErrorMessage);
@@ -47,8 +47,6 @@ public class AccountController : Controller
         return View();
     }
 
-    //
-    // POST: /Account/Login
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
@@ -157,24 +155,23 @@ public class AccountController : Controller
         #endregion
     }
 
-    //
-    // GET: /Account/Register
     [HttpGet]
     [AllowAnonymous]
     public IActionResult Register(string? returnUrl = null)
     {
+        //TODO: Review
         //ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         ViewData["ReturnUrl"] = returnUrl;
         return View();
     }
 
-    //
-    // POST: /Account/Register
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
     public IActionResult Register(RegisterViewModel model, string? returnUrl = null)
     {
+        //TODO: Review
+        
         ViewData["ReturnUrl"] = returnUrl;
         if (ModelState.IsValid)
         {
@@ -243,8 +240,6 @@ public class AccountController : Controller
 
     }
 
-    //
-    // POST: /Account/LogOff
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult LogOff(string? returnUrl = null)
@@ -261,13 +256,12 @@ public class AccountController : Controller
         }
     }
 
-    //
-    // POST: /Account/ExternalLogin
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
     public IActionResult ExternalLogin(string provider, string? returnUrl = null)
     {
+        //TODO: Review
         // Request a redirect to the external login provider.
         var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
         var properties = _identityService.ConfigureExternalAuthenticationProperties(provider, redirectUrl!);
@@ -334,12 +328,11 @@ public class AccountController : Controller
          */
     }
 
-    //
-    // GET: /Account/ExternalLoginCallback
     [HttpGet]
     [AllowAnonymous]
     public IActionResult ExternalLoginCallback(string? returnUrl = null, string? remoteError = null)
     {
+        //TODO: Review
         if (remoteError != null)
         {
             ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
@@ -377,7 +370,7 @@ public class AccountController : Controller
             var email = info.Principal.FindFirstValue(ClaimTypes.Email);
             return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = email! });
         }
-
+       
         /*
          returnUrl = returnUrl ?? Url.Content("~/");
             if (remoteError != null)
@@ -420,8 +413,6 @@ public class AccountController : Controller
          */
     }
 
-    //
-    // POST: /Account/ExternalLoginConfirmation
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
@@ -458,7 +449,6 @@ public class AccountController : Controller
         return View(model);
     }
 
-    // GET: /Account/ConfirmEmail
     [HttpGet]
     [AllowAnonymous]
     public IActionResult ConfirmEmail(string userId, string code)
@@ -476,8 +466,6 @@ public class AccountController : Controller
         return View(result.Succeeded ? "ConfirmEmail" : "Error");
     }
 
-    //
-    // GET: /Account/ForgotPassword
     [HttpGet]
     [AllowAnonymous]
     public IActionResult ForgotPassword()
@@ -485,13 +473,12 @@ public class AccountController : Controller
         return View();
     }
 
-    //
-    // POST: /Account/ForgotPassword
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
     public IActionResult ForgotPassword(ForgotPasswordViewModel model)
     {
+        //TODO: Review
         if (ModelState.IsValid)
         {
             var user = _identityService.FindByEmailAsync(model.Email);
@@ -546,8 +533,6 @@ public class AccountController : Controller
          */
     }
 
-    //
-    // GET: /Account/ForgotPasswordConfirmation
     [HttpGet]
     [AllowAnonymous]
     public IActionResult ForgotPasswordConfirmation()
@@ -555,8 +540,6 @@ public class AccountController : Controller
         return View();
     }
 
-    //
-    // GET: /Account/ResetPassword
     [HttpGet]
     [AllowAnonymous]
     public IActionResult ResetPassword(string? code = null)
@@ -564,8 +547,6 @@ public class AccountController : Controller
         return code == null ? View("Error") : View();
     }
 
-    //
-    // POST: /Account/ResetPassword
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
@@ -590,8 +571,6 @@ public class AccountController : Controller
         return View();
     }
 
-    //
-    // GET: /Account/ResetPasswordConfirmation
     [HttpGet]
     [AllowAnonymous]
     public IActionResult ResetPasswordConfirmation()
@@ -599,8 +578,6 @@ public class AccountController : Controller
         return View();
     }
 
-    //
-    // GET: /Account/SendCode
     [HttpGet]
     [AllowAnonymous]
     public ActionResult SendCode(string? returnUrl = null, bool rememberMe = false)
@@ -615,8 +592,6 @@ public class AccountController : Controller
         return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl!, RememberMe = rememberMe });
     }
 
-    //
-    // POST: /Account/SendCode
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
@@ -651,8 +626,6 @@ public class AccountController : Controller
         return RedirectToAction(nameof(VerifyCode), new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
     }
 
-    //
-    // GET: /Account/VerifyCode
     [HttpGet]
     [AllowAnonymous]
     public IActionResult VerifyCode(string provider, bool rememberMe, string? returnUrl = null)
@@ -666,8 +639,6 @@ public class AccountController : Controller
         return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl!, RememberMe = rememberMe });
     }
 
-    //
-    // POST: /Account/VerifyCode
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
@@ -698,8 +669,6 @@ public class AccountController : Controller
         }
     }
 
-    //
-    // GET: /Account/VerifyAuthenticatorCode
     [HttpGet]
     [AllowAnonymous]
     public IActionResult VerifyAuthenticatorCode(bool rememberMe, string? returnUrl = null)
@@ -713,8 +682,6 @@ public class AccountController : Controller
         return View(new VerifyAuthenticatorCodeViewModel { ReturnUrl = returnUrl!, RememberMe = rememberMe });
     }
 
-    //
-    // POST: /Account/VerifyAuthenticatorCode
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
@@ -745,8 +712,6 @@ public class AccountController : Controller
         }
     }
 
-    //
-    // GET: /Account/UseRecoveryCode
     [HttpGet]
     [AllowAnonymous]
     public IActionResult UseRecoveryCode(string? returnUrl = null)
@@ -760,8 +725,6 @@ public class AccountController : Controller
         return View(new UseRecoveryCodeViewModel { ReturnUrl = returnUrl! });
     }
 
-    //
-    // POST: /Account/UseRecoveryCode
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
@@ -785,19 +748,12 @@ public class AccountController : Controller
     }
 
     #region Helpers
-
     private void AddErrors(List<IdentityResultViewModel> result)
     {
         foreach (var error in result)
         {
             ModelState.AddModelError(string.Empty, error.Description);
         }
-    }
-
-    private AppUserViewModel GetCurrentUserAsync()
-    {
-        AppUserViewModel appUser = new();
-        return appUser.ConvertToViewModel(_identityService.GetUserAsync(HttpContext.User));
     }
 
     private IActionResult RedirectToLocal(string returnUrl)
@@ -811,6 +767,5 @@ public class AccountController : Controller
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
     }
-
     #endregion
 }

@@ -27,8 +27,4 @@
     <ProjectReference Include="..\LCFila.Application\LCFila.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Identity\" />
-  </ItemGroup>
-
 </Project>

@@ -21,8 +21,6 @@ public class ManageController : Controller
         _logger = loggerFactory.CreateLogger<ManageController>();
     }
 
-    //
-    // GET: /Manage/Index
     [HttpGet]
     public IActionResult Index(ManageMessageId? message = null)
     {
@@ -48,8 +46,6 @@ public class ManageController : Controller
         return View(model);
     }
 
-    //
-    // POST: /Manage/RemoveLogin
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult RemoveLogin(RemoveLoginViewModel account)
@@ -68,15 +64,11 @@ public class ManageController : Controller
         return RedirectToAction(nameof(ManageLogins), new { Message = message });
     }
 
-    //
-    // GET: /Manage/AddPhoneNumber
     public IActionResult AddPhoneNumber()
     {
         return View();
     }
 
-    //
-    // POST: /Manage/AddPhoneNumber
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult AddPhoneNumber(AddPhoneNumberViewModel model)
@@ -92,8 +84,6 @@ public class ManageController : Controller
         return RedirectToAction(nameof(VerifyPhoneNumber), new { PhoneNumber = model.PhoneNumber });
     }
 
-    //
-    // POST: /Manage/ResetAuthenticatorKey
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult ResetAuthenticatorKey()
@@ -107,8 +97,6 @@ public class ManageController : Controller
         return RedirectToAction(nameof(Index), "Manage");
     }
 
-    //
-    // POST: /Manage/GenerateRecoveryCode
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult GenerateRecoveryCode()
@@ -123,8 +111,6 @@ public class ManageController : Controller
         return View("Error");
     }
 
-    //
-    // POST: /Manage/EnableTwoFactorAuthentication
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult EnableTwoFactorAuthentication()
@@ -139,8 +125,6 @@ public class ManageController : Controller
         return RedirectToAction(nameof(Index), "Manage");
     }
 
-    //
-    // POST: /Manage/DisableTwoFactorAuthentication
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult DisableTwoFactorAuthentication()
@@ -155,8 +139,6 @@ public class ManageController : Controller
         return RedirectToAction(nameof(Index), "Manage");
     }
 
-    //
-    // GET: /Manage/VerifyPhoneNumber
     [HttpGet]
     public IActionResult VerifyPhoneNumber(string phoneNumber)
     {
@@ -165,8 +147,6 @@ public class ManageController : Controller
         return phoneNumber == null ? View("Error") : View(new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });
     }
 
-    //
-    // POST: /Manage/VerifyPhoneNumber
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult VerifyPhoneNumber(VerifyPhoneNumberViewModel model)
@@ -190,8 +170,6 @@ public class ManageController : Controller
         return View(model);
     }
 
-    //
-    // GET: /Manage/RemovePhoneNumber
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult RemovePhoneNumber()
@@ -209,16 +187,12 @@ public class ManageController : Controller
         return RedirectToAction(nameof(Index), new { Message = ManageMessageId.Error });
     }
 
-    //
-    // GET: /Manage/ChangePassword
     [HttpGet]
     public IActionResult ChangePassword()
     {
         return View();
     }
 
-    //
-    // POST: /Manage/ChangePassword
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult ChangePassword(ChangePasswordViewModel model)
@@ -243,16 +217,12 @@ public class ManageController : Controller
         return RedirectToAction(nameof(Index), new { Message = ManageMessageId.Error });
     }
 
-    //
-    // GET: /Manage/SetPassword
     [HttpGet]
     public IActionResult SetPassword()
     {
         return View();
     }
 
-    //
-    // POST: /Manage/SetPassword
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult SetPassword(SetPasswordViewModel model)
@@ -277,7 +247,6 @@ public class ManageController : Controller
         return RedirectToAction(nameof(Index), new { Message = ManageMessageId.Error });
     }
 
-    //GET: /Manage/ManageLogins
     [HttpGet]
     public IActionResult ManageLogins(ManageMessageId? message = null)
     {
@@ -294,7 +263,7 @@ public class ManageController : Controller
         var userLogins = _identityManagerService.GetLoginsAsync(user.ConvertToAppUser());
         var schemes = _identityManagerService.GetExternalAuthenticationSchemesAsync();
         var otherLogins = schemes.Where(auth => userLogins.All(ul => auth.Name != ul.LoginProvider)).ToList();
-        ViewData["ShowRemoveButton"] = user.PasswordHash != null;// || userLogins.Count > 1;
+        ViewData["ShowRemoveButton"] = user.PasswordHash != null || userLogins.Count > 1;
         return View(new ManageLoginsViewModel
         {
             CurrentLogins = userLogins,
@@ -302,8 +271,6 @@ public class ManageController : Controller
         });
     }
 
-    //
-    // POST: /Manage/LinkLogin
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult LinkLogin(string provider)
@@ -314,8 +281,6 @@ public class ManageController : Controller
         return Challenge(properties, provider);
     }
 
-    //
-    // GET: /Manage/LinkLoginCallback
     [HttpGet]
     public ActionResult LinkLoginCallback()
     {
@@ -335,7 +300,6 @@ public class ManageController : Controller
     }
 
     #region Helpers
-
     private void AddErrors(List<IdentityResultViewModel> result)
     {
         foreach (var error in result)
@@ -362,6 +326,5 @@ public class ManageController : Controller
         user.ConvertToViewModel(_identityManagerService.GetUserAsync(HttpContext.User));
         return user;
     }
-
     #endregion
 }

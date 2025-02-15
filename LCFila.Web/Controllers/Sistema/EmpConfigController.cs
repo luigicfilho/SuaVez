@@ -18,7 +18,7 @@ public class EmpConfigController : BaseController
     {
         _adminSysAppService = adminSysAppService;       
     }
-    // GET: EmpConfigController
+
     public async Task<IActionResult> Index()
     {
         ConfigEmpresa();
@@ -36,21 +36,18 @@ public class EmpConfigController : BaseController
         return View(emconfigviewmodel);
     }
 
-    // GET: EmpConfigController/Details/5
     public IActionResult Details(Guid id)
     {
         ConfigEmpresa();
         return View();
     }
 
-    // GET: EmpConfigController/Create
     public IActionResult Create()
     {
         ConfigEmpresa();
         return View();
     }
 
-    // POST: EmpConfigController/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Create(IFormCollection collection)
@@ -66,14 +63,12 @@ public class EmpConfigController : BaseController
         }
     }
 
-    // GET: EmpConfigController/Edit/5
     public IActionResult Edit(Guid id)
     {
         ConfigEmpresa();
         return View();
     }
 
-    // POST: EmpConfigController/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(Guid id, EmpresaConfiguracaoViewModel empconfig)
@@ -95,14 +90,12 @@ public class EmpConfigController : BaseController
         }
     }
 
-    // GET: EmpConfigController/Delete/5
     public IActionResult Delete(Guid id)
     {
         ConfigEmpresa();
         return View();
     }
 
-    // POST: EmpConfigController/Delete/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Delete(Guid id, IFormCollection collection)
@@ -143,6 +136,5 @@ public class EmpConfigController : BaseController
         empconfig.LinkLogodaEmpresa = Url.Content("~/" + relativefilePath1.Replace("wwwroot/", "").Replace("\\", "/"));
 
         return Ok(files);
-
     }
 }
