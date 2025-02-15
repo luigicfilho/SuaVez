@@ -54,6 +54,7 @@ cd LCFila
 dotnet tool install --global dotnet-ef
 dotnet ef migrations add Initial --startup-project .\LCFila.Web\LCFila.Web.csproj --project .\LCFila.Infra\LCFila.Infra.csproj
 dotnet ef database update --project .\LCFila.Infra\LCFila.Infra.csproj -s .\LCFila.Web\LCFila.Web.csproj
+dotnet ef migrations script -o ../fileName.sql --startup-project .\LCFila.Web\LCFila.Web.csproj --project .\LCFila.Infra\LCFila.Infra.csproj
 ```
 
 ### Run the development server:
