@@ -11,9 +11,8 @@ namespace LCFila.Controllers.Sistema;
 public class SysadminController : BaseController
 {
     private readonly IAdminSysAppService _adminSysAppService;
-    public SysadminController(INotificador notificador,
-                              IAdminSysAppService adminSysAppService,
-                              IConfigAppService configAppService) : base(notificador, configAppService)
+    public SysadminController(IAdminSysAppService adminSysAppService,
+                              IConfigAppService configAppService) : base(configAppService)
     {
         _adminSysAppService = adminSysAppService;
     }
@@ -89,8 +88,6 @@ public class SysadminController : BaseController
 
             //TODO: REVIEW THIS, it's the only thing that makes reference to MVC
             //var resultado =  Results.Extensions.MapResult(result);
-
-            if (!OperacaoValida()) return View(empresaViewModel);
 
             return RedirectToAction(nameof(Index));
         }

@@ -10,11 +10,8 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection ConfigureLCFila(this IServiceCollection services, IConfiguration configuration)
     {
-        //services.AddControllersWithViews();
-
         services.AddIdentityConfiguration(configuration);
 
-        // builder.Services.AddFeatureManagement();
         services.AddScopedFeatureManagement(configuration.GetSection("LCFilaFeatures"));
 
         services.Configure<FeatureManagementOptions>(options =>
@@ -27,7 +24,6 @@ public static class ServiceCollectionExtensions
 
         services.ResolveDependencies(configuration);
 
-        //var serviceProvider = services.BuildServiceProvider();
         return services;
     }
 }

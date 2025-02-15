@@ -1,7 +1,6 @@
-﻿using LCFila.Application.Helpers;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
-namespace LCFila.Application.MVC;
+namespace LCFila.Application.Helpers;
 
 public static class ResultsExtensions
 {
@@ -13,7 +12,7 @@ public static class ResultsExtensions
                         onSuccess: value => Results.Ok(value),
                         onFailure: error => GetErrorResult(error));
     }
-    
+
     internal static IResult GetErrorResult(Error error)
     {
         return error.ErrorType switch
@@ -26,7 +25,7 @@ public static class ResultsExtensions
                 title: "Server Failure",
                 type: Enum.GetName(typeof(ErrorType), error.ErrorType),
                 extensions: new Dictionary<string, object?> {
-                    {  "errors", new[] { error } } 
+                    {  "errors", new[] { error } }
                 }
             ),
             ErrorType.GenericFailure => Results.BadRequest(error),

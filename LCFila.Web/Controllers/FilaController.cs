@@ -13,9 +13,8 @@ namespace LCFila.Controllers;
 public class FilaController : BaseController
 {
     private readonly IFilaAppService _filaAppService;
-    public FilaController(INotificador notificador,
-                          IFilaAppService filaAppService,
-                          IConfigAppService configAppService) : base(notificador, configAppService)
+    public FilaController(IFilaAppService filaAppService,
+                          IConfigAppService configAppService) : base(configAppService)
     {
         _filaAppService = filaAppService;
     }
@@ -137,8 +136,6 @@ public class FilaController : BaseController
 
         if (result)
         {
-            if (!OperacaoValida()) return View(pessoaViewModel);
-
             return RedirectToAction("Details", new { id = pessoaViewModel.filaId });
         }
         return BadRequest();

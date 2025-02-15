@@ -12,10 +12,9 @@ public class UsuarioController : BaseController
 {
     private readonly IUserAppService _userAppService;
 
-    public UsuarioController(INotificador notificador,
-                             IUserAppService userAppService,
+    public UsuarioController(IUserAppService userAppService,
                              IConfigAppService configAppService)
-                           : base(notificador, configAppService)
+                           : base(configAppService)
     {
         _userAppService = userAppService;
     }

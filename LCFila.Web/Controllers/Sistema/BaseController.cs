@@ -5,13 +5,10 @@ namespace LCFila.Controllers.Sistema;
 
 public abstract class BaseController : Controller
 {
-    private readonly INotificador _notificador;
     private readonly IConfigAppService _configAppService;
 
-    protected BaseController(INotificador notificador,
-                             IConfigAppService configAppService)
+    protected BaseController(IConfigAppService configAppService)
     {
-        _notificador = notificador;
         _configAppService = configAppService;
     }
 
@@ -26,10 +23,5 @@ public abstract class BaseController : Controller
             ViewBag.logo = empresa.EmpresaConfiguracao.LinkLogodaEmpresa;
             ViewBag.footer = empresa.EmpresaConfiguracao.FooterEmpresa;
         }
-    }
-
-    protected bool OperacaoValida()
-    {
-        return !_notificador.TemNotificacao();
     }
 }

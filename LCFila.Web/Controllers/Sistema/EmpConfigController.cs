@@ -13,9 +13,8 @@ public class EmpConfigController : BaseController
     private readonly IAdminSysAppService _adminSysAppService;
 
     const string UploadDirectory = "wwwroot/upload_arq";
-    public EmpConfigController(INotificador notificador,
-                               IAdminSysAppService adminSysAppService,
-                               IConfigAppService configAppService) : base(notificador, configAppService)
+    public EmpConfigController(IAdminSysAppService adminSysAppService,
+                               IConfigAppService configAppService) : base(configAppService)
     {
         _adminSysAppService = adminSysAppService;       
     }

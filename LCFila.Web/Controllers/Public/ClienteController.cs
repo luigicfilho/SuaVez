@@ -10,10 +10,9 @@ public class ClienteController : BaseController
 {
     private readonly IPessoaAppService _pessoaAppService;
 
-    public ClienteController(INotificador notificador,
-                             IPessoaAppService pessoaAppService,
+    public ClienteController(IPessoaAppService pessoaAppService,
                              IConfigAppService configAppService)
-                           : base(notificador, configAppService)
+                           : base(configAppService)
     {
         _pessoaAppService = pessoaAppService;
     }

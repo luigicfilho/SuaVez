@@ -7,7 +7,7 @@ namespace LCFila.Controllers;
 [FeatureGate("Scheduling")]
 public class SchedulerController : BaseController
 {
-    public SchedulerController(INotificador notificador, IConfigAppService configAppService) : base(notificador, configAppService)
+    public SchedulerController(IConfigAppService configAppService) : base(configAppService)
     {
     }
 }

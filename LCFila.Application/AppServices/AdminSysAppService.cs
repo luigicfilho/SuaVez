@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using LCFila.Application.Helpers;
 using LCFila.Application.Interfaces;
 using LCFila.Domain.Models;
-using LCFila.Application.Services;
 using LCFila.Infra.Interfaces;
 
 namespace LCFila.Application.AppServices;
@@ -17,8 +16,7 @@ public class AdminSysAppService : IAdminSysAppService
     private readonly ILogger<AdminSysAppService> _logger;
     private readonly IEmailSender _emailSender;
 
-    public AdminSysAppService(INotificador notificador,
-                              UserManager<AppUser> userManager,
+    public AdminSysAppService(UserManager<AppUser> userManager,
                               RoleManager<IdentityRole> roleManager,
                               ILogger<AdminSysAppService> logger,
                               IEmailSender emailSender,

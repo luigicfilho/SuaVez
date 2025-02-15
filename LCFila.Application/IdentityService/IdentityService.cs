@@ -1,9 +1,9 @@
 ﻿using LCFila.Application.Interfaces.Identity;
 using LCFila.Domain.Models;
-using LCFila.Application.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using LCFila.Application.AppServices;
 
 namespace LCFila.Application.IdentityService;
 

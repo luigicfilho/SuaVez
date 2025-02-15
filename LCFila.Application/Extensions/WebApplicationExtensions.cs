@@ -46,24 +46,9 @@ public static class WebApplicationExtensions
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UseGlobalizationConfig();
-
-        //app.MapGet("/", () => "Hello, World!");
-        //app.MapGet("/requires-auth", (ClaimsPrincipal user) => $"Hello, {user.Identity?.Name}!").RequireAuthorization();
-
-        //app.MapGroup("/identity").MapIdentityApi<IdentityUser>();
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
-
-        //app.MapRazorPages();
-        //app.UseEndpoints(endpoints =>
-        //{
-        //    endpoints.MapControllerRoute(
-        //        name: "default",
-        //        pattern: "{controller=Home}/{action=Index}/{id?}");
-        //    endpoints.MapRazorPages();
-        //});
 
         return app;
     }
