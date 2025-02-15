@@ -54,6 +54,7 @@ cd LCFila
 dotnet tool install --global dotnet-ef
 dotnet ef migrations add Initial --startup-project .\LCFila.Web\LCFila.Web.csproj --project .\LCFila.Infra\LCFila.Infra.csproj
 dotnet ef database update --project .\LCFila.Infra\LCFila.Infra.csproj -s .\LCFila.Web\LCFila.Web.csproj
+dotnet ef migrations script -o ../fileName.sql --startup-project .\LCFila.Web\LCFila.Web.csproj --project .\LCFila.Infra\LCFila.Infra.csproj
 ```
 
 ### Run the development server:
@@ -98,7 +99,9 @@ The diagram above shows the major components and how they interact within the sy
 - **LCFila.Domain** - The domain logic (e.g., queue management, priority logic).
 
 You can check the ADRs:
-ADR-1: [Using MVC Web App](https://github.com/luigicfilho/LCFila/blob/main/docs/adr/adr-001-implement-LC-Fila-as-dotnet-mvc.md)
+
+- ADR-1: [Using MVC Web App](https://github.com/luigicfilho/LCFila/blob/main/docs/adr/adr-001-implement-LC-Fila-as-dotnet-mvc.md)
+- ADR-2: [Adopt DDD With Layered Architecture](https://github.com/luigicfilho/LCFila/blob/main/docs/adr/adr-002-adopt-ddd-with-layered-architecture.md)
 
 **1. Queue Creation for Multiple Companies**
 - Each company can have its own queue.
