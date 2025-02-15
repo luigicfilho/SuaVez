@@ -98,7 +98,9 @@ The diagram above shows the major components and how they interact within the sy
 - **LCFila.Domain** - The domain logic (e.g., queue management, priority logic).
 
 You can check the ADRs:
-ADR-1: [Using MVC Web App](https://github.com/luigicfilho/LCFila/blob/main/docs/adr/adr-001-implement-LC-Fila-as-dotnet-mvc.md)
+
+- ADR-1: [Using MVC Web App](https://github.com/luigicfilho/LCFila/blob/main/docs/adr/adr-001-implement-LC-Fila-as-dotnet-mvc.md)
+- ADR-2: [Adopt DDD With Layered Architecture](https://github.com/luigicfilho/LCFila/blob/main/docs/adr/adr-002-adopt-ddd-with-layered-architecture.md)
 
 **1. Queue Creation for Multiple Companies**
 - Each company can have its own queue.
