@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="FluentValidation" Version="11.9.1" />
     <PackageReference Include="Microsoft.AspNetCore.CookiePolicy" Version="2.3.0" />
 	<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.3.0" />

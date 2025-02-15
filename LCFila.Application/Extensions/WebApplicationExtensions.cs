@@ -1,5 +1,4 @@
-﻿using LCFila.Application.Configurations;
-using LCFila.Domain.Models;
+﻿using LCFila.Domain.Models;
 using LCFila.Infra.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;

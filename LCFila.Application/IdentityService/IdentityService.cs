@@ -3,7 +3,7 @@ using LCFila.Domain.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
-using LCFila.Application.AppServices;
+using LCFila.Infra.External;
 
 namespace LCFila.Application.IdentityService;
 

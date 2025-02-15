@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Mail;
 
-namespace LCFila.Application.AppServices;
+namespace LCFila.Infra.External;
 
 public class EmailSender : IEmailSender
 {

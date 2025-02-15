@@ -4,6 +4,7 @@ using LCFila.Application.Helpers;
 using LCFila.Application.Interfaces;
 using LCFila.Domain.Models;
 using LCFila.Infra.Interfaces;
+using LCFila.Infra.External;
 
 namespace LCFila.Application.AppServices;
 
