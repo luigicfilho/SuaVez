@@ -17,7 +17,6 @@ public static class DependencyInjectionConfig
         services.AddScoped<FilaDbContext>();
         services.AddScoped<IPessoaRepository, PessoaRepository>();
         services.AddScoped<IFilaRepository, FilaRepository>();
-        services.AddScoped<IFilaPessoaRepository, FilaPessoaRepository>();
         services.AddScoped<IEmpresaLoginRepository, EmpresaLoginRepository>();
         services.AddScoped<IEmpresaConfiguracaoRepository, EmpresaConfiguracaoRepository>();
         services.AddScoped<IConfigAppService, ConfigAppService>();

@@ -11,18 +11,15 @@ internal class FilaAppService : IFilaAppService
 {
     private readonly IPessoaRepository _pessoaRepository;
     private readonly IFilaRepository _filaRepository;
-    private readonly IFilaPessoaRepository _filapessoaRepository;
     private readonly IEmpresaLoginRepository _empresaRepository;
     private readonly UserManager<AppUser> _userManager;
     public FilaAppService(UserManager<AppUser> userManager,
                           IPessoaRepository pessoaRepository,
-                          IFilaPessoaRepository filapessoaRepository,
                           IFilaRepository filaRepository,
                           IEmpresaLoginRepository empresaRepository)
     {
         _pessoaRepository = pessoaRepository;
         _filaRepository = filaRepository;
-        _filapessoaRepository = filapessoaRepository;
         _userManager = userManager;
         _empresaRepository = empresaRepository;
     }

@@ -15,10 +15,8 @@ public class FilaDbContext : IdentityDbContext
 
     public DbSet<Fila> Filas { get; set; }
     public DbSet<Pessoa> Pessoas { get; set; }
-    public DbSet<FilaPessoa> FilaPessoas { get; set; }
     public DbSet<EmpresaLogin> EmpresasLogin { get; set; }
     public DbSet<EmpresaConfiguracao> EmpresaConfigs { get; set; }
-    //public DbSet<IdentityRole> IdentityRoles { get; set; }
 
 
     public bool MigrateDatabase()
