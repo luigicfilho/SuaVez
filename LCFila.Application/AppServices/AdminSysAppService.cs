@@ -5,6 +5,8 @@ using LCFila.Application.Interfaces;
 using LCFila.Domain.Models;
 using LCFila.Infra.Interfaces;
 using LCFila.Infra.External;
+using LCFila.Application.Dto;
+using Microsoft.IdentityModel.Tokens;
 
 namespace LCFila.Application.AppServices;
 
@@ -127,7 +129,7 @@ public class AdminSysAppService : IAdminSysAppService
         return empresa;
     }
 
-    public async Task<EmpresaConfiguracao> GetEmpresaConfiguracao(string userName)
+    public async Task<EmpresaConfiguracaoDto> GetEmpresaConfiguracao(string userName)
     {
         IQueryable<AppUser> AllUsers = _userManager.Users;
         AppUser admin = AllUsers.FirstOrDefault(p => p.UserName == userName)!;
@@ -135,28 +137,39 @@ public class AdminSysAppService : IAdminSysAppService
         EmpresaLogin empresa = AllEmpresas.FirstOrDefault(p => p.IdAdminEmpresa == Guid.Parse(admin.Id))!;
         IEnumerable<EmpresaConfiguracao> config = await _empresaConfigRepository.Buscar(p => p.NomeDaEmpresa == empresa.NomeEmpresa);
         EmpresaConfiguracao empcofig = config.FirstOrDefault()!;
-        return empcofig;
+
+        EmpresaConfiguracaoDto empresaConfiguracaoDto = new()
+        {
+            CorPrincipalEmpresa = empcofig.CorPrincipalEmpresa,
+            CorSegundariaEmpresa = empcofig.CorSegundariaEmpresa,
+            Id = empcofig.Id,
+            NomeDaEmpresa = empcofig.NomeDaEmpresa,
+            FooterEmpresa = empcofig.FooterEmpresa,
+            LinkLogodaEmpresa = empcofig.LinkLogodaEmpresa
+        };
+
+        return empresaConfiguracaoDto;
     }
 
-    public async Task<EmpresaConfiguracao> UpdateEmpresaConfiguracao(Guid Id, EmpresaConfiguracao empresaConfiguracao, string filePath)
+    public async Task<EmpresaConfiguracaoDto> UpdateEmpresaConfiguracao(Guid Id, EmpresaConfiguracaoDto empresaConfiguracao, string filePath)
     {
         List<EmpresaLogin> AllEmpresas = await _empresaRepository.ObterTodos();
         EmpresaLogin empresa = AllEmpresas.FirstOrDefault(p => p.EmpresaConfiguracao.Id == Id)!;
         //empresa.NomeEmpresa = empconfig.NomeDaEmpresa;
-        //EmpresaConfiguracao empconfigs = new EmpresaConfiguracao()
-        //{
-        //    Id = empconfig.Id,
-        //    NomeDaEmpresa = empconfig.NomeDaEmpresa,
-        //    LinkLogodaEmpresa = empconfig.LinkLogodaEmpresa,
-        //    CorPrincipalEmpresa = empconfig.CorPrincipalEmpresa,
-        //    CorSegundariaEmpresa = empconfig.CorSegundariaEmpresa,
-        //    FooterEmpresa = empconfig.FooterEmpresa
-        //};
+        EmpresaConfiguracao empconfigs = new EmpresaConfiguracao()
+        {
+            Id = empresaConfiguracao.Id,
+            NomeDaEmpresa = empresaConfiguracao.NomeDaEmpresa,
+            LinkLogodaEmpresa = string.IsNullOrEmpty(empresaConfiguracao.LinkLogodaEmpresa) ? "http://" : empresaConfiguracao.LinkLogodaEmpresa,
+            CorPrincipalEmpresa = empresaConfiguracao.CorPrincipalEmpresa,
+            CorSegundariaEmpresa = empresaConfiguracao.CorSegundariaEmpresa,
+            FooterEmpresa = empresaConfiguracao.FooterEmpresa
+        };
         if (filePath is null)
         {
             empresaConfiguracao.LinkLogodaEmpresa = empresa.EmpresaConfiguracao.LinkLogodaEmpresa;
         }
-        empresa.EmpresaConfiguracao = empresaConfiguracao;
+        empresa.EmpresaConfiguracao = empconfigs;
         await _empresaRepository.Atualizar(empresa);
         await _empresaRepository.SaveChanges();
 

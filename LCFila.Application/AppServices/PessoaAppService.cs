@@ -3,6 +3,7 @@ using LCFila.Application.Interfaces;
 using LCFila.Domain.Models;
 using LCFila.Infra.Interfaces;
 using System.Linq.Expressions;
+using LCFila.Application.Dto;
 
 namespace LCFila.Application.AppServices
 {
@@ -59,9 +60,20 @@ namespace LCFila.Application.AppServices
 
         }
 
-        public Pessoa GetDetails(Guid Id, Guid filaid)
+        public PessoasDto GetDetails(Guid Id, Guid filaid)
         {
-            return ObterPorId(Id);
+            var pessoa = ObterPorId(Id);
+            PessoasDto pessoasDto = new()
+            {
+                Id = pessoa!.Id,
+                Nome = pessoa.Nome,
+                Status = pessoa.Status.ToString(),
+                Celular = pessoa.Celular,
+                Posicao = pessoa.Posicao,
+                Preferencial = pessoa.Preferencial,
+                Ativo = pessoa.Ativo
+            };
+            return pessoasDto;
         }
 
         public bool Pular(Guid id, Guid filaid)

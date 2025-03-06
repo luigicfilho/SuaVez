@@ -3,7 +3,7 @@ using LCFila.Domain.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
-namespace LCFila.ViewModels;
+namespace LCFila.Web.Models;
 
 public class EmpresaLoginViewModel
 {

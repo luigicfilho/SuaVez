@@ -1,8 +1,7 @@
-﻿using LCFila.Web.Models;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace LCFila.ViewModels;
+namespace LCFila.Web.Models;
 
 public class PessoaViewModel
 {
@@ -17,7 +16,7 @@ public class PessoaViewModel
     [DisplayName("Ativo?")]
     public bool Ativo { get; set; }
     public DateTime DataEntradaNaFila { get; set; }
-    public PessoaStatusViewModel Status { get; set; }
+    public string Status { get; set; } = string.Empty;
     [DisplayName("Preferencial?")]
     public bool Preferencial { get; set; }
     public int Posicao { get; set; }

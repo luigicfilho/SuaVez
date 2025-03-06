@@ -1,4 +1,4 @@
-﻿namespace LCFila.ViewModels;
+﻿namespace LCFila.Web.Models;
 
 public class AdicionarpessoasViewModel
 {

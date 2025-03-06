@@ -1,4 +1,4 @@
-namespace LCFila.Models;
+namespace LCFila.Web.Models;
 
 public class ErrorViewModel
 {

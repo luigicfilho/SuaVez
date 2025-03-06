@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using LCFila.Controllers.Sistema;
-using LCFila.Mapping;
-using LCFila.ViewModels;
 using LCFila.Web.Mapping;
 using LCFila.Application.Interfaces;
 using LCFila.Web.Models;
@@ -100,7 +98,7 @@ public class FilaController : BaseController
         ConfigEmpresa();
         if (!ModelState.IsValid) return View(pessoaViewModel);
 
-        var result = _filaAppService.AdicionarPessoa(pessoaViewModel.pessoa.ConvertToPessoa(), 
+        var result = _filaAppService.AdicionarPessoa(pessoaViewModel.pessoa.ConvertToPessoaDto(), 
                                                      pessoaViewModel.filaId);
 
         if (result)

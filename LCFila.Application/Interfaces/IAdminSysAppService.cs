@@ -1,4 +1,5 @@
-﻿using LCFila.Application.Helpers;
+﻿using LCFila.Application.Dto;
+using LCFila.Application.Helpers;
 using LCFila.Domain.Models;
 
 namespace LCFila.Application.Interfaces;
@@ -12,6 +13,6 @@ public interface IAdminSysAppService
     Results<EmpresaLogin> CreateEmpresa(EmpresaLogin empresaLogin, string email, string password);
     Task<EmpresaLogin> EditEmpresa(EmpresaLogin empresaLogin);
     Task<EmpresaLogin> RemoveEmpresa(Guid Id);
-    Task<EmpresaConfiguracao> GetEmpresaConfiguracao(string userName);
-    Task<EmpresaConfiguracao> UpdateEmpresaConfiguracao(Guid Id, EmpresaConfiguracao empresaConfiguracao, string filePath);
+    Task<EmpresaConfiguracaoDto> GetEmpresaConfiguracao(string userName);
+    Task<EmpresaConfiguracaoDto> UpdateEmpresaConfiguracao(Guid Id, EmpresaConfiguracaoDto empresaConfiguracao, string filePath);
 }

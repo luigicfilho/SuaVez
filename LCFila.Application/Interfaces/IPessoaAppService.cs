@@ -1,4 +1,4 @@
-﻿using LCFila.Domain.Models;
+﻿using LCFila.Application.Dto;
 
 namespace LCFila.Application.Interfaces;
 
@@ -9,7 +9,7 @@ public interface IPessoaAppService
 
     bool Chamar(Guid id, Guid filaid);
 
-    Pessoa GetDetails(Guid id, Guid filaid);
+    PessoasDto GetDetails(Guid id, Guid filaid);
 
     bool Remover(Guid id, Guid filaid);
 }

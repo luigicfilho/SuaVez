@@ -1,4 +1,5 @@
-﻿@model LCFila.ViewModels.AppUserViewModel
+﻿@using LCFila.Web.Models
+@model AppUserViewModel
 
 @{
     ViewData["Title"] = "Alterar Colaborador";
@@ -67,7 +68,7 @@
 
                             <div class="form-group">
                                 <label asp-for="PhoneNumber" class="control-label"></label>
-                                <input asp-for="PhoneNumber" class="form-control"></input>
+                                <input asp-for="PhoneNumber" class="form-control" />
                                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                             </div>
                             

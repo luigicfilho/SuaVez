@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using LCFila.Application.Interfaces.Identity;
-using LCFila.ViewModels;
 using LCFila.Web.Models;
 using LCFila.Web.Models.Identity.ManageViewModels;
 

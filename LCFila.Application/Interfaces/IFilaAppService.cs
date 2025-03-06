@@ -1,4 +1,4 @@
-﻿using LCFila.Application.DTO;
+﻿using LCFila.Application.Dto;
 using LCFila.Domain.Models;
 
 namespace LCFila.Application.Interfaces;
@@ -12,7 +12,7 @@ public interface IFilaAppService
     CreateFilaDto GetUserIdEmpId(string UserName);
     bool CriarFila(FilaDto fila, Guid EmpresaId, Guid UserId);
     Guid IniciarFila(string UserName);
-    bool AdicionarPessoa(Pessoa Pessoa, Guid FilaId);
+    bool AdicionarPessoa(PessoasDto Pessoa, Guid FilaId);
     bool RemoverFila(Guid Id);
     List<AppUser> GetAllUsers();
 }

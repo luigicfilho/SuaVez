@@ -1,4 +1,4 @@
-﻿namespace LCFila.Application.DTO;
+﻿namespace LCFila.Application.Dto;
 
 public class FilaDto
 {
@@ -10,8 +10,6 @@ public class FilaDto
     public string Status { get; set; } = string.Empty;
     public bool Ativo { get; set; }
     public string TempoMedio { get; set; } = string.Empty;
-    public Guid UserId { get; set; }
-    public Guid EmpresaId { get; set; }
 
     public string NomeUser { get; set; } = string.Empty;
 }

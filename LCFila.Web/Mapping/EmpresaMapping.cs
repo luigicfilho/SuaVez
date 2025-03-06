@@ -1,15 +1,44 @@
-﻿using LCFila.ViewModels;
-using LCFila.Web.Mapping;
-
-//TODO: how to do it in another way to remove theses references
+﻿//TODO: how to do it in another way to remove theses references
 //Don't need all this information in this layer, just the informations
 //that need to be passed down
 using LCFila.Domain.Models;
+using LCFila.Application.Dto;
+using LCFila.Web.Models;
 
-namespace LCFila.Mapping;
+namespace LCFila.Web.Mapping;
 
 public static class EmpresaMapping
 {
+    public static EmpresaConfiguracaoDto ConvertToEmpresaConfiguracaoDto(this EmpresaConfiguracaoViewModel empresaConfiguracaoViewModel)
+    {
+        EmpresaConfiguracaoDto empresaConfig = new()
+        {
+            Id = empresaConfiguracaoViewModel.Id,
+            CorPrincipalEmpresa = empresaConfiguracaoViewModel.CorPrincipalEmpresa,
+            NomeDaEmpresa = empresaConfiguracaoViewModel.NomeDaEmpresa,
+            CorSegundariaEmpresa = empresaConfiguracaoViewModel.CorSegundariaEmpresa,
+            FooterEmpresa = empresaConfiguracaoViewModel.FooterEmpresa,
+            LinkLogodaEmpresa = empresaConfiguracaoViewModel.LinkLogodaEmpresa
+        };
+
+        return empresaConfig;
+    }
+
+    public static EmpresaConfiguracaoViewModel ConvertToEmpresaConfiguracaoDto(this EmpresaConfiguracaoDto empresaConfiguracaoViewModel)
+    {
+        EmpresaConfiguracaoViewModel empresaConfig = new()
+        {
+            Id = empresaConfiguracaoViewModel.Id,
+            CorPrincipalEmpresa = empresaConfiguracaoViewModel.CorPrincipalEmpresa,
+            NomeDaEmpresa = empresaConfiguracaoViewModel.NomeDaEmpresa,
+            CorSegundariaEmpresa = empresaConfiguracaoViewModel.CorSegundariaEmpresa,
+            FooterEmpresa = empresaConfiguracaoViewModel.FooterEmpresa,
+            LinkLogodaEmpresa = empresaConfiguracaoViewModel.LinkLogodaEmpresa
+        };
+
+        return empresaConfig;
+    }
+
     public static EmpresaLogin ConvertToEmpresaLogin(this EmpresaLoginViewModel empresaloginViewModel)
     {
         EmpresaConfiguracao empconfig = new()
@@ -57,37 +86,6 @@ public static class EmpresaMapping
         return empresaLoginview;
     }
 
-    public static EmpresaConfiguracao ConvertToEmpresaConfiguracao(this EmpresaConfiguracaoViewModel empresaConfiguracaoViewModel)
-    {
-        EmpresaConfiguracao empresaConfig = new()
-        {
-            Id = empresaConfiguracaoViewModel.Id,
-            CorPrincipalEmpresa = empresaConfiguracaoViewModel.CorPrincipalEmpresa,
-            NomeDaEmpresa = empresaConfiguracaoViewModel.NomeDaEmpresa,
-            CorSegundariaEmpresa = empresaConfiguracaoViewModel.CorSegundariaEmpresa,
-            FooterEmpresa = empresaConfiguracaoViewModel.FooterEmpresa,
-            LinkLogodaEmpresa = empresaConfiguracaoViewModel.LinkLogodaEmpresa
-        };
-
-        return empresaConfig;
-    }
-
-    public static EmpresaConfiguracaoViewModel ConvertToEmpresaConfiguracaoView(this EmpresaConfiguracao empresaConfiguracao)
-    {
-        EmpresaConfiguracaoViewModel empresaConfig = new()
-        {
-            Id = empresaConfiguracao.Id,
-            CorPrincipalEmpresa = empresaConfiguracao.CorPrincipalEmpresa,
-            NomeDaEmpresa = empresaConfiguracao.NomeDaEmpresa,
-            CorSegundariaEmpresa = empresaConfiguracao.CorSegundariaEmpresa,
-            FooterEmpresa = empresaConfiguracao.FooterEmpresa,
-            LinkLogodaEmpresa = empresaConfiguracao.LinkLogodaEmpresa
-        };
-
-        return empresaConfig;
-    }
-
-
     public static IEnumerable<EmpresaLoginViewModel> ConvertToEmpresaLoginViewModel(this IEnumerable<EmpresaLogin>? empresalogin)
     {
         List<EmpresaLoginViewModel> viewlist = [];
@@ -117,7 +115,37 @@ public static class EmpresaMapping
         return list;
     }
 
-    public static List<FilaViewModel> ConvertoToFilaViewModel(this List<Fila> list)
+    internal static EmpresaConfiguracaoViewModel ConvertToEmpresaConfiguracaoView(this EmpresaConfiguracao empresaConfiguracao)
+    {
+        EmpresaConfiguracaoViewModel empresaConfig = new()
+        {
+            Id = empresaConfiguracao.Id,
+            CorPrincipalEmpresa = empresaConfiguracao.CorPrincipalEmpresa,
+            NomeDaEmpresa = empresaConfiguracao.NomeDaEmpresa,
+            CorSegundariaEmpresa = empresaConfiguracao.CorSegundariaEmpresa,
+            FooterEmpresa = empresaConfiguracao.FooterEmpresa,
+            LinkLogodaEmpresa = empresaConfiguracao.LinkLogodaEmpresa
+        };
+
+        return empresaConfig;
+    }
+
+    internal static EmpresaConfiguracao ConvertToEmpresaConfiguracao(this EmpresaConfiguracaoViewModel empresaConfiguracaoViewModel)
+    {
+        EmpresaConfiguracao empresaConfig = new()
+        {
+            Id = empresaConfiguracaoViewModel.Id,
+            CorPrincipalEmpresa = empresaConfiguracaoViewModel.CorPrincipalEmpresa,
+            NomeDaEmpresa = empresaConfiguracaoViewModel.NomeDaEmpresa,
+            CorSegundariaEmpresa = empresaConfiguracaoViewModel.CorSegundariaEmpresa,
+            FooterEmpresa = empresaConfiguracaoViewModel.FooterEmpresa,
+            LinkLogodaEmpresa = empresaConfiguracaoViewModel.LinkLogodaEmpresa
+        };
+
+        return empresaConfig;
+    }
+
+    internal static List<FilaViewModel> ConvertoToFilaViewModel(this List<Fila> list)
     {
         List<FilaViewModel> listview = [];
         foreach(var fila in list)

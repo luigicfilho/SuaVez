@@ -1,34 +1,21 @@
-﻿using LCFila.ViewModels;
+﻿using LCFila.Application.Dto;
 using LCFila.Web.Models;
 
-//TODO: how to do it in another way to remove theses references
-//Don't need all this information in this layer, just the informations
-//that need to be passed down
-using LCFila.Domain.Models;
-using LCFila.Domain.Enums;
-using LCFila.Application.DTO;
-
-namespace LCFila.Mapping;
+namespace LCFila.Web.Mapping;
 
 public static class PessoaMapping
 {
-    public static Pessoa ConvertToPessoa(this PessoaViewModel? pessoaViewModel)
+    public static PessoasDto ConvertToPessoaDto(this PessoaViewModel? pessoaViewModel)
     {
-        Pessoa pessoa = new();
-        Fila fila = new();
-        //if (pessoaViewModel!.Fila is not null)
-        //{
-        //    var filapessoa = pessoaViewModel.Fila.FirstOrDefault();
-        //    if(filapessoa is not null)
-        //    {
-        //        fila = filapessoa.ConvertToFilaVM();
-        //    }
-        //}
-               
-        if (pessoaViewModel is not null) {
+        PessoasDto pessoa = new();
+        FilaDto fila = new();
+
+
+        if (pessoaViewModel is not null)
+        {
             pessoa.Id = pessoaViewModel.Id;
             pessoa.Nome = pessoaViewModel.Nome;
-            pessoa.Status = Enum.Parse<PessoaStatus>(Enum.GetName(pessoaViewModel.Status)!);
+            pessoa.Status = pessoaViewModel.Status.ToString();
             pessoa.Celular = pessoaViewModel.Celular;
             //pessoa.Documento = pessoaViewModel.Documento;
             //pessoa.Fila = fila;
@@ -39,54 +26,6 @@ public static class PessoaMapping
         }
 
         return pessoa;
-    }
-
-    public static IEnumerable<PessoaViewModel> ConvertToPessoaViewModelList(this IEnumerable<Pessoa> pessoalist)
-    {
-        List<PessoaViewModel> listPessoa = [];
-
-        foreach (var pessoa in pessoalist)
-        {
-            listPessoa.Add(new PessoaViewModel
-            {
-                Id = pessoa.Id,
-                Nome = pessoa.Nome,
-                Status = Enum.Parse<PessoaStatusViewModel>(Enum.GetName(pessoa.Status)!),
-                Celular = pessoa.Celular,
-                //Documento = pessoa.Documento,
-                //Fila = [pessoa.Fila.ConvertToFilaViewModel()],
-                //FilaId = pessoa.FilaId,
-                Posicao = pessoa.Posicao,
-                Preferencial = pessoa.Preferencial,
-                Ativo = pessoa.Ativo
-            });
-        }
-
-        return listPessoa;
-    }
-
-    public static IEnumerable<PessoaViewModel> ConvertToPessoaViewModelListVM(this List<PessoasDto> pessoalist)
-    {
-        List<PessoaViewModel> listPessoa = [];
-
-        foreach (var pessoa in pessoalist)
-        {
-            listPessoa.Add(new PessoaViewModel
-            {
-                Id = pessoa.Id,
-                Nome = pessoa.Nome,
-                Status = Enum.Parse<PessoaStatusViewModel>(pessoa.Status),
-                Celular = pessoa.Celular,
-                //Documento = pessoa.Documento,
-                //Fila = [pessoa.Fila.ConvertToFilaViewModel()],
-                //FilaId = pessoa.FilaId,
-                Posicao = pessoa.Posicao,
-                Preferencial = pessoa.Preferencial,
-                Ativo = pessoa.Ativo
-            });
-        }
-
-        return listPessoa;
     }
 
     public static FilaPessoaViewModel ConvertToFilaViewModelListVM(this FilaDetailsDto pessoalistdto)
@@ -101,14 +40,15 @@ public static class PessoaMapping
         return listPessoa;
     }
 
-    public static PessoaViewModel ConvertToPessoaViewModel(this Pessoa? pessoa)
+    public static PessoaViewModel ConvertToPessoaViewModel(this PessoasDto? pessoa)
     {
         PessoaViewModel pessoaViewModel = new();
         if (pessoa is not null)
         {
             pessoaViewModel.Id = pessoa!.Id;
             pessoaViewModel.Nome = pessoa.Nome;
-            pessoaViewModel.Status = Enum.Parse<PessoaStatusViewModel>(Enum.GetName(pessoa.Status)!);
+            //pessoaViewModel.Status = Enum.Parse<PessoaStatusViewModel>(Enum.GetName(pessoa.Status)!);
+            pessoaViewModel.Status = pessoa.Status;
             pessoaViewModel.Celular = pessoa.Celular;
             //pessoaViewModel.Documento = pessoa.Documento;
             //pessoaViewModel.FilaPertence = pessoa.Fila.ConvertToFilaViewModel();
@@ -119,5 +59,29 @@ public static class PessoaMapping
         }
 
         return pessoaViewModel!;
+    }
+
+    internal static IEnumerable<PessoaViewModel> ConvertToPessoaViewModelListVM(this List<PessoasDto> pessoalist)
+    {
+        List<PessoaViewModel> listPessoa = [];
+
+        foreach (var pessoa in pessoalist)
+        {
+            listPessoa.Add(new PessoaViewModel
+            {
+                Id = pessoa.Id,
+                Nome = pessoa.Nome,
+                Status = pessoa.Status,
+                Celular = pessoa.Celular,
+                //Documento = pessoa.Documento,
+                //Fila = [pessoa.Fila.ConvertToFilaViewModel()],
+                //FilaId = pessoa.FilaId,
+                Posicao = pessoa.Posicao,
+                Preferencial = pessoa.Preferencial,
+                Ativo = pessoa.Ativo
+            });
+        }
+
+        return listPessoa;
     }
 }

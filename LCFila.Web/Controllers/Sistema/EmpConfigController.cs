@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using LCFila.Mapping;
-using LCFila.ViewModels;
 using LCFila.Application.Interfaces;
+using LCFila.Web.Models;
+using LCFila.Web.Mapping;
 
 namespace LCFila.Controllers.Sistema;
 
@@ -22,52 +22,13 @@ public class EmpConfigController : BaseController
     public async Task<IActionResult> Index()
     {
         ConfigEmpresa();
+        
         var userName = User.Identity!.Name;
         var empcofig = await _adminSysAppService.GetEmpresaConfiguracao(userName!);
-        EmpresaConfiguracaoViewModel emconfigviewmodel = new EmpresaConfiguracaoViewModel()
-        {
-            Id = empcofig.Id,
-            NomeDaEmpresa = empcofig.NomeDaEmpresa,
-            LinkLogodaEmpresa = empcofig.LinkLogodaEmpresa,
-            CorPrincipalEmpresa = empcofig.CorPrincipalEmpresa,
-            CorSegundariaEmpresa = empcofig.CorSegundariaEmpresa,
-            FooterEmpresa = empcofig.FooterEmpresa
-        };
-        return View(emconfigviewmodel);
+        
+        return View(empcofig.ConvertToEmpresaConfiguracaoDto());
     }
 
-    public IActionResult Details(Guid id)
-    {
-        ConfigEmpresa();
-        return View();
-    }
-
-    public IActionResult Create()
-    {
-        ConfigEmpresa();
-        return View();
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Create(IFormCollection collection)
-    {
-        ConfigEmpresa();
-        try
-        {
-            return RedirectToAction(nameof(Index));
-        }
-        catch
-        {
-            return View();
-        }
-    }
-
-    public IActionResult Edit(Guid id)
-    {
-        ConfigEmpresa();
-        return View();
-    }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -80,34 +41,13 @@ public class EmpConfigController : BaseController
             {
                 uploadFile(empconfig.file, empconfig);
             }
-            var empcofig = await _adminSysAppService.UpdateEmpresaConfiguracao(id, empconfig.ConvertToEmpresaConfiguracao(), empconfig.LinkLogodaEmpresa);
+            var empcofig = await _adminSysAppService.UpdateEmpresaConfiguracao(id, empconfig.ConvertToEmpresaConfiguracaoDto(), empconfig.LinkLogodaEmpresa);
 
             return RedirectToAction(nameof(Index));
         }
         catch (Exception)
         {
-            return View(id);
-        }
-    }
-
-    public IActionResult Delete(Guid id)
-    {
-        ConfigEmpresa();
-        return View();
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Delete(Guid id, IFormCollection collection)
-    {
-        ConfigEmpresa();
-        try
-        {
-            return RedirectToAction(nameof(Index));
-        }
-        catch
-        {
-            return View();
+            return View("Index", id);
         }
     }
 

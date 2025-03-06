@@ -2,7 +2,7 @@
 using LCFila.Domain.Models;
 using System.Text.Json.Serialization;
 
-namespace LCFila.ViewModels;
+namespace LCFila.Web.Models;
 
 public class AppUserViewModel
 {

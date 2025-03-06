@@ -1,5 +1,5 @@
 ﻿
-namespace LCFila.Application.DTO;
+namespace LCFila.Application.Dto;
 
 public class FilaDetailsDto
 {

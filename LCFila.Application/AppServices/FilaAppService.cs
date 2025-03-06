@@ -4,8 +4,7 @@ using LCFila.Domain.Models;
 using LCFila.Infra.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using LCFila.Application.DTO;
-using System.IO;
+using LCFila.Application.Dto;
 
 namespace LCFila.Application.AppServices;
 
@@ -26,7 +25,7 @@ internal class FilaAppService : IFilaAppService
         _empresaRepository = empresaRepository;
     }
 
-    public bool AdicionarPessoa(Pessoa Pessoa, Guid FilaId)
+    public bool AdicionarPessoa(PessoasDto Pessoa, Guid FilaId)
     {
         try
         {
@@ -34,21 +33,23 @@ internal class FilaAppService : IFilaAppService
             var fila = _filaRepository.ObterPorId(FilaId).Result;
             var pessoasdafila = pessoas.Where(p => p.FilaId == FilaId && p.Ativo == true && p.Status == PessoaStatus.Esperando).ToList();
 
+            Pessoa pessoadb = new();
             //Pessoa.DataEntradaNaFila = DateTime.Now;
-            Pessoa.Ativo = true;
-            Pessoa.Status = PessoaStatus.Esperando;
-
+            pessoadb.Ativo = true;
+            pessoadb.Status = PessoaStatus.Esperando;
+            pessoadb.Preferencial = Pessoa.Preferencial;
+            //Enum.Parse<PessoaStatus>(Enum.GetName(pessoaViewModel.Status)!);
             //Pessoa.Fila = fila!;
             if (Pessoa.Preferencial)
             {
-                Pessoa.Posicao = 1;
+                pessoadb.Posicao = 1;
                 foreach (var item in pessoas.Where(p => p.FilaId == FilaId && p.Ativo == true && p.Status == PessoaStatus.Esperando).OrderBy(p => p.Preferencial))
                 {
                     if (item.Ativo)
                     {
                         if (item.Preferencial)
                         {
-                            Pessoa.Posicao = item.Posicao + 1;
+                            pessoadb.Posicao = item.Posicao + 1;
                         }
                         else
                         {
@@ -61,11 +62,11 @@ internal class FilaAppService : IFilaAppService
             }
             else
             {
-                Pessoa.Posicao = pessoasdafila.Count + 1;
+                pessoadb.Posicao = pessoasdafila.Count + 1;
             }
-            Pessoa.FilaId = FilaId;
+            pessoadb.FilaId = FilaId;
             //Pessoa.Fila = fila!;
-            _pessoaRepository.Adicionar(Pessoa);
+            _pessoaRepository.Adicionar(pessoadb);
             return true;
         }
         catch (Exception)

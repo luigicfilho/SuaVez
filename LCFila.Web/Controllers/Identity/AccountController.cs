@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 using LCFila.Application.Interfaces.Identity;
 using LCFila.Controllers;
-using LCFila.ViewModels;
 using LCFila.Web.Models;
 using LCFila.Web.Models.Identity.AccountViewModels;
 

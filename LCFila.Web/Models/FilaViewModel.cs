@@ -1,6 +1,4 @@
-﻿using LCFila.Web.Models;
-
-namespace LCFila.ViewModels;
+﻿namespace LCFila.Web.Models;
 
 public class FilaViewModel
 {

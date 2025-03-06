@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using LCFila.Controllers.Sistema;
-using LCFila.Mapping;
 using LCFila.Application.Interfaces;
+using LCFila.Web.Mapping;
 
 namespace LCFila.Web.Controllers.Public;
 
@@ -18,7 +18,7 @@ public class ClienteController : BaseController
     }
 
     [AllowAnonymous]
-    public ActionResult Index()
+    public IActionResult Index()
     {
         ConfigEmpresa();
         return View();
@@ -28,9 +28,11 @@ public class ClienteController : BaseController
     public IActionResult Details(Guid id, Guid filaid)
     {
         ConfigEmpresa();
+        
         var pegarpessoa = _pessoaAppService.GetDetails(id, filaid);
         var pessoa = pegarpessoa.ConvertToPessoaViewModel();
         pessoa.FilaId = filaid;
+        
         return View(pessoa);
     }
 
@@ -45,7 +47,7 @@ public class ClienteController : BaseController
         return RedirectToAction("Error", new { id = filaid });
     }
 
-    public ActionResult Attend(Guid id, Guid filaid)
+    public IActionResult Attend(Guid id, Guid filaid)
     {
         ConfigEmpresa();
         var result = _pessoaAppService.Atender(id, filaid);
