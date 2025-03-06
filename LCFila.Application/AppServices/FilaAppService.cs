@@ -4,6 +4,8 @@ using LCFila.Domain.Models;
 using LCFila.Infra.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using LCFila.Application.DTO;
+using System.IO;
 
 namespace LCFila.Application.AppServices;
 
@@ -31,6 +33,10 @@ internal class FilaAppService : IFilaAppService
             var pessoas = _pessoaRepository.ObterTodos().Result;
             var fila = _filaRepository.ObterPorId(FilaId).Result;
             var pessoasdafila = pessoas.Where(p => p.FilaId == FilaId && p.Ativo == true && p.Status == PessoaStatus.Esperando).ToList();
+
+            //Pessoa.DataEntradaNaFila = DateTime.Now;
+            Pessoa.Ativo = true;
+            Pessoa.Status = PessoaStatus.Esperando;
 
             //Pessoa.Fila = fila!;
             if (Pessoa.Preferencial)
@@ -68,9 +74,17 @@ internal class FilaAppService : IFilaAppService
         }
     }
 
-    public bool CriarFila(Fila fila)
+    public bool CriarFila(FilaDto fila, Guid EmpresaId, Guid UserId)
     {
-        var result = _filaRepository.Adicionar(fila);
+        Fila novaFila = new();
+        novaFila.DataInicio = DateTime.Now;
+        novaFila.Ativo = true;
+        novaFila.Status = FilaStatus.Aberta;
+        novaFila.Nome = fila.Nome;
+        novaFila.EmpresaId = EmpresaId;
+        novaFila.UserId = UserId;
+        novaFila.TempoMedio = "30";
+        var result = _filaRepository.Adicionar(novaFila);
         return result.IsCompletedSuccessfully;
     }
 
@@ -92,39 +106,83 @@ internal class FilaAppService : IFilaAppService
         
     }
 
-    public (Guid userid, Guid empresaid) GetUserIdEmpId(string UserName)
+    public CreateFilaDto GetUserIdEmpId(string UserName)
     {
         var user = _userManager.Users.SingleOrDefaultAsync(p => p.UserName == UserName).Result;
         var empresalogin = _empresaRepository.Buscar(s => s.IdAdminEmpresa == Guid.Parse(user!.Id)).Result.FirstOrDefault();
-        return (Guid.Parse(user!.Id), empresalogin!.Id);
+
+        CreateFilaDto createFilaDto = new()
+        {
+            UserId = Guid.Parse(user!.Id),
+            EmpresaId = empresalogin!.Id
+        };
+
+
+        return createFilaDto;
     }
 
-    public List<Fila> GetFilaList(string UserName)
+    public List<FilaDto> GetFilaList(string UserName)
     {
+        List<FilaDto> listaDeFila = new();
+
+        var allusers = GetAllUsers();
         var user = _userManager.Users.SingleOrDefaultAsync(p => p.UserName == UserName).Result;
         //var allusers = GetAllUsers();
         var empresalogin = _empresaRepository.Buscar(s => s.IdAdminEmpresa == Guid.Parse(user!.Id));
         var Empresaid = empresalogin.Id;
         var pegarfila = _filaRepository.ObterTodos().Result;
+        var allfila = pegarfila.Where(p => p.UserId == Guid.Parse(user!.Id)).ToList();
+        
         List<Fila> filasdousuario = new List<Fila>();
         //if (User.IsInRole("EmpAdmin"))
         //{
         //    filasdousuario = pegarfila.Where(p => p.EmpresaId == Empresaid).ToList();
         //} else
         //{
-        return filasdousuario = pegarfila.Where(p => p.UserId == Guid.Parse(user!.Id)).ToList();
+
+        foreach (var item in allfila)
+        {
+            FilaDto fila = new();
+            fila.Id = item.Id;
+            fila.Status = Enum.GetName(item.Status)!;
+            fila.Nome = item.Nome;
+            fila.DataInicio = item.DataInicio;
+            fila.Ativo = item.Ativo;
+            fila.NomeUser = allusers.SingleOrDefault(p => p.Id == item.UserId.ToString())!.UserName!;
+            listaDeFila.Add(fila);
+        }
+        return listaDeFila;
         //}
 
         //var pessoas = _pessoaRepository.ObterTodos().Result;
     }
 
-    public (Fila, List<Pessoa>) GetPessoas(Guid Id, string UserName)
+    public FilaDetailsDto GetPessoas(Guid Id, string UserName)
     {
+
         var user = _userManager.Users.SingleOrDefaultAsync(p => p.UserName == UserName).Result;
         var empresalogin = _empresaRepository.Buscar(s => s.IdAdminEmpresa == Guid.Parse(user!.Id)).Result;
         var Empresaid = empresalogin.SingleOrDefault()!.Id;
         var filatoopen = _filaRepository.ObterPorId(Id).Result;
-        return (filatoopen!, _pessoaRepository.Buscar(p => p.FilaId == Id).Result.ToList());
+        var pessoas = _pessoaRepository.Buscar(p => p.FilaId == Id).Result.ToList();
+        FilaDetailsDto filaDetails = new();
+        filaDetails.FilaId = filatoopen!.Id;
+        filaDetails.FilaStatus = Enum.GetName(filatoopen.Status)!;
+        
+        foreach(var pessoa in pessoas)
+        {
+            PessoasDto pessoaDto = new();
+            pessoaDto.Id = pessoa.Id;
+            pessoaDto.Nome = pessoa.Nome;
+            pessoaDto.Posicao = pessoa.Posicao;
+            pessoaDto.Preferencial = pessoa.Preferencial;
+            pessoaDto.Celular = pessoa.Celular;
+            pessoaDto.Status = Enum.GetName(pessoa.Status)!;
+            pessoaDto.Ativo = pessoa.Ativo;
+            filaDetails.ListaPessoas.Add(pessoaDto);
+        }
+
+        return filaDetails;
     }
 
     public Guid IniciarFila(string UserName)
@@ -137,7 +195,7 @@ internal class FilaAppService : IFilaAppService
         novafila.TempoMedio = "30";
         novafila.EmpresaId = Empresaid;
         novafila.UserId = Guid.Parse(user!.Id);
-        var result = CriarFila(novafila);
+        //var result = CriarFila(novafila);
         return novafila.Id;
     }
 

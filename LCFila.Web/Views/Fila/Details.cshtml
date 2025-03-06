@@ -1,4 +1,4 @@
-﻿@model List<LCFila.ViewModels.PessoaViewModel>
+﻿@model LCFila.ViewModels.FilaPessoaViewModel
 @{
     var teste = DateTime.Now;
 }
@@ -34,13 +34,13 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">
-                    @if (ViewBag.statusfila == "Finalizada")
+                    @if (Model.FilaStatus == "Finalizada")
                     {
-                        <a asp-area="" asp-controller="Fila" asp-action="Create" asp-route-id="@ViewBag.idFila" data-id="@ViewBag.idFila" class="btn btn-primary disabled">Adicionar Cliente</a>
+                        <a asp-area="" asp-controller="Fila" asp-action="Create" asp-route-id="@Model.Id" data-id="@Model.Id" class="btn btn-primary disabled">Adicionar Cliente</a>
                     }
                     else
                     {
-                        <a asp-area="" asp-controller="Fila" asp-action="Create" asp-route-id="@ViewBag.idFila" data-id="@ViewBag.idFila" class="btn btn-primary">Adicionar Cliente</a>
+                        <a asp-area="" asp-controller="Fila" asp-action="Create" asp-route-id="@Model.Id" data-id="@Model.Id" class="btn btn-primary">Adicionar Cliente</a>
                     }
 
 
@@ -79,7 +79,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.OrderBy(p => p.Posicao))
+                        @foreach (var item in Model.Pessoas.OrderBy(p => p.Posicao))
                         {
                             @if (item.Ativo == true && item.Status.ToString() == LCFila.Web.Models.PessoaStatusViewModel.Chamado.ToString())
                             {
@@ -103,19 +103,19 @@
                                     <td class="project-state">
                                     </td>
                                     <td class="project-actions text-right">
-                                        <a class="btn btn-primary btn-sm" asp-area="" asp-controller="Cliente" asp-action="Details" asp-route-id="@item.Id" asp-route-filaid="@ViewBag.idFila" data-id="@item.Id">
+                                        <a class="btn btn-primary btn-sm" asp-area="" asp-controller="Cliente" asp-action="Details" asp-route-id="@item.Id" asp-route-filaid="@Model.Id" data-id="@item.Id">
                                             <i class="far fa-id-badge"></i>
                                             Detalhes
                                         </a>
-                                        <a class="btn btn-info btn-sm" asp-area="" asp-controller="Cliente" asp-action="Attend" asp-route-id="@item.Id" asp-route-filaid="@ViewBag.idFila" data-id="@item.Id">
+                                        <a class="btn btn-info btn-sm" asp-area="" asp-controller="Cliente" asp-action="Attend" asp-route-id="@item.Id" asp-route-filaid="@Model.Id" data-id="@item.Id">
                                             <i class="fas fa-check"></i>
                                             Atendido
                                         </a>
-                                        <a class="btn btn-secondary btn-sm" asp-area="" asp-controller="Cliente" asp-action="Skip" asp-route-id="@item.Id" asp-route-filaid="@ViewBag.idFila" data-id="@item.Id">
+                                        <a class="btn btn-secondary btn-sm" asp-area="" asp-controller="Cliente" asp-action="Skip" asp-route-id="@item.Id" asp-route-filaid="@Model.Id" data-id="@item.Id">
                                             <i class="fas fa-history"></i>
                                             Pular Vez
                                         </a>
-                                        <a class="btn btn-danger btn-sm" asp-area="" asp-controller="Cliente" asp-action="Remove" asp-route-id="@item.Id" asp-route-filaid="@ViewBag.idFila" data-id="@item.Id">
+                                        <a class="btn btn-danger btn-sm" asp-area="" asp-controller="Cliente" asp-action="Remove" asp-route-id="@item.Id" asp-route-filaid="@Model.Id" data-id="@item.Id">
                                             <i class="fas fa-trash"></i>
                                             Remover
                                         </a>
@@ -148,7 +148,7 @@
                                             <i class="far fa-id-badge"></i>
                                             Detalhes
                                         </a>
-                                        <a class="btn btn-dark btn-sm" asp-area="" asp-controller="Cliente" asp-action="Call" asp-route-id="@item.Id" asp-route-filaid="@ViewBag.idFila" data-id="@item.Id">
+                                        <a class="btn btn-dark btn-sm" asp-area="" asp-controller="Cliente" asp-action="Call" asp-route-id="@item.Id" asp-route-filaid="@Model.Id" data-id="@item.Id">
                                             <i class="fas fa-bolt"></i>
                                             Chamar
                                         </a>
@@ -156,11 +156,11 @@
                                             <i class="fas fa-check"></i>
                                             Atendido
                                         </a>*@
-                                        <a class="btn btn-secondary btn-sm" asp-area="" asp-controller="Cliente" asp-action="Skip" asp-route-id="@item.Id" asp-route-filaid="@ViewBag.idFila" data-id="@item.Id">
+                                        <a class="btn btn-secondary btn-sm" asp-area="" asp-controller="Cliente" asp-action="Skip" asp-route-id="@item.Id" asp-route-filaid="@Model.Id" data-id="@item.Id">
                                             <i class="fas fa-history"></i>
                                             Pular Vez
                                         </a>
-                                        <a class="btn btn-danger btn-sm" asp-area="" asp-controller="Cliente" asp-action="Remove" asp-route-id="@item.Id" asp-route-filaid="@ViewBag.idFila" data-id="@item.Id">
+                                        <a class="btn btn-danger btn-sm" asp-area="" asp-controller="Cliente" asp-action="Remove" asp-route-id="@item.Id" asp-route-filaid="@Model.Id" data-id="@item.Id">
                                             <i class="fas fa-trash"></i>
                                             Remover
                                         </a>

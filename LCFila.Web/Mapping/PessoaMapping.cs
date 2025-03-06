@@ -1,5 +1,4 @@
 ﻿using LCFila.ViewModels;
-using LCFila.Web.Mapping;
 using LCFila.Web.Models;
 
 //TODO: how to do it in another way to remove theses references
@@ -7,6 +6,7 @@ using LCFila.Web.Models;
 //that need to be passed down
 using LCFila.Domain.Models;
 using LCFila.Domain.Enums;
+using LCFila.Application.DTO;
 
 namespace LCFila.Mapping;
 
@@ -16,23 +16,23 @@ public static class PessoaMapping
     {
         Pessoa pessoa = new();
         Fila fila = new();
-        if (pessoaViewModel!.Fila is not null)
-        {
-            var filapessoa = pessoaViewModel.Fila.FirstOrDefault();
-            if(filapessoa is not null)
-            {
-                fila = filapessoa.ConvertToFila();
-            }
-        }
+        //if (pessoaViewModel!.Fila is not null)
+        //{
+        //    var filapessoa = pessoaViewModel.Fila.FirstOrDefault();
+        //    if(filapessoa is not null)
+        //    {
+        //        fila = filapessoa.ConvertToFilaVM();
+        //    }
+        //}
                
         if (pessoaViewModel is not null) {
             pessoa.Id = pessoaViewModel.Id;
             pessoa.Nome = pessoaViewModel.Nome;
             pessoa.Status = Enum.Parse<PessoaStatus>(Enum.GetName(pessoaViewModel.Status)!);
             pessoa.Celular = pessoaViewModel.Celular;
-            pessoa.Documento = pessoaViewModel.Documento;
+            //pessoa.Documento = pessoaViewModel.Documento;
             //pessoa.Fila = fila;
-            pessoa.FilaId = pessoaViewModel.FilaId;
+            //pessoa.FilaId = pessoaViewModel.FilaId;
             pessoa.Posicao = pessoaViewModel.Posicao;
             pessoa.Preferencial = pessoaViewModel.Preferencial;
             pessoa.Ativo = pessoaViewModel.Ativo;
@@ -53,14 +53,50 @@ public static class PessoaMapping
                 Nome = pessoa.Nome,
                 Status = Enum.Parse<PessoaStatusViewModel>(Enum.GetName(pessoa.Status)!),
                 Celular = pessoa.Celular,
-                Documento = pessoa.Documento,
+                //Documento = pessoa.Documento,
                 //Fila = [pessoa.Fila.ConvertToFilaViewModel()],
-                FilaId = pessoa.FilaId,
+                //FilaId = pessoa.FilaId,
                 Posicao = pessoa.Posicao,
                 Preferencial = pessoa.Preferencial,
                 Ativo = pessoa.Ativo
             });
         }
+
+        return listPessoa;
+    }
+
+    public static IEnumerable<PessoaViewModel> ConvertToPessoaViewModelListVM(this List<PessoasDto> pessoalist)
+    {
+        List<PessoaViewModel> listPessoa = [];
+
+        foreach (var pessoa in pessoalist)
+        {
+            listPessoa.Add(new PessoaViewModel
+            {
+                Id = pessoa.Id,
+                Nome = pessoa.Nome,
+                Status = Enum.Parse<PessoaStatusViewModel>(pessoa.Status),
+                Celular = pessoa.Celular,
+                //Documento = pessoa.Documento,
+                //Fila = [pessoa.Fila.ConvertToFilaViewModel()],
+                //FilaId = pessoa.FilaId,
+                Posicao = pessoa.Posicao,
+                Preferencial = pessoa.Preferencial,
+                Ativo = pessoa.Ativo
+            });
+        }
+
+        return listPessoa;
+    }
+
+    public static FilaPessoaViewModel ConvertToFilaViewModelListVM(this FilaDetailsDto pessoalistdto)
+    {
+        FilaPessoaViewModel listPessoa = new()
+        {
+            Id = pessoalistdto.FilaId,
+            FilaStatus = pessoalistdto.FilaStatus,
+            Pessoas = pessoalistdto.ListaPessoas.ConvertToPessoaViewModelListVM()
+        };
 
         return listPessoa;
     }
@@ -74,9 +110,9 @@ public static class PessoaMapping
             pessoaViewModel.Nome = pessoa.Nome;
             pessoaViewModel.Status = Enum.Parse<PessoaStatusViewModel>(Enum.GetName(pessoa.Status)!);
             pessoaViewModel.Celular = pessoa.Celular;
-            pessoaViewModel.Documento = pessoa.Documento;
+            //pessoaViewModel.Documento = pessoa.Documento;
             //pessoaViewModel.FilaPertence = pessoa.Fila.ConvertToFilaViewModel();
-            pessoaViewModel.FilaId = pessoa.FilaId;
+            //pessoaViewModel.FilaId = pessoa.FilaId;
             pessoaViewModel.Posicao = pessoa.Posicao;
             pessoaViewModel.Preferencial = pessoa.Preferencial;
             pessoaViewModel.Ativo = pessoa.Ativo;

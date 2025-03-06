@@ -31,7 +31,7 @@ public static class EmpresaMapping
             IdAdminEmpresa = empresaloginViewModel.IdAdminEmpresa,
             CNPJ = empresaloginViewModel.CNPJ,
             EmpresaConfiguracao = empconfig,
-            EmpresaFilas = empresaloginViewModel.EmpresaFilas!.Any() ? empresaloginViewModel.EmpresaFilas!.ConvertToListFila() : [],
+            EmpresaFilas = empresaloginViewModel.EmpresaFilas!.Any() ? empresaloginViewModel.EmpresaFilas!.ConvertToListFilaVM() : [],
             NomeEmpresa = empresaloginViewModel.NomeEmpresa,
             UsersEmpresa = empresaloginViewModel.UsersEmpresa!,
             Ativo = empresaloginViewModel.Ativo
@@ -122,7 +122,7 @@ public static class EmpresaMapping
         List<FilaViewModel> listview = [];
         foreach(var fila in list)
         {
-            listview.Add(fila.ConvertToFilaViewModel());
+            listview.Add(fila.ConvertToFilaViewModelVM());
         }
         return listview;
     }

@@ -4,8 +4,8 @@ using LCFila.Controllers.Sistema;
 using LCFila.Mapping;
 using LCFila.ViewModels;
 using LCFila.Web.Mapping;
-using LCFila.Web.Models;
 using LCFila.Application.Interfaces;
+using LCFila.Web.Models;
 
 namespace LCFila.Controllers;
 
@@ -19,34 +19,24 @@ public class FilaController : BaseController
         _filaAppService = filaAppService;
     }
 
-    public IActionResult Index(/*Guid? id*/)
+    public IActionResult Index()
     {
         ConfigEmpresa();
 
-        //TODO: Refactor this!!!
-
-        var allusers = _filaAppService.GetAllUsers();
         var filasdousuario = _filaAppService.GetFilaList(User.Identity!.Name!);
 
-        //TODO: Review this conversion, it' a reference to APP
-        var teste = FilaMapping.ConvertToListFilaViewModel(filasdousuario);
-        foreach (var item in teste)
-        {
-            item.NomeUser = allusers.SingleOrDefault(p => p.Id == item.UserId.ToString())!.UserName!;
-        }
-        return View(teste.ToList());
+        var listaFilas = FilaMapping.ConvertToListFilaViewModel(filasdousuario);
+
+        return View(listaFilas);
     }
 
     public IActionResult Details(Guid id)
     {
         ConfigEmpresa();
 
-        //TODO: Refactor this
-        var (filatoopen,pessoas) = _filaAppService.GetPessoas(id, User.Identity!.Name!);
-        var pessoasdafila = pessoas.ConvertToPessoaViewModelList();
-        ViewBag.idFila = id;
-        ViewBag.statusfila = filatoopen.Status.ToString();
-        return View(pessoasdafila);
+        var filaDetails = _filaAppService.GetPessoas(id, User.Identity!.Name!);
+        var filaDetailsViewModel = filaDetails.ConvertToFilaViewModelListVM();
+        return View(filaDetailsViewModel);
     }
 
     public IActionResult ReAbrir(Guid id)
@@ -74,30 +64,25 @@ public class FilaController : BaseController
     public IActionResult CreateFila()
     {
         ConfigEmpresa();
-        var (userId, empresaid) = _filaAppService.GetUserIdEmpId(User.Identity!.Name!);
+        var createFilaDto = _filaAppService.GetUserIdEmpId(User.Identity!.Name!);
 
-        FilaViewModel filamodel = new FilaViewModel
-        {
-            UserId = userId,
-            EmpresaId = empresaid,
-            TempoMedio = "30"
-        };
-        return View(filamodel);
+        var createFilaViewModel = createFilaDto.ConvertToViewModel();
+
+        return View(createFilaViewModel);
     }
 
     [HttpPost]
-    public IActionResult CreateFila(FilaViewModel filamodel)
+    public IActionResult CreateFila(CreateFilaViewModel filamodel)
     {
         ConfigEmpresa();
-        filamodel.DataInicio = DateTime.Now;
-        filamodel.Ativo = true;
-        //Review ENUM, really need to be a reference to App?
-        filamodel.Status = FilaStatusViewModel.Aberta;
-        //TODO: Review this conversion, it' a reference to APP
-        var fila = filamodel.ConvertToFila();
-        var result = _filaAppService.CriarFila(fila);
+
+        var result = _filaAppService.CriarFila(filamodel.ConvertToFilaVM(), 
+                                               filamodel.EmpresaId, 
+                                               filamodel.UserId);
+        
         if (result)
             return RedirectToAction(nameof(Index));
+        
         return BadRequest();
     }
 
@@ -105,18 +90,8 @@ public class FilaController : BaseController
     public IActionResult Create(Guid id)
     {
         ConfigEmpresa();
-        AdicionarpessoasViewModel pessoasviewmodel = new AdicionarpessoasViewModel();
-        pessoasviewmodel.filaId = id;
-        return View(pessoasviewmodel);
-    }
 
-    public IActionResult IniciarFila()
-    {
-        ConfigEmpresa();
-        
-        var filaId = _filaAppService.IniciarFila(User.Identity!.Name!);
-        return RedirectToAction("Index", filaId);
-
+        return View(new AdicionarpessoasViewModel() { filaId = id });
     }
 
     [HttpPost]
@@ -124,12 +99,6 @@ public class FilaController : BaseController
     {
         ConfigEmpresa();
         if (!ModelState.IsValid) return View(pessoaViewModel);
-
-        pessoaViewModel.pessoa.DataEntradaNaFila = DateTime.Now;
-        pessoaViewModel.pessoa.Ativo = true;
-        pessoaViewModel.pessoa.FilaId = pessoaViewModel.filaId;
-        //Review ENUM, really need to be a reference to App?
-        pessoaViewModel.pessoa.Status = PessoaStatusViewModel.Esperando;
 
         var result = _filaAppService.AdicionarPessoa(pessoaViewModel.pessoa.ConvertToPessoa(), 
                                                      pessoaViewModel.filaId);
@@ -141,6 +110,14 @@ public class FilaController : BaseController
         return BadRequest();
     }
 
+    public IActionResult IniciarFila()
+    {
+        ConfigEmpresa();
+
+        var filaId = _filaAppService.IniciarFila(User.Identity!.Name!);
+        return RedirectToAction("Index", filaId);
+
+    }
     public ActionResult Edit(int id)
     {
         ConfigEmpresa();
@@ -183,7 +160,6 @@ public class FilaController : BaseController
                 return RedirectToAction(nameof(Index));
 
             return BadRequest();
-            //return RedirectToAction(nameof(Index));
         }
         catch
         {

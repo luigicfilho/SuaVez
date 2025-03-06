@@ -23,9 +23,7 @@ public class HomeController : BaseController
     public IActionResult Index()
     {
         ConfigEmpresa();
-        ErrorViewModel teste = new ErrorViewModel();
-        teste.Mensagem = "OLA!";
-        return View("index",teste);
+        return View("index");
     }
 
     public IActionResult Privacy()

@@ -1,34 +1,75 @@
 ﻿using LCFila.ViewModels;
-using LCFila.Web.Models;
-//TODO: how to do it in another way to remove theses references
-//Don't need all this information in this layer, just the informations
-//that need to be passed down
+using LCFila.Application.DTO;
 using LCFila.Domain.Models;
 using LCFila.Domain.Enums;
+using LCFila.Web.Models;
 
 namespace LCFila.Web.Mapping;
 
 public static class FilaMapping
 {
-    public static Fila ConvertToFila(this FilaViewModel filaViewModel)
+    public static FilaDto ConvertToFila(this FilaViewModel filaViewModel)
     {
-        Fila fila = new()
+        FilaDto fila = new()
         {
             Id = filaViewModel.Id,
             Nome = filaViewModel.Nome,
-            Status = Enum.Parse<FilaStatus>(Enum.GetName(filaViewModel.Status)!),
+            Status = filaViewModel.Status,
             TempoMedio = filaViewModel.TempoMedio,
-            Tipofila = Enum.Parse<TiposFilas>(Enum.GetName(filaViewModel.Tipofila)!),
-            UserId = filaViewModel.UserId,
             Ativo = filaViewModel.Ativo,
-            DataFim = filaViewModel.DataFim,
-            DataInicio = filaViewModel.DataInicio,
+            DataInicio = filaViewModel.DataInicio
+        };
+
+        return fila;
+    }
+
+    public static FilaDto ConvertToFilaVM(this CreateFilaViewModel filaViewModel)
+    {
+        FilaDto fila = new()
+        {
+            Nome = filaViewModel.Nome,
+            UserId = filaViewModel.UserId,
             EmpresaId = filaViewModel.EmpresaId
         };
 
         return fila;
     }
-    public static List<Fila> ConvertToListFila(this List<FilaViewModel> filaViewModellist)
+    public static Fila ConvertToFilaVM(this FilaViewModel filaViewModel)
+    {
+        Fila fila = new()
+        {
+            Id = filaViewModel.Id,
+            Nome = filaViewModel.Nome,
+            Status = Enum.Parse<FilaStatus>(filaViewModel.Status),
+            TempoMedio = filaViewModel.TempoMedio,
+            Ativo = filaViewModel.Ativo,
+            DataInicio = filaViewModel.DataInicio
+        };
+
+        return fila;
+    }
+
+    public static List<FilaDto> ConvertToListFila(this List<FilaViewModel> filaViewModellist)
+    {
+        List<FilaDto> listfila = [];
+
+        foreach (var fila in filaViewModellist)
+        {
+            listfila.Add(new FilaDto
+            {
+                Id = fila.Id,
+                Nome = fila.Nome,
+                Status = fila.Status,
+                TempoMedio = fila.TempoMedio,
+                Ativo = fila.Ativo,
+                DataInicio = fila.DataInicio
+            });
+        }
+
+        return listfila;
+    }
+
+    public static List<Fila> ConvertToListFilaVM(this List<FilaViewModel> filaViewModellist)
     {
         List<Fila> listfila = [];
 
@@ -38,40 +79,47 @@ public static class FilaMapping
             {
                 Id = fila.Id,
                 Nome = fila.Nome,
-                Status = Enum.Parse<FilaStatus>(Enum.GetName(fila.Status)!),
+                Status = Enum.Parse<FilaStatus>(fila.Status!),
                 TempoMedio = fila.TempoMedio,
-                Tipofila = Enum.Parse<TiposFilas>(Enum.GetName(fila.Tipofila)!),
-                UserId = fila.UserId,
                 Ativo = fila.Ativo,
-                DataFim = fila.DataFim,
-                DataInicio = fila.DataInicio,
-                EmpresaId = fila.EmpresaId
+                DataInicio = fila.DataInicio
             });
         }
 
         return listfila;
     }
 
-    public static FilaViewModel ConvertToFilaViewModel(this Fila fila)
+    public static FilaViewModel ConvertToFilaViewModel(this FilaDto fila)
     {
         FilaViewModel filaViewModel = new()
         {
             Id = fila.Id,
             Nome = fila.Nome,
-            Status = Enum.Parse<FilaStatusViewModel>(Enum.GetName(fila.Status)!),
+            Status = fila.Status,
             TempoMedio = fila.TempoMedio,
-            Tipofila = Enum.Parse<TiposFilaViewModel>(Enum.GetName(fila.Tipofila)!),
-            UserId = fila.UserId,
             Ativo = fila.Ativo,
-            DataFim = fila.DataFim,
-            DataInicio = fila.DataInicio,
-            EmpresaId = fila.EmpresaId
+            DataInicio = fila.DataInicio
         };
 
         return filaViewModel;
     }
 
-    public static List<FilaViewModel> ConvertToListFilaViewModel(List<Fila> filalist)
+    public static FilaViewModel ConvertToFilaViewModelVM(this Fila fila)
+    {
+        FilaViewModel filaViewModel = new()
+        {
+            Id = fila.Id,
+            Nome = fila.Nome,
+            Status = Enum.GetName(fila.Status)!,
+            TempoMedio = fila.TempoMedio,
+            Ativo = fila.Ativo,
+            DataInicio = fila.DataInicio
+        };
+
+        return filaViewModel;
+    }
+
+    public static List<FilaViewModel> ConvertToListFilaViewModel(List<FilaDto> filalist)
     {
         List<FilaViewModel> listfila = [];
 
@@ -83,17 +131,25 @@ public static class FilaMapping
                 {
                     Id = fila.Id,
                     Nome = fila.Nome,
-                    Status = Enum.Parse<FilaStatusViewModel>(Enum.GetName(fila.Status)!),
+                    Status = fila.Status,
                     TempoMedio = fila.TempoMedio,
-                    Tipofila = Enum.Parse<TiposFilaViewModel>(Enum.GetName(fila.Tipofila)!),
-                    UserId = fila.UserId,
                     Ativo = fila.Ativo,
-                    DataFim = fila.DataFim,
-                    DataInicio = fila.DataInicio,
-                    EmpresaId = fila.EmpresaId
+                    NomeUser = fila.NomeUser,
+                    DataInicio = fila.DataInicio
                 });
             }
         }
         return listfila;
+    }
+
+    public static CreateFilaViewModel ConvertToViewModel(this CreateFilaDto createFilaDto)
+    {
+        CreateFilaViewModel createFilaViewModel = new()
+        {
+            EmpresaId = createFilaDto.EmpresaId,
+            UserId = createFilaDto.UserId
+        };
+
+        return createFilaViewModel;
     }
 }
