@@ -1,8 +1,9 @@
 ﻿//TODO: remove this reference in someway
 using LCFila.Domain.Models;
+using LCFila.Web.Models.Empresa;
 using System.Text.Json.Serialization;
 
-namespace LCFila.Web.Models;
+namespace LCFila.Web.Models.User;
 
 public class AppUserViewModel
 {

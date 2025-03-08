@@ -7,6 +7,7 @@ using LCFila.Application.Interfaces.Identity;
 using LCFila.Controllers;
 using LCFila.Web.Models;
 using LCFila.Web.Models.Identity.AccountViewModels;
+using LCFila.Web.Models.User;
 
 namespace IdentitySample.Controllers;
 

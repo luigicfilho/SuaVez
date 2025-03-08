@@ -1,7 +1,5 @@
 ﻿using LCFila.Application.Dto;
-using LCFila.Domain.Models;
-using LCFila.Domain.Enums;
-using LCFila.Web.Models;
+using LCFila.Web.Models.Fila;
 
 namespace LCFila.Web.Mapping;
 
@@ -67,7 +65,7 @@ public static class FilaMapping
         return filaViewModel;
     }
 
-    public static List<FilaViewModel> ConvertToListFilaViewModel(List<FilaDto> filalist)
+    public static List<FilaViewModel> ConvertToListFilaViewModel(this List<FilaDto> filalist)
     {
         List<FilaViewModel> listfila = [];
 
@@ -101,39 +99,4 @@ public static class FilaMapping
         return createFilaViewModel;
     }
 
-    //TODO: Remove
-    public static FilaViewModel ConvertToFilaViewModelVM(this Fila fila)
-    {
-        FilaViewModel filaViewModel = new()
-        {
-            Id = fila.Id,
-            Nome = fila.Nome,
-            Status = Enum.GetName(fila.Status)!,
-            TempoMedio = fila.TempoMedio,
-            Ativo = fila.Ativo,
-            DataInicio = fila.DataInicio
-        };
-
-        return filaViewModel;
-    }
-
-    public static List<Fila> ConvertToListFilaVM(this List<FilaViewModel> filaViewModellist)
-    {
-        List<Fila> listfila = [];
-
-        foreach (var fila in filaViewModellist)
-        {
-            listfila.Add(new Fila
-            {
-                Id = fila.Id,
-                Nome = fila.Nome,
-                Status = Enum.Parse<FilaStatus>(fila.Status!),
-                TempoMedio = fila.TempoMedio,
-                Ativo = fila.Ativo,
-                DataInicio = fila.DataInicio
-            });
-        }
-
-        return listfila;
-    }
 }

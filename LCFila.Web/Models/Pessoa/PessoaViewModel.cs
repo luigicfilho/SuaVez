@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace LCFila.Web.Models;
+namespace LCFila.Web.Models.Pessoa;
 
 public class PessoaViewModel
 {

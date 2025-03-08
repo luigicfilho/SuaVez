@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using LCFila.Application.Interfaces;
-using LCFila.Web.Models;
 using LCFila.Web.Mapping;
+using LCFila.Web.Models.Empresa;
 
 namespace LCFila.Controllers.Sistema;
 
@@ -23,8 +23,7 @@ public class EmpConfigController : BaseController
     {
         ConfigEmpresa();
         
-        var userName = User.Identity!.Name;
-        var empcofig = await _adminSysAppService.GetEmpresaConfiguracao(userName!);
+        var empcofig = await _adminSysAppService.GetEmpresaConfiguracao(User.Identity!.Name!);
         
         return View(empcofig.ConvertToEmpresaConfiguracaoDto());
     }

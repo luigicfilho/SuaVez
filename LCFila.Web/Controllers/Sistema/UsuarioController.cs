@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using LCFila.Controllers.Sistema;
 using LCFila.Application.Interfaces;
-using LCFila.Web.Models;
+using LCFila.Web.Models.User;
 
 namespace LCFila.Web.Controllers.Sistema;
 

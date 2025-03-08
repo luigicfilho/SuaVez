@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace LCFila.Web.Models;
+namespace LCFila.Web.Models.Empresa;
 
 public class EmpresaConfiguracaoViewModel
 {

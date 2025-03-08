@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
-namespace LCFila.Web.Models;
+namespace LCFila.Web.Models.User;
 
 public class UserCreateViewModel
 {

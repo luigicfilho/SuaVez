@@ -4,6 +4,8 @@ using LCFila.Controllers.Sistema;
 using LCFila.Web.Mapping;
 using LCFila.Application.Interfaces;
 using LCFila.Web.Models;
+using LCFila.Web.Models.Fila;
+using LCFila.Web.Models.Pessoa;
 
 namespace LCFila.Controllers;
 
@@ -23,7 +25,7 @@ public class FilaController : BaseController
 
         var filasdousuario = _filaAppService.GetFilaList(User.Identity!.Name!);
 
-        var listaFilas = FilaMapping.ConvertToListFilaViewModel(filasdousuario);
+        var listaFilas = filasdousuario.ConvertToListFilaViewModel();
 
         return View(listaFilas);
     }

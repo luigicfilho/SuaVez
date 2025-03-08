@@ -1,4 +1,6 @@
-﻿namespace LCFila.Web.Models;
+﻿using LCFila.Web.Models.Pessoa;
+
+namespace LCFila.Web.Models.Fila;
 
 public class FilaPessoaViewModel
 {

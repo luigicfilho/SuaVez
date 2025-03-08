@@ -1,9 +1,10 @@
-﻿//TODO: remove this reference in someway
-using LCFila.Domain.Models;
+﻿using LCFila.Application.Dto;
+using LCFila.Web.Models.Fila;
+using LCFila.Web.Models.User;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
-namespace LCFila.Web.Models;
+namespace LCFila.Web.Models.Empresa;
 
 public class EmpresaLoginViewModel
 {
@@ -25,7 +26,7 @@ public class EmpresaLoginViewModel
     public string Password { get; set; } = string.Empty;
 
     public Guid IdAdminEmpresa { get; set; }
-    public List<AppUser>? UsersEmpresa { get; set; }
+    public List<AppUserViewModel>? UsersEmpresa { get; set; }
 
     [Display(Name = "Lista de Usuários")]
     public SelectList? ListaUsers { get; set; }
@@ -33,7 +34,7 @@ public class EmpresaLoginViewModel
     public List<FilaViewModel>? EmpresaFilas { get; set; } = [];
 
     [Display(Name = "Administrador")]
-    public AppUser? AdminEmpresa { get; set; }
+    public AppUserDto? AdminEmpresa { get; set; }
 
     [Display(Name = "Status ")]
     public bool Ativo { get; set; }

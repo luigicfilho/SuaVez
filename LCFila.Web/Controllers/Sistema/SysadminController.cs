@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using LCFila.Application.Interfaces;
-using LCFila.Web.Models;
 using LCFila.Web.Mapping;
+using LCFila.Web.Models.Empresa;
 
 namespace LCFila.Controllers.Sistema;
 
@@ -45,7 +45,6 @@ public class SysadminController : BaseController
     {
         await _adminSysAppService.ActivateToggleEmpresa(id, false);
         return RedirectToAction(nameof(Index));
-        //return View();
     }
 
     public ActionResult Create()
@@ -68,23 +67,10 @@ public class SysadminController : BaseController
             var result = _adminSysAppService.CreateEmpresa(empresa,
                                                                  empresaViewModel.Email,
                                                                  empresaViewModel.Password);
+
             result.Match(
-                _ => Console.WriteLine("Operation was successful."),
-                error => Console.WriteLine($"Operation failed with error: {error.Message}"));
-            //result.Match();
-
-            object resultados;
-            if (result.IsSuccess)
-            {
-                var s = result.Value;
-                var e = result.Error;
-                var retorno = result.Match(
-                            onSuccess: value => resultados = value,
-                            onFailure: error => resultados = error);
-            }
-
-            //TODO: REVIEW THIS, it's the only thing that makes reference to MVC
-            //var resultado =  Results.Extensions.MapResult(result);
+                    _ => Console.WriteLine("Operation was successful."),
+                    error => Console.WriteLine($"Operation failed with error: {error.Message}"));
 
             return RedirectToAction(nameof(Index));
         }
@@ -100,11 +86,10 @@ public class SysadminController : BaseController
         var empresa = await _adminSysAppService.GetEmpresaDetail(id);
         var adminempresa = await _adminSysAppService.GetEmpresaAdmin(empresa.IdAdminEmpresa.ToString());
 
-
         // var users = _userManager.Users.Include(p => p.EmpresaLogin).Where(p => p.EmpresaLogin.Id == empresa.Id).ToList();
         var empresaviewmodel = empresa.ConvertToEmpresaLoginViewModel();
         empresaviewmodel.Email = adminempresa.Email!;
-        var usersQuery = from d in empresa.UsersEmpresa.Where(p => p.Email != adminempresa.Email).AsEnumerable()
+        var usersQuery = from d in empresa.UsersEmpresa!.Where(p => p.Email != adminempresa.Email).AsEnumerable()
                          orderby d.Email // Sort by name.
                          select d;
         empresaviewmodel.ListaUsers = new SelectList(usersQuery, "Id", "Email");
@@ -144,7 +129,7 @@ public class SysadminController : BaseController
         ConfigEmpresa();
         try
         {
-            _ = await _adminSysAppService.RemoveEmpresa(id);
+            await _adminSysAppService.RemoveEmpresa(id);
 
             return RedirectToAction(nameof(Index));
         }

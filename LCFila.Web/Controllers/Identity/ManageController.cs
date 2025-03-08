@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using LCFila.Application.Interfaces.Identity;
 using LCFila.Web.Models;
 using LCFila.Web.Models.Identity.ManageViewModels;
+using LCFila.Web.Models.User;
 
 namespace IdentitySamples.Controllers;
 

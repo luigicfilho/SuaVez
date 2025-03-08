@@ -7,6 +7,8 @@ using LCFila.Infra.Interfaces;
 using LCFila.Infra.External;
 using LCFila.Application.Dto;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Http;
+using LCFila.Domain.Enums;
 
 namespace LCFila.Application.AppServices;
 
@@ -43,7 +45,7 @@ public class AdminSysAppService : IAdminSysAppService
         return;
     }
 
-    public Results<EmpresaLogin> CreateEmpresa(EmpresaLogin empresaLogin, string email, string password)
+    public Results<EmpresaLoginDto> CreateEmpresa(EmpresaLoginDto empresaLogindto, string email, string password)
     {
         var user = new AppUser
         {
@@ -57,19 +59,22 @@ public class AdminSysAppService : IAdminSysAppService
 
         EmpresaConfiguracao empconfig = new EmpresaConfiguracao()
         {
-            NomeDaEmpresa = empresaLogin.NomeEmpresa,
+            NomeDaEmpresa = empresaLogindto.NomeEmpresa,
             LinkLogodaEmpresa = "http://",
             CorPrincipalEmpresa = "black",
             CorSegundariaEmpresa = "black",
             FooterEmpresa = "no footer"
         };
 
-        //EmpresaLogin empresaLogin = new();
+        EmpresaLogin empresaLogin = new();
 
         empresaLogin.IdAdminEmpresa = Guid.Parse(user.Id);
         empresaLogin.UsersEmpresa = listausers;
         empresaLogin.EmpresaFilas = new();
         empresaLogin.EmpresaConfiguracao = empconfig;
+
+        empresaLogindto.IdAdminEmpresa = Guid.Parse(user.Id);
+        empresaLogindto.EmpresaFilas = new();
 
         var result = _userManager.CreateAsync(user, password).Result;
         if (result.Succeeded)
@@ -87,37 +92,199 @@ public class AdminSysAppService : IAdminSysAppService
                 _userManager.DeleteAsync(user);
                 
                 //return resultFactory.Failure(new Error("APP01", "Was not possible to confirm the email."));
-                return Results<EmpresaLogin>.Failure(Error.GenericFailure("APP01", "Was not possible to confirm the email."));
+                return Results<EmpresaLoginDto>.Failure(Error.GenericFailure("APP01", "Was not possible to confirm the email."));
             }
         }
 
-        return Results<EmpresaLogin>.Success(empresaLogin!);
+        return Results<EmpresaLoginDto>.Success(empresaLogindto!);
     }
 
-    public async Task<EmpresaLogin> EditEmpresa(EmpresaLogin empresaLogin)
+    public async Task<EmpresaLoginDto> EditEmpresa(EmpresaLoginDto empresaLogin)
     {
-        await _empresaRepository.Atualizar(empresaLogin);
+        var empLogin = await _empresaRepository.ObterPorId(empresaLogin.Id);
+        //TODO: Update what it's needed
+        List<AppUser> appuserlist = [];
+        foreach (var appuser in empresaLogin.UsersEmpresa!)
+        {
+            appuserlist.Add(new()
+            {
+                Email = appuser.Email!,
+                PhoneNumber = appuser.PhoneNumber!,
+                Id = appuser.Id,
+                UserName = appuser.UserName!
+            });
+        }
+
+        List<Fila> filalist = [];
+        foreach (var filas in empresaLogin.EmpresaFilas!)
+        {
+            filalist.Add(new()
+            {
+                Id = filas.Id,
+                Nome = filas.Nome,
+                DataInicio = filas.DataInicio,
+                DataFim = filas.DataFim,
+                Tipofila = Enum.Parse<TiposFilas>(filas.Tipofila),
+                Status = Enum.Parse<FilaStatus>(filas.Status),
+                Ativo = filas.Ativo,
+                TempoMedio = filas.TempoMedio
+            });
+        }
+
+        EmpresaConfiguracao empConfDto = new()
+        {
+            Id = empresaLogin.EmpresaConfiguracao!.Id,
+            NomeDaEmpresa = empresaLogin.EmpresaConfiguracao.NomeDaEmpresa,
+            LinkLogodaEmpresa = empresaLogin.EmpresaConfiguracao.LinkLogodaEmpresa,
+            CorPrincipalEmpresa = empresaLogin.EmpresaConfiguracao.CorPrincipalEmpresa,
+            CorSegundariaEmpresa = empresaLogin.EmpresaConfiguracao.CorSegundariaEmpresa,
+            FooterEmpresa = empresaLogin.EmpresaConfiguracao.FooterEmpresa
+        };
+
+        EmpresaLogin empresaLoginDto = new()
+        {
+            NomeEmpresa = empresaLogin!.NomeEmpresa,
+            CNPJ = empresaLogin!.CNPJ,
+            IdAdminEmpresa = empresaLogin.IdAdminEmpresa,
+            UsersEmpresa = appuserlist,
+            EmpresaConfiguracao = empConfDto,
+            EmpresaFilas = filalist,
+            Ativo = empresaLogin.Ativo
+        };
+        await _empresaRepository.Atualizar(empresaLoginDto!);
         await _empresaRepository.SaveChanges();
         return empresaLogin;
     }
 
-    public async Task<IEnumerable<EmpresaLogin>> GetAllEmpresas()
+    public async Task<IEnumerable<EmpresaLoginDto>> GetAllEmpresas()
     {
-        return await _empresaRepository.ObterTodos();
+        var empresasLogins = await _empresaRepository.ObterTodos();
+        List<AppUserDto> appuserlist = [];
+
+        List<FilaDto> filalist = [];
+
+        List<EmpresaLoginDto> empresaLoginDtos = [];
+        foreach (var emps in empresasLogins)
+        {
+            foreach (var appuser in emps.UsersEmpresa)
+            {
+                appuserlist.Add(new()
+                {
+                    Email = appuser.Email!,
+                    PhoneNumber = appuser.PhoneNumber!,
+                    Id = appuser.Id,
+                    UserName = appuser.UserName!
+                });
+            }
+            foreach (var filas in emps.EmpresaFilas)
+            {
+                filalist.Add(new()
+                {
+                    Id = filas.Id,
+                    Nome = filas.Nome,
+                    DataInicio = filas.DataInicio,
+                    DataFim = filas.DataFim,
+                    Tipofila = filas.Tipofila.ToString(),
+                    Status = filas.Status.ToString(),
+                    Ativo = filas.Ativo,
+                    TempoMedio = filas.TempoMedio
+                });
+            }
+            EmpresaConfiguracaoDto empConfDto = new()
+            {
+                Id = emps.EmpresaConfiguracao.Id,
+                NomeDaEmpresa = emps.EmpresaConfiguracao.NomeDaEmpresa,
+                LinkLogodaEmpresa = emps.EmpresaConfiguracao.LinkLogodaEmpresa,
+                CorPrincipalEmpresa = emps.EmpresaConfiguracao.CorPrincipalEmpresa,
+                CorSegundariaEmpresa = emps.EmpresaConfiguracao.CorSegundariaEmpresa,
+                FooterEmpresa = emps.EmpresaConfiguracao.FooterEmpresa
+            };
+            empresaLoginDtos.Add(new EmpresaLoginDto
+            {
+                Id = emps.Id,
+                NomeEmpresa = emps!.NomeEmpresa,
+                CNPJ = emps!.CNPJ,
+                IdAdminEmpresa = emps.IdAdminEmpresa,
+                UsersEmpresa = appuserlist,
+                EmpresaConfiguracao = empConfDto,
+                EmpresaFilas = filalist,
+                Ativo = emps.Ativo
+            });
+        }
+        return empresaLoginDtos;
     }
 
-    public async Task<EmpresaLogin> GetEmpresaDetail(Guid Id)
+    public async Task<EmpresaLoginDto> GetEmpresaDetail(Guid Id)
     {
         var retorno = await _empresaRepository!.ObterPorId(Id);
-        return retorno!;
+        List<AppUserDto> appuserlist = [];
+
+        foreach(var appuser in retorno!.UsersEmpresa)
+        {
+            appuserlist.Add(new()
+            {
+                Email = appuser.Email!,
+                PhoneNumber = appuser.PhoneNumber!,
+                Id = appuser.Id,
+                UserName = appuser.UserName!
+            });
+        }
+
+        List<FilaDto> filalist = [];
+        foreach (var filas in retorno!.EmpresaFilas)
+        {
+            filalist.Add(new()
+            {
+                Id = filas.Id,
+                Nome = filas.Nome,
+                DataInicio = filas.DataInicio,
+                DataFim = filas.DataFim,
+                Tipofila = filas.Tipofila.ToString(),
+                Status = filas.Status.ToString(),
+                Ativo = filas.Ativo,
+                TempoMedio = filas.TempoMedio
+            });
+        }
+
+        EmpresaConfiguracaoDto empConfDto = new()
+        {
+            Id = retorno.EmpresaConfiguracao.Id,
+            NomeDaEmpresa = retorno.EmpresaConfiguracao.NomeDaEmpresa,
+            LinkLogodaEmpresa = retorno.EmpresaConfiguracao.LinkLogodaEmpresa,
+            CorPrincipalEmpresa = retorno.EmpresaConfiguracao.CorPrincipalEmpresa,
+            CorSegundariaEmpresa = retorno.EmpresaConfiguracao.CorSegundariaEmpresa,
+            FooterEmpresa = retorno.EmpresaConfiguracao.FooterEmpresa
+        };
+
+        EmpresaLoginDto empresaLoginDto = new()
+        {
+            NomeEmpresa = retorno!.NomeEmpresa,
+            CNPJ = retorno!.CNPJ,
+            IdAdminEmpresa = retorno.IdAdminEmpresa,
+            UsersEmpresa = appuserlist,
+            EmpresaConfiguracao = empConfDto,
+            EmpresaFilas = filalist,
+            Ativo = retorno.Ativo
+        };
+
+        return empresaLoginDto;
     }
 
-    public async Task<AppUser> GetEmpresaAdmin(string IdAdminEmpresa)
+    public async Task<AppUserDto> GetEmpresaAdmin(string IdAdminEmpresa)
     {
         var retorno = await _userManager.FindByIdAsync(IdAdminEmpresa);
-        return retorno!;
+
+        AppUserDto appUserDto = new()
+        {
+            Email = retorno!.Email!,
+            PhoneNumber = retorno.PhoneNumber!,
+            Id = retorno.Id,
+            UserName = retorno!.UserName!
+        };
+
+        return appUserDto!;
     }
-    public async Task<EmpresaLogin> RemoveEmpresa(Guid Id)
+    public async Task RemoveEmpresa(Guid Id)
     {
         var empresa = await _empresaRepository.ObterPorId(Id);
 
@@ -126,7 +293,7 @@ public class AdminSysAppService : IAdminSysAppService
         await _userManager.DeleteAsync(adminempresa!);
         await _empresaRepository.Remover(empresa.Id);
         await _empresaRepository.SaveChanges();
-        return empresa;
+        
     }
 
     public async Task<EmpresaConfiguracaoDto> GetEmpresaConfiguracao(string userName)

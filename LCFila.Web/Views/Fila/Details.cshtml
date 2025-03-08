@@ -1,4 +1,6 @@
 ﻿@using LCFila.Web.Models
+@using LCFila.Web.Models.Fila
+@using LCFila.Web.Models.Pessoa
 @model FilaPessoaViewModel
 @{
     var teste = DateTime.Now;
@@ -82,7 +84,7 @@
                     <tbody>
                         @foreach (var item in Model.Pessoas.OrderBy(p => p.Posicao))
                         {
-                            @if (item.Ativo == true && item.Status.ToString() == LCFila.Web.Models.PessoaStatusViewModel.Chamado.ToString())
+                            @if (item.Ativo == true && item.Status.ToString() == PessoaStatusViewModel.Chamado.ToString())
                             {
                                 <tr>
                                     <td>
@@ -123,7 +125,7 @@
                                     </td>
                                 </tr>
                             }
-                            else if (item.Ativo == true && item.Status.ToString() == LCFila.Web.Models.PessoaStatusViewModel.Esperando.ToString())
+                            else if (item.Ativo == true && item.Status.ToString() == PessoaStatusViewModel.Esperando.ToString())
                             {
                                 <tr>
                                     <td>

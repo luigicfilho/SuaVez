@@ -1,5 +1,6 @@
 ﻿using LCFila.Application.Dto;
-using LCFila.Web.Models;
+using LCFila.Web.Models.Fila;
+using LCFila.Web.Models.Pessoa;
 
 namespace LCFila.Web.Mapping;
 

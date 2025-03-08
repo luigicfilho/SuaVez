@@ -1,9 +1,6 @@
-﻿//TODO: how to do it in another way to remove theses references
-//Don't need all this information in this layer, just the informations
-//that need to be passed down
-using LCFila.Domain.Models;
-using LCFila.Application.Dto;
-using LCFila.Web.Models;
+﻿using LCFila.Application.Dto;
+using LCFila.Web.Models.Empresa;
+using LCFila.Web.Models.User;
 
 namespace LCFila.Web.Mapping;
 
@@ -39,9 +36,9 @@ public static class EmpresaMapping
         return empresaConfig;
     }
 
-    public static EmpresaLogin ConvertToEmpresaLogin(this EmpresaLoginViewModel empresaloginViewModel)
+    public static EmpresaLoginDto ConvertToEmpresaLogin(this EmpresaLoginViewModel empresaloginViewModel)
     {
-        EmpresaConfiguracao empconfig = new()
+        EmpresaConfiguracaoDto empconfig = new()
         {
             CorSegundariaEmpresa = "",
             CorPrincipalEmpresa = "",
@@ -51,42 +48,42 @@ public static class EmpresaMapping
         };
         if (empresaloginViewModel.EmpresaConfiguracao is not null)
         {
-            empconfig = empresaloginViewModel.EmpresaConfiguracao.ConvertToEmpresaConfiguracao();
+            empconfig = empresaloginViewModel.EmpresaConfiguracao.ConvertToEmpresaConfiguracaoDto();
         }
 
-        EmpresaLogin empresaLogin = new()
+        EmpresaLoginDto empresaLogin = new()
         {
             Id = empresaloginViewModel.Id,
             IdAdminEmpresa = empresaloginViewModel.IdAdminEmpresa,
             CNPJ = empresaloginViewModel.CNPJ,
             EmpresaConfiguracao = empconfig,
-            EmpresaFilas = empresaloginViewModel.EmpresaFilas!.Any() ? empresaloginViewModel.EmpresaFilas!.ConvertToListFilaVM() : [],
+            EmpresaFilas = empresaloginViewModel.EmpresaFilas!.Any() ? empresaloginViewModel.EmpresaFilas!.ConvertToListFila() : [],
             NomeEmpresa = empresaloginViewModel.NomeEmpresa,
-            UsersEmpresa = empresaloginViewModel.UsersEmpresa!,
+            UsersEmpresa = empresaloginViewModel.UsersEmpresa!.ConvertToDto(),
             Ativo = empresaloginViewModel.Ativo
         };
 
         return empresaLogin;
     }
 
-    public static EmpresaLoginViewModel ConvertToEmpresaLoginViewModel(this EmpresaLogin empresalogin)
+    public static EmpresaLoginViewModel ConvertToEmpresaLoginViewModel(this EmpresaLoginDto empresalogin)
     {
         EmpresaLoginViewModel empresaLoginview = new()
         {
             Id = empresalogin.Id,
             IdAdminEmpresa = empresalogin.IdAdminEmpresa,
             CNPJ = empresalogin.CNPJ,
-            EmpresaConfiguracao = empresalogin.EmpresaConfiguracao.ConvertToEmpresaConfiguracaoView(),
-            EmpresaFilas = empresalogin.EmpresaFilas.ConvertoToFilaViewModel(),
+            EmpresaConfiguracao = empresalogin.EmpresaConfiguracao!.ConvertToEmpresaConfiguracaoDto(),
+            EmpresaFilas = empresalogin.EmpresaFilas!.ConvertToListFilaViewModel(),
             NomeEmpresa = empresalogin.NomeEmpresa,
-            UsersEmpresa = empresalogin.UsersEmpresa,
+            UsersEmpresa = empresalogin.UsersEmpresa!.ConvertToViewModel(),
             Ativo = empresalogin.Ativo
         };
 
         return empresaLoginview;
     }
 
-    public static IEnumerable<EmpresaLoginViewModel> ConvertToEmpresaLoginViewModel(this IEnumerable<EmpresaLogin>? empresalogin)
+    public static IEnumerable<EmpresaLoginViewModel> ConvertToEmpresaLoginViewModel(this IEnumerable<EmpresaLoginDto>? empresalogin)
     {
         List<EmpresaLoginViewModel> viewlist = [];
         if(empresalogin is not null)
@@ -100,10 +97,10 @@ public static class EmpresaMapping
                         Id = emp.Id,
                         IdAdminEmpresa = emp.IdAdminEmpresa,
                         CNPJ = emp.CNPJ,
-                        EmpresaConfiguracao = emp.EmpresaConfiguracao.ConvertToEmpresaConfiguracaoView(),
-                        EmpresaFilas = emp.EmpresaFilas.ConvertoToFilaViewModel(),
+                        EmpresaConfiguracao = emp.EmpresaConfiguracao!.ConvertToEmpresaConfiguracaoDto(),
+                        EmpresaFilas = emp.EmpresaFilas!.ConvertToListFilaViewModel(),
                         NomeEmpresa = emp.NomeEmpresa,
-                        UsersEmpresa = emp.UsersEmpresa,
+                        UsersEmpresa = emp.UsersEmpresa!.ConvertToViewModel(),
                         Ativo = emp.Ativo
                     });
                 }
@@ -115,43 +112,34 @@ public static class EmpresaMapping
         return list;
     }
 
-    internal static EmpresaConfiguracaoViewModel ConvertToEmpresaConfiguracaoView(this EmpresaConfiguracao empresaConfiguracao)
+    public static List<AppUserViewModel> ConvertToViewModel(this List<AppUserDto> appUserDtos)
     {
-        EmpresaConfiguracaoViewModel empresaConfig = new()
+        List<AppUserViewModel> appUserViewModels = [];
+        foreach(var appuser in appUserDtos)
         {
-            Id = empresaConfiguracao.Id,
-            CorPrincipalEmpresa = empresaConfiguracao.CorPrincipalEmpresa,
-            NomeDaEmpresa = empresaConfiguracao.NomeDaEmpresa,
-            CorSegundariaEmpresa = empresaConfiguracao.CorSegundariaEmpresa,
-            FooterEmpresa = empresaConfiguracao.FooterEmpresa,
-            LinkLogodaEmpresa = empresaConfiguracao.LinkLogodaEmpresa
-        };
-
-        return empresaConfig;
-    }
-
-    internal static EmpresaConfiguracao ConvertToEmpresaConfiguracao(this EmpresaConfiguracaoViewModel empresaConfiguracaoViewModel)
-    {
-        EmpresaConfiguracao empresaConfig = new()
-        {
-            Id = empresaConfiguracaoViewModel.Id,
-            CorPrincipalEmpresa = empresaConfiguracaoViewModel.CorPrincipalEmpresa,
-            NomeDaEmpresa = empresaConfiguracaoViewModel.NomeDaEmpresa,
-            CorSegundariaEmpresa = empresaConfiguracaoViewModel.CorSegundariaEmpresa,
-            FooterEmpresa = empresaConfiguracaoViewModel.FooterEmpresa,
-            LinkLogodaEmpresa = empresaConfiguracaoViewModel.LinkLogodaEmpresa
-        };
-
-        return empresaConfig;
-    }
-
-    internal static List<FilaViewModel> ConvertoToFilaViewModel(this List<Fila> list)
-    {
-        List<FilaViewModel> listview = [];
-        foreach(var fila in list)
-        {
-            listview.Add(fila.ConvertToFilaViewModelVM());
+            appUserViewModels.Add(new AppUserViewModel
+            {
+                Id = Guid.Parse(appuser.Id),
+                Email = appuser.Email,
+                PhoneNumber = appuser.PhoneNumber
+            });
         }
-        return listview;
+        return appUserViewModels;
     }
+
+    public static List<AppUserDto> ConvertToDto(this List<AppUserViewModel> appUserViewModels)
+    {
+        List<AppUserDto> appUserDtoList = [];
+        foreach (var appuser in appUserViewModels)
+        {
+            appUserDtoList.Add(new AppUserDto
+            {
+                Id = appuser.Id.ToString(),
+                Email = appuser.Email,
+                PhoneNumber = appuser.PhoneNumber
+            });
+        }
+        return appUserDtoList;
+    }
+
 }
