@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using LCFila.Infra.External;
+using LCFila.Application.Dto;
 
 namespace LCFila.Application.IdentityService;
 
@@ -24,10 +25,9 @@ internal class IdentitysService : IIdentityService
         _emailSender = emailSender;
     }
 
-
-    public IdentityResult AddLoginAsync(AppUser user, ExternalLoginInfo info)
+    public IdentityResult AddLoginAsync(AppUserDto user, ExternalLoginInfo info)
     {
-        return _userManager.AddLoginAsync(user, info).Result;
+        return _userManager.AddLoginAsync(user.ConvertToAppUser(), info).Result;
     }
 
     public AuthenticationProperties ConfigureExternalAuthenticationProperties(string provider, string redirectUrl)
@@ -35,19 +35,19 @@ internal class IdentitysService : IIdentityService
         return _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
     }
 
-    public IdentityResult ConfirmEmailAsync(AppUser user, string code)
+    public IdentityResult ConfirmEmailAsync(AppUserDto user, string code)
     {
-        return _userManager.ConfirmEmailAsync(user, code).Result;
+        return _userManager.ConfirmEmailAsync(user.ConvertToAppUser(), code).Result;
     }
 
-    public IdentityResult CreateAsync(AppUser user)
+    public IdentityResult CreateAsync(AppUserDto user)
     {
-        return _userManager.CreateAsync(user).Result;
+        return _userManager.CreateAsync(user.ConvertToAppUser()).Result;
     }
 
-    public IdentityResult CreateAsync(AppUser user, string Password)
+    public IdentityResult CreateAsync(AppUserDto user, string Password)
     {
-        return _userManager.CreateAsync(user, Password).Result;
+        return _userManager.CreateAsync(user.ConvertToAppUser(), Password).Result;
     }
 
     public SignInResult ExternalLoginSignInAsync(string LoginProvider, string ProviderKey, bool isPersistent = false)
@@ -65,14 +65,14 @@ internal class IdentitysService : IIdentityService
         return _userManager.FindByIdAsync(userId).Result!;
     }
 
-    public string GenerateTwoFactorTokenAsync(AppUser user, string provider)
+    public string GenerateTwoFactorTokenAsync(AppUserDto user, string provider)
     {
-        return _userManager.GenerateTwoFactorTokenAsync(user, provider).Result;
+        return _userManager.GenerateTwoFactorTokenAsync(user.ConvertToAppUser(), provider).Result;
     }
 
-    public string GetEmailAsync(AppUser user)
+    public string GetEmailAsync(AppUserDto user)
     {
-        return _userManager.GetEmailAsync(user).Result!;
+        return _userManager.GetEmailAsync(user.ConvertToAppUser()).Result!;
     }
 
     public ExternalLoginInfo GetExternalLoginInfoAsync()
@@ -90,14 +90,14 @@ internal class IdentitysService : IIdentityService
         return _userManager.GetUserAsync(claims).Result!;
     }
 
-    public IList<string> GetValidTwoFactorProvidersAsync(AppUser user)
+    public IList<string> GetValidTwoFactorProvidersAsync(AppUserDto user)
     {
-        return _userManager.GetValidTwoFactorProvidersAsync(user).Result;
+        return _userManager.GetValidTwoFactorProvidersAsync(user.ConvertToAppUser()).Result;
     }
 
-    public bool IsEmailConfirmedAsync(AppUser user)
+    public bool IsEmailConfirmedAsync(AppUserDto user)
     {
-        return _userManager.IsEmailConfirmedAsync(user).Result;
+        return _userManager.IsEmailConfirmedAsync(user.ConvertToAppUser()).Result;
     }
 
     public SignInResult PasswordSignInAsync(string Email, string Password, bool RememberMe, bool lockoutOnFailure = false)
@@ -105,14 +105,14 @@ internal class IdentitysService : IIdentityService
         return _signInManager.PasswordSignInAsync(Email, Password, RememberMe, lockoutOnFailure).Result;
     }
 
-    public IdentityResult ResetPasswordAsync(AppUser user, string Code, string Password)
+    public IdentityResult ResetPasswordAsync(AppUserDto user, string Code, string Password)
     {
-        return _userManager.ResetPasswordAsync(user, Code, Password).Result;
+        return _userManager.ResetPasswordAsync(user.ConvertToAppUser(), Code, Password).Result;
     }
 
-    public void SignInAsync(AppUser user, bool isPersistent = false)
+    public void SignInAsync(AppUserDto user, bool isPersistent = false)
     {
-        _signInManager.SignInAsync(user, isPersistent);
+        _signInManager.SignInAsync(user.ConvertToAppUser(), isPersistent);
     }
 
     public void SignOutAsync()
@@ -140,7 +140,7 @@ internal class IdentitysService : IIdentityService
         return _signInManager.UpdateExternalAuthenticationTokensAsync(info).Result;
     }
 
-    public void SendCode(string provider, string code, AppUser user)
+    public void SendCode(string provider, string code, AppUserDto user)
     {
         var message = "Your security code is: " + code;
         if (provider == "Email")

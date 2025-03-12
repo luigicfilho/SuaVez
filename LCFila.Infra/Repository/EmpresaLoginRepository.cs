@@ -14,7 +14,8 @@ public class EmpresaLoginRepository : Repository<EmpresaLogin>, IEmpresaLoginRep
 
     public override async Task<EmpresaLogin?> ObterPorId(Guid id)
     {
-        return await Db.EmpresasLogin.Include(f => f.UsersEmpresa).Include(f => f.EmpresaConfiguracao).SingleOrDefaultAsync(p => p.Id == id);
+        var empresas = await Db.EmpresasLogin.Include(f => f.UsersEmpresa).Include(f => f.EmpresaConfiguracao).SingleOrDefaultAsync(p => p.Id == id);
+        return empresas;
     }
 
     public override async Task<List<EmpresaLogin>> ObterTodos()
@@ -40,5 +41,11 @@ public class EmpresaLoginRepository : Repository<EmpresaLogin>, IEmpresaLoginRep
         {
             throw new Exception("Something go wrong!");
         }
+    }
+
+    public async Task<EmpresaLogin?> ObterPorAdminId(Guid id)
+    {
+        var empresas = await Db.EmpresasLogin.Include(f => f.UsersEmpresa).Include(f => f.EmpresaConfiguracao).SingleOrDefaultAsync(p => p.IdAdminEmpresa == id);
+        return empresas;
     }
 }

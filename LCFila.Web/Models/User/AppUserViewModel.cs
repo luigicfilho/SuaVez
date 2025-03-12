@@ -1,6 +1,4 @@
-﻿//TODO: remove this reference in someway
-using LCFila.Domain.Models;
-using LCFila.Web.Models.Empresa;
+﻿using LCFila.Web.Models.Empresa;
 using System.Text.Json.Serialization;
 
 namespace LCFila.Web.Models.User;
@@ -35,28 +33,4 @@ public class AppUserViewModel
     public EmpresaLoginViewModel empresaLogin { get; set; } = new();
 
 };
-
-//TODO: Review This, send idenity stuff to app
-public static class PessoaMapping
-{
-    public static AppUserViewModel ConvertToViewModel(this AppUserViewModel appUserViewModel, AppUser user)
-    {
-        AppUserViewModel UserViewModel = new()
-        {
-            UserName = user.Email!,
-            Email = user.Email!,
-            PhoneNumber = user.PhoneNumber!
-        };
-        return UserViewModel;
-    }
-    public static AppUser ConvertToAppUser(this AppUserViewModel appUserViewModel)
-    {
-        return new AppUser()
-        {
-            UserName = appUserViewModel.Email,
-            Email = appUserViewModel.Email,
-            PhoneNumber = appUserViewModel.PhoneNumber
-        };
-    }
-}
 

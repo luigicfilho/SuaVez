@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using LCFila.Infra.External;
+using LCFila.Application.Dto;
 
 namespace LCFila.Application.IdentityService;
 
@@ -26,24 +27,24 @@ internal class IdentityManagerService : IIdentityManagerService
         //_smsSender = smsSender;
     }
 
-    public IdentityResult AddLoginAsync(AppUser user, UserLoginInfo info)
+    public IdentityResult AddLoginAsync(AppUserDto user, UserLoginInfo info)
     {
-        return _userManager.AddLoginAsync(user, info).Result;
+        return _userManager.AddLoginAsync(user.ConvertToAppUser(), info).Result;
     }
 
-    public IdentityResult AddPasswordAsync(AppUser user, string NewPassword)
+    public IdentityResult AddPasswordAsync(AppUserDto user, string NewPassword)
     {
-        return _userManager.AddPasswordAsync(user, NewPassword).Result;
+        return _userManager.AddPasswordAsync(user.ConvertToAppUser(), NewPassword).Result;
     }
 
-    public IdentityResult ChangePasswordAsync(AppUser user, string OldPassword, string NewPassword)
+    public IdentityResult ChangePasswordAsync(AppUserDto user, string OldPassword, string NewPassword)
     {
-        return _userManager.ChangePasswordAsync(user, OldPassword, NewPassword).Result;
+        return _userManager.ChangePasswordAsync(user.ConvertToAppUser(), OldPassword, NewPassword).Result;
     }
 
-    public IdentityResult ChangePhoneNumberAsync(AppUser user, string phoneNumber, string Code)
+    public IdentityResult ChangePhoneNumberAsync(AppUserDto user, string phoneNumber, string Code)
     {
-        return _userManager.ChangePhoneNumberAsync(user, phoneNumber, Code).Result;
+        return _userManager.ChangePhoneNumberAsync(user.ConvertToAppUser(), phoneNumber, Code).Result;
     }
 
     public AuthenticationProperties ConfigureExternalAuthenticationProperties(string? provider, [StringSyntax("Uri")] string? redirectUrl, string? userId = null)
@@ -51,19 +52,19 @@ internal class IdentityManagerService : IIdentityManagerService
         return _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, userId);
     }
 
-    public string GenerateChangePhoneNumberTokenAsync(AppUser user, string PhoneNumber)
+    public string GenerateChangePhoneNumberTokenAsync(AppUserDto user, string PhoneNumber)
     {
-        return _userManager.GenerateChangePhoneNumberTokenAsync(user, PhoneNumber).Result;
+        return _userManager.GenerateChangePhoneNumberTokenAsync(user.ConvertToAppUser(), PhoneNumber).Result;
     }
 
-    public IEnumerable<string> GenerateNewTwoFactorRecoveryCodesAsync(AppUser user, int val)
+    public IEnumerable<string> GenerateNewTwoFactorRecoveryCodesAsync(AppUserDto user, int val)
     {
-        return _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, val).Result!;
+        return _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user.ConvertToAppUser(), val).Result!;
     }
 
-    public string GetAuthenticatorKeyAsync(AppUser user)
+    public string GetAuthenticatorKeyAsync(AppUserDto user)
     {
-        return _userManager.GetAuthenticatorKeyAsync(user).Result!;
+        return _userManager.GetAuthenticatorKeyAsync(user.ConvertToAppUser()).Result!;
     }
 
     public IEnumerable<AuthenticationScheme> GetExternalAuthenticationSchemesAsync()
@@ -76,24 +77,25 @@ internal class IdentityManagerService : IIdentityManagerService
         return _signInManager.GetExternalLoginInfoAsync(userId).Result!;
     }
 
-    public IList<UserLoginInfo> GetLoginsAsync(AppUser user)
+    public IList<UserLoginInfo> GetLoginsAsync(AppUserDto user)
     {
-        return _userManager.GetLoginsAsync(user).Result;
+        return _userManager.GetLoginsAsync(user.ConvertToAppUser()).Result;
     }
 
-    public string GetPhoneNumberAsync(AppUser user)
+    public string GetPhoneNumberAsync(AppUserDto user)
     {
-        return _userManager.GetPhoneNumberAsync(user).Result!;
+        return _userManager.GetPhoneNumberAsync(user.ConvertToAppUser()).Result!;
     }
 
-    public bool GetTwoFactorEnabledAsync(AppUser user)
+    public bool GetTwoFactorEnabledAsync(AppUserDto user)
     {
-        return _userManager.GetTwoFactorEnabledAsync(user).Result;
+        return _userManager.GetTwoFactorEnabledAsync(user.ConvertToAppUser()).Result;
     }
 
-    public AppUser GetUserAsync(ClaimsPrincipal principal)
+    public AppUserDto GetUserAsync(ClaimsPrincipal principal)
     {
-        return _userManager.GetUserAsync(principal).Result!;
+        var user = _userManager.GetUserAsync(principal).Result!;
+        return user.ConvertToAppUserDto();
     }
 
     public string GetUserId(ClaimsPrincipal userClaims)
@@ -101,43 +103,43 @@ internal class IdentityManagerService : IIdentityManagerService
         return _userManager.GetUserId(userClaims)!;
     }
 
-    public string GetUserIdAsync(AppUser user)
+    public string GetUserIdAsync(AppUserDto user)
     {
-        return _userManager.GetUserIdAsync(user).Result;
+        return _userManager.GetUserIdAsync(user.ConvertToAppUser()).Result;
     }
 
-    public bool HasPasswordAsync(AppUser user)
+    public bool HasPasswordAsync(AppUserDto user)
     {
-        return _userManager.HasPasswordAsync(user).Result;
+        return _userManager.HasPasswordAsync(user.ConvertToAppUser()).Result;
     }
 
-    public bool IsTwoFactorClientRememberedAsync(AppUser user)
+    public bool IsTwoFactorClientRememberedAsync(AppUserDto user)
     {
-        return _signInManager.IsTwoFactorClientRememberedAsync(user).Result;
+        return _signInManager.IsTwoFactorClientRememberedAsync(user.ConvertToAppUser()).Result;
     }
 
-    public IdentityResult RemoveLoginAsync(AppUser user, string LoginProvider, string ProviderKey)
+    public IdentityResult RemoveLoginAsync(AppUserDto user, string LoginProvider, string ProviderKey)
     {
-        return _userManager.RemoveLoginAsync(user, LoginProvider, ProviderKey).Result;
+        return _userManager.RemoveLoginAsync(user.ConvertToAppUser(), LoginProvider, ProviderKey).Result;
     }
 
-    public bool ResetAuthenticatorKeyAsync(AppUser user)
+    public bool ResetAuthenticatorKeyAsync(AppUserDto user)
     {
-        return _userManager.ResetAuthenticatorKeyAsync(user).IsCompletedSuccessfully;
+        return _userManager.ResetAuthenticatorKeyAsync(user.ConvertToAppUser()).IsCompletedSuccessfully;
     }
 
-    public IdentityResult SetPhoneNumberAsync(AppUser user, string? phoneNumber)
+    public IdentityResult SetPhoneNumberAsync(AppUserDto user, string? phoneNumber)
     {
-        return _userManager.SetPhoneNumberAsync(user, phoneNumber).Result;
+        return _userManager.SetPhoneNumberAsync(user.ConvertToAppUser(), phoneNumber).Result;
     }
 
-    public bool SetTwoFactorEnabledAsync(AppUser user, bool val)
+    public bool SetTwoFactorEnabledAsync(AppUserDto user, bool val)
     {
-        return _userManager.SetTwoFactorEnabledAsync(user, val).IsCompletedSuccessfully;
+        return _userManager.SetTwoFactorEnabledAsync(user.ConvertToAppUser(), val).IsCompletedSuccessfully;
     }
 
-    public bool SignInAsync(AppUser user, bool isPersistent)
+    public bool SignInAsync(AppUserDto user, bool isPersistent)
     {
-        return _signInManager.SignInAsync(user, isPersistent).IsCompletedSuccessfully;
+        return _signInManager.SignInAsync(user.ConvertToAppUser(), isPersistent).IsCompletedSuccessfully;
     }
 }

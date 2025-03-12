@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using LCFila.Controllers.Sistema;
 using LCFila.Web.Mapping;
 using LCFila.Application.Interfaces;
-using LCFila.Web.Models;
 using LCFila.Web.Models.Fila;
 using LCFila.Web.Models.Pessoa;
 
@@ -35,7 +34,9 @@ public class FilaController : BaseController
         ConfigEmpresa();
 
         var filaDetails = _filaAppService.GetPessoas(id, User.Identity!.Name!);
+        
         var filaDetailsViewModel = filaDetails.ConvertToFilaViewModelListVM();
+        
         return View(filaDetailsViewModel);
     }
 

@@ -1,4 +1,5 @@
-﻿using LCFila.Application.Interfaces;
+﻿using LCFila.Application.Dto;
+using LCFila.Application.Interfaces;
 using LCFila.Domain.Models;
 using LCFila.Infra.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -18,7 +19,7 @@ internal class UserAppService : IUserAppService
         _userManager = userManager;
         _signInManager = signInManager;
     }
-    public bool AtualizarUser(Guid id, AppUser formUser, string Role)
+    public bool AtualizarUser(Guid id, AppUserDto formUser, string Role)
     {
         try
         {
@@ -63,12 +64,12 @@ internal class UserAppService : IUserAppService
         }
     }
 
-    public bool CreateNewUser(string UserEmail, string Password, int Role)
+    public bool CreateNewUser(string UserEmail, string Password, int Role, string userLoggedIn)
     {
         try
         {
             var user = new AppUser { UserName = UserEmail, Email = UserEmail };
-
+            //var userlogged = _userManager.GetUserAsync userLoggedIn;
             user.EmailConfirmed = true;
             var result = _userManager.CreateAsync(user, Password).Result;
             if (result.Succeeded)
@@ -97,7 +98,7 @@ internal class UserAppService : IUserAppService
             if (result.Succeeded)
             {
                 var AllUsers = _userManager.Users;
-                var admin = AllUsers.FirstOrDefault(p => p.UserName == UserEmail);
+                var admin = AllUsers.FirstOrDefault(p => p.UserName == userLoggedIn);
                 var AllEmpresas = _empresaRepository.ObterTodos().Result;
                 var empresa = AllEmpresas.FirstOrDefault(p => p.IdAdminEmpresa == Guid.Parse(admin!.Id));
                 empresa!.UsersEmpresa.Add(user);
@@ -112,25 +113,39 @@ internal class UserAppService : IUserAppService
 
     }
 
-    public List<AppUser> GetListUsers(string UserName)
+    public List<AppUserDto> GetListUsers(string UserName)
     {
-        //TODO: Fix logic, need to search the company by adminId not empresaId in line 37
-
-        //User.Identity.Name
         var AllUsers = _userManager.Users;
-        //var user = User.Identity.Name;
-        //var admin = AllUsers.Include(p => p.EmpresaLogin).FirstOrDefault(p => p.UserName == User.Identity.Name);
         var admin = AllUsers.FirstOrDefault(a => a.UserName == UserName);
-        var Empresa = _empresaRepository.ObterPorId(Guid.Parse(admin!.Id)).Result;
+        var Empresa = _empresaRepository.ObterPorAdminId(Guid.Parse(admin!.Id)).Result;
         var usersempresa = Empresa!.UsersEmpresa.Where(p => p.Id != Empresa.IdAdminEmpresa.ToString()).ToList();
-        return usersempresa;
+        List<AppUserDto> appUserDtos = [];
+        foreach(var user in usersempresa)
+        {
+            appUserDtos.Add(new AppUserDto()
+            {
+                Id = user.Id,
+                Email = user.Email!,
+                UserName = user.UserName!,
+                PhoneNumber = user.PhoneNumber!
+            });
+        }
+        return appUserDtos;
     }
 
-    public (string, AppUser) GetUserAndRole(Guid id)
+    public (string, AppUserDto) GetUserAndRole(Guid id)
     {
         var user = _userManager.FindByIdAsync(id.ToString()).Result;
         var role = _userManager.GetRolesAsync(user!).Result;
-        return (role[0],user)!;
+
+        AppUserDto appUserDto = new()
+        {
+            Id = user!.Id,
+            Email = user.Email!,
+            UserName = user.UserName!,
+            PhoneNumber = user.PhoneNumber!
+        };
+        return (role[0], appUserDto)!;
     }
 
     public bool Logout()
@@ -139,7 +154,7 @@ internal class UserAppService : IUserAppService
         return result.IsCompletedSuccessfully;
     }
 
-    public bool RemoverUser(Guid id, AppUser formUser)
+    public bool RemoverUser(Guid id, AppUserDto formUser)
     {
         try
         {

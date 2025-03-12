@@ -1,15 +1,16 @@
-﻿using LCFila.Domain.Models;
+﻿using LCFila.Application.Dto;
+using LCFila.Domain.Models;
 
 
 namespace LCFila.Application.Interfaces;
 
 public interface IUserAppService
 {
-   List<AppUser> GetListUsers(string UserName);
-   (string, AppUser) GetUserAndRole(Guid id);
-   bool CreateNewUser(string UserEmail, string Password, int Role);
-   bool AtualizarUser(Guid id, AppUser formUser, string Role);
-   bool RemoverUser(Guid id, AppUser formUser);
+   List<AppUserDto> GetListUsers(string UserName);
+   (string, AppUserDto) GetUserAndRole(Guid id);
+   bool CreateNewUser(string UserEmail, string Password, int Role, string userLoggedIn);
+   bool AtualizarUser(Guid id, AppUserDto formUser, string Role);
+   bool RemoverUser(Guid id, AppUserDto formUser);
    bool RemoverUser(Guid id);
    bool Logout();
 }

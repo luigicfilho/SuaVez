@@ -4,6 +4,7 @@ using LCFila.Application.Interfaces.Identity;
 using LCFila.Web.Models;
 using LCFila.Web.Models.Identity.ManageViewModels;
 using LCFila.Web.Models.User;
+using LCFila.Web.Mapping;
 
 namespace IdentitySamples.Controllers;
 
@@ -322,9 +323,8 @@ public class ManageController : Controller
 
     private AppUserViewModel GetCurrentUserAsync()
     {
-        AppUserViewModel user = new();
-        user.ConvertToViewModel(_identityManagerService.GetUserAsync(HttpContext.User));
-        return user;
+        var userdto = _identityManagerService.GetUserAsync(HttpContext.User);
+        return userdto.ConvertToViewModel();
     }
     #endregion
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using LCFila.Controllers.Sistema;
 using LCFila.Application.Interfaces;
 using LCFila.Web.Models.User;
+using LCFila.Web.Mapping;
 
 namespace LCFila.Web.Controllers.Sistema;
 
@@ -23,7 +24,7 @@ public class UsuarioController : BaseController
     {
         ConfigEmpresa();
         var listUsers = _userAppService.GetListUsers(User.Identity!.Name!);
-        return View(listUsers);
+        return View(listUsers.ConvertToViewModel());
     }
 
     public IActionResult Details(Guid id)
@@ -42,7 +43,7 @@ public class UsuarioController : BaseController
                 ViewBag.Role = "Administrador";
             }
         }
-        return View(user);
+        return View(user.ConvertToViewModel());
     }
 
     public IActionResult Create()
@@ -65,7 +66,8 @@ public class UsuarioController : BaseController
         ConfigEmpresa();
         try
         {
-            var result = _userAppService.CreateNewUser(Input.Email, Input.Password, Input.RoleId);
+            var userLoggedIn = User.Identity!.Name;
+            var result = _userAppService.CreateNewUser(Input.Email, Input.Password, Input.RoleId, userLoggedIn);
 
             if (result)
             {
@@ -100,7 +102,7 @@ public class UsuarioController : BaseController
                 ViewBag.Role = "Administrador";
             }
         }
-        return View(user);
+        return View(user.ConvertToViewModel());
     }
 
     [HttpPost]

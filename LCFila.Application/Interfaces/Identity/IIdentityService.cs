@@ -1,4 +1,5 @@
-﻿using LCFila.Domain.Models;
+﻿using LCFila.Application.Dto;
+using LCFila.Domain.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
@@ -10,30 +11,30 @@ public interface IIdentityService
     #region UserManager
     AppUser GetUserAsync(ClaimsPrincipal claims);
 
-    string GetEmailAsync(AppUser user);
+    string GetEmailAsync(AppUserDto user);
 
-    string GenerateTwoFactorTokenAsync(AppUser user, string provider);
+    string GenerateTwoFactorTokenAsync(AppUserDto user, string provider);
 
-    IdentityResult ResetPasswordAsync(AppUser user, string Code, string Password);
+    IdentityResult ResetPasswordAsync(AppUserDto user, string Code, string Password);
 
     AppUser FindByEmailAsync(string Email);
 
-    bool IsEmailConfirmedAsync(AppUser user);
+    bool IsEmailConfirmedAsync(AppUserDto user);
 
-    IdentityResult ConfirmEmailAsync(AppUser user, string code);
+    IdentityResult ConfirmEmailAsync(AppUserDto user, string code);
 
     AppUser FindByIdAsync(string userId);
 
-    IdentityResult CreateAsync(AppUser user);
-    IdentityResult CreateAsync(AppUser user, string Password);
-    IdentityResult AddLoginAsync(AppUser user, ExternalLoginInfo info);
-    IList<string> GetValidTwoFactorProvidersAsync(AppUser user);
+    IdentityResult CreateAsync(AppUserDto user);
+    IdentityResult CreateAsync(AppUserDto user, string Password);
+    IdentityResult AddLoginAsync(AppUserDto user, ExternalLoginInfo info);
+    IList<string> GetValidTwoFactorProvidersAsync(AppUserDto user);
 
     #endregion
 
     #region SignInManager
     SignInResult PasswordSignInAsync(string Email, string Password, bool RememberMe, bool lockoutOnFailure = false);
-    void SignInAsync(AppUser user, bool isPersistent = false);
+    void SignInAsync(AppUserDto user, bool isPersistent = false);
 
     void SignOutAsync();
     AuthenticationProperties ConfigureExternalAuthenticationProperties(string provider, string redirectUrl);
@@ -48,5 +49,5 @@ public interface IIdentityService
 
     #endregion
 
-    void SendCode(string provider, string code, AppUser user);
+    void SendCode(string provider, string code, AppUserDto user);
 }

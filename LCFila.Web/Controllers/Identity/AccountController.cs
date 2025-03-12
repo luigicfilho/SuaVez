@@ -8,6 +8,8 @@ using LCFila.Controllers;
 using LCFila.Web.Models;
 using LCFila.Web.Models.Identity.AccountViewModels;
 using LCFila.Web.Models.User;
+using LCFila.Web.Mapping;
+using LCFila.Application.IdentityService;
 
 namespace IdentitySample.Controllers;
 
@@ -462,7 +464,7 @@ public class AccountController : Controller
         {
             return View("Error");
         }
-        var result = _identityService.ConfirmEmailAsync(user, code);
+        var result = _identityService.ConfirmEmailAsync(user.ConvertToAppUserDto(), code);
         return View(result.Succeeded ? "ConfirmEmail" : "Error");
     }
 
@@ -482,7 +484,7 @@ public class AccountController : Controller
         if (ModelState.IsValid)
         {
             var user = _identityService.FindByEmailAsync(model.Email);
-            if (user == null || !(_identityService.IsEmailConfirmedAsync(user)))
+            if (user == null || !(_identityService.IsEmailConfirmedAsync(user.ConvertToAppUserDto())))
             {
                 // Don't reveal that the user does not exist or is not confirmed
                 return View("ForgotPasswordConfirmation");
@@ -562,7 +564,7 @@ public class AccountController : Controller
             // Don't reveal that the user does not exist
             return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
         }
-        var result = _identityService.ResetPasswordAsync(user, model.Code, model.Password);
+        var result = _identityService.ResetPasswordAsync(user.ConvertToAppUserDto(), model.Code, model.Password);
         if (result.Succeeded)
         {
             return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
@@ -587,7 +589,7 @@ public class AccountController : Controller
         {
             return View("Error");
         }
-        var userFactors = _identityService.GetValidTwoFactorProvidersAsync(user);
+        var userFactors = _identityService.GetValidTwoFactorProvidersAsync(user.ConvertToAppUserDto());
         var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
         return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl!, RememberMe = rememberMe });
     }
@@ -614,13 +616,13 @@ public class AccountController : Controller
         }
 
         // Generate the token and send it
-        var code = _identityService.GenerateTwoFactorTokenAsync(user, model.SelectedProvider);
+        var code = _identityService.GenerateTwoFactorTokenAsync(user.ConvertToAppUserDto(), model.SelectedProvider);
         if (string.IsNullOrWhiteSpace(code))
         {
             return View("Error");
         }
         
-        _identityService.SendCode(model.SelectedProvider, code, user);
+        _identityService.SendCode(model.SelectedProvider, code, user.ConvertToAppUserDto());
 
 
         return RedirectToAction(nameof(VerifyCode), new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
