@@ -25,6 +25,11 @@ internal class IdentitysService : IIdentityService
         _emailSender = emailSender;
     }
 
+    public IEnumerable<AuthenticationScheme> GetExternalAuthenticationSchemesAsync()
+    {
+        return _signInManager.GetExternalAuthenticationSchemesAsync().Result;
+    }
+
     public IdentityResult AddLoginAsync(AppUserDto user, ExternalLoginInfo info)
     {
         return _userManager.AddLoginAsync(user.ConvertToAppUser(), info).Result;

@@ -38,7 +38,7 @@ public interface IIdentityService
 
     void SignOutAsync();
     AuthenticationProperties ConfigureExternalAuthenticationProperties(string provider, string redirectUrl);
-
+    IEnumerable<AuthenticationScheme> GetExternalAuthenticationSchemesAsync();
     ExternalLoginInfo GetExternalLoginInfoAsync();
     SignInResult ExternalLoginSignInAsync(string LoginProvider, string ProviderKey, bool isPersistent = false);
     IdentityResult UpdateExternalAuthenticationTokensAsync(ExternalLoginInfo info);
