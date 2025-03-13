@@ -20,18 +20,12 @@ public class UserCreateViewModel
     [Display(Name = "Password")]
     public string Password { get; set; } = string.Empty;
 
-    [DataType(DataType.Password)]
-    [Display(Name = "Confirm password")]
-    [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-    public string ConfirmPassword { get; set; } = string.Empty;
+    //[DataType(DataType.Password)]
+    //[Display(Name = "Confirm password")]
+    //[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+    //public string ConfirmPassword { get; set; } = string.Empty;
 
     public List<SelectListItem> Roles { get; set; } = [];
     public int RoleId { get; set; }
 
-}
-
-public enum MyRoles
-{
-    Administrador = 1,
-    Funcionário = 2
 }

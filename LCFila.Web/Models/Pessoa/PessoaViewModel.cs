@@ -15,7 +15,7 @@ public class PessoaViewModel
     public string Celular { get; set; } = string.Empty;
     [DisplayName("Ativo?")]
     public bool Ativo { get; set; }
-    public DateTime DataEntradaNaFila { get; set; }
+    //public DateTime DataEntradaNaFila { get; set; }
     public string Status { get; set; } = string.Empty;
     [DisplayName("Preferencial?")]
     public bool Preferencial { get; set; }

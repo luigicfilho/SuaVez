@@ -11,7 +11,7 @@ public class FilaViewModel
     public string NomeUser { get; set; } = string.Empty;
 
     //While
-    public Guid UserId { get; set; }
-    public Guid EmpresaId { get; set; }
+    //public Guid UserId { get; set; }
+    //public Guid EmpresaId { get; set; }
 }
 

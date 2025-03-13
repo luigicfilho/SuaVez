@@ -8,7 +8,6 @@ namespace LCFila.Web.Models.Empresa;
 
 public class EmpresaLoginViewModel
 {
-
     public Guid Id { get; set; }
     [Display(Name = "Nome da Empresa")]
     public string NomeEmpresa { get; set; } = string.Empty;
