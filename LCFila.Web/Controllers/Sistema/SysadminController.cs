@@ -5,7 +5,7 @@ using LCFila.Application.Interfaces;
 using LCFila.Web.Mapping;
 using LCFila.Web.Models.Empresa;
 
-namespace LCFila.Controllers.Sistema;
+namespace LCFila.Web.Controllers.Sistema;
 
 [Authorize(Roles = "SysAdmin")]
 public class SysadminController : BaseController
@@ -68,10 +68,6 @@ public class SysadminController : BaseController
                                                                  empresaViewModel.Email,
                                                                  empresaViewModel.Password);
 
-            result.Match(
-                    _ => Console.WriteLine("Operation was successful."),
-                    error => Console.WriteLine($"Operation failed with error: {error.Message}"));
-
             return RedirectToAction(nameof(Index));
         }
         catch (Exception)
@@ -86,11 +82,10 @@ public class SysadminController : BaseController
         var empresa = await _adminSysAppService.GetEmpresaDetail(id);
         var adminempresa = await _adminSysAppService.GetEmpresaAdmin(empresa.IdAdminEmpresa.ToString());
 
-        // var users = _userManager.Users.Include(p => p.EmpresaLogin).Where(p => p.EmpresaLogin.Id == empresa.Id).ToList();
         var empresaviewmodel = empresa.ConvertToEmpresaLoginViewModel();
         empresaviewmodel.Email = adminempresa.Email!;
         var usersQuery = from d in empresa.UsersEmpresa!.Where(p => p.Email != adminempresa.Email).AsEnumerable()
-                         orderby d.Email // Sort by name.
+                         orderby d.Email
                          select d;
         empresaviewmodel.ListaUsers = new SelectList(usersQuery, "Id", "Email");
         empresaviewmodel.AdminEmpresa = adminempresa;

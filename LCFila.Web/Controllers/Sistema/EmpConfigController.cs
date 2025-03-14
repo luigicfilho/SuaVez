@@ -4,7 +4,7 @@ using LCFila.Application.Interfaces;
 using LCFila.Web.Mapping;
 using LCFila.Web.Models.Empresa;
 
-namespace LCFila.Controllers.Sistema;
+namespace LCFila.Web.Controllers.Sistema;
 
 
 [Authorize(Roles = "EmpAdmin,SysAdmin")]

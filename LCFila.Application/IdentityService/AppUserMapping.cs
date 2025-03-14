@@ -1,5 +1,4 @@
-﻿
-using LCFila.Application.Dto;
+﻿using LCFila.Application.Dto;
 using LCFila.Domain.Models;
 
 namespace LCFila.Application.IdentityService;

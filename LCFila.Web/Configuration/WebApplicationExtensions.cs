@@ -13,13 +13,12 @@ public static class WebApplicationExtensions
         var componentType = allApplicationTypes
             .SingleOrDefault(t => typeof(ILCFilaConfigurator).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
 
-        if (componentType != null) // Important to check if componentType is found
+        if (componentType != null)
         {
             builder.Services.AddScoped(typeof(ILCFilaConfigurator), componentType);
         }
         else
         {
-            // Handle the case where the type is not found (log an error, throw an exception, etc.)
             throw new InvalidOperationException("ILCFilaConfigurator implementation not found.");
         }
 

@@ -4,26 +4,29 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 using LCFila.Application.Interfaces.Identity;
-using LCFila.Controllers;
 using LCFila.Web.Models;
 using LCFila.Web.Models.Identity.AccountViewModels;
 using LCFila.Web.Models.User;
 using LCFila.Web.Mapping;
 using LCFila.Application.IdentityService;
+using LCFila.Application.Interfaces;
 
-namespace IdentitySample.Controllers;
+namespace LCFila.Web.Controllers.Identity;
 
 [Authorize]
 public class AccountController : Controller
 {
     private readonly IIdentityService _identityService;
+    private readonly IAdminSysAppService _adminSysAppService;
     private readonly ILogger _logger;
 
     public AccountController(
         IIdentityService identityService,
+        IAdminSysAppService adminSysAppService,
         ILoggerFactory loggerFactory)
     {
         _identityService = identityService;
+        _adminSysAppService = adminSysAppService;
         _logger = loggerFactory.CreateLogger<AccountController>();
     }
 
@@ -52,30 +55,6 @@ public class AccountController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Login(LoginViewModel model, string? returnUrl = null)
     {
-        #region UserInputValidation
-        //if (Input.Email.IndexOf('@') > -1)
-        //{
-        //    //Validate email format
-        //    string emailRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
-        //                           @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
-        //                              @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
-        //    Regex re = new Regex(emailRegex);
-        //    if (!re.IsMatch(Input.Email))
-        //    {
-        //        ModelState.AddModelError("Email", "Email is not valid");
-        //    }
-        //}
-        //else
-        //{
-        //    //validate Username format
-        //    string emailRegex = @"^[a-zA-Z0-9]*$";
-        //    Regex re = new Regex(emailRegex);
-        //    if (!re.IsMatch(Input.Email))
-        //    {
-        //        ModelState.AddModelError("Email", "Username is not valid");
-        //    }
-        //}
-        #endregion
         ViewData["ReturnUrl"] = returnUrl ?? Url.Content("~/");
         if (ModelState.IsValid)
         {
@@ -84,36 +63,22 @@ public class AccountController : Controller
             var result = _identityService.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
             if (result.Succeeded)
             {
-                //var user = await _userManager.Users.SingleOrDefaultAsync(p => p.Email == Input.Email);
-                //    var roles = await _userManager.GetRolesAsync(user);
-
-                //    var teste = roles.Where(p => p.Contains("SysAdmin")).FirstOrDefault();
-                //    if (teste != null)
-                //    {
-                //        _logger.LogInformation("SysAdmin logged in.");
-                //        return RedirectToAction("Index", "Sysadmin");
-                //    }
-                //    var AllEmpresas = await _empresaRepository.ObterTodos();
-                //    var empresa = AllEmpresas.FirstOrDefault(p => p.IdAdminEmpresa == Guid.Parse(user.Id));
-                //    if (empresa.Ativo)
-                //    {
-                //        _logger.LogInformation("User logged in.");
-                //        return LocalRedirect(returnUrl);
-                //    }
-                //    else
-                //    {
-                //        await _signInManager.SignOutAsync();
-                //        _logger.LogInformation("User logged out.");
-                //        return RedirectToPage("./Lockout");
-                //    }
-
-                _logger.LogInformation(1, "User logged in.");
-                return RedirectToLocal(returnUrl!);
+                var empresaAtiva = _adminSysAppService.IsEmpresaAtiva(model.Email);
+                if (empresaAtiva)
+                {
+                    _logger.LogInformation("User logged in.");
+                    return LocalRedirect(returnUrl!);
+                }
+                else
+                {
+                    _identityService.SignOutAsync();
+                    _logger.LogInformation("User logged out.");
+                    return RedirectToAction(nameof(Lockout));
+                }
             }
             if (result.RequiresTwoFactor)
             {
-                //return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-                return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, model.RememberMe });
             }
             if (result.IsLockedOut)
             {
@@ -128,9 +93,15 @@ public class AccountController : Controller
             }
         }
 
-        // If we got this far, something failed, redisplay form
         ModelState.AddModelError(string.Empty, "Something go wrong.");
         return View(model);
+    }
+
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult Lockout()
+    {
+        return View();
     }
 
     [HttpGet]
@@ -348,7 +319,7 @@ public class AccountController : Controller
         if (ModelState.IsValid)
         {
             var user = _identityService.FindByEmailAsync(model.Email);
-            if (user == null || !(_identityService.IsEmailConfirmedAsync(user.ConvertToAppUserDto())))
+            if (user == null || !_identityService.IsEmailConfirmedAsync(user.ConvertToAppUserDto()))
             {
                 // Don't reveal that the user does not exist or is not confirmed
                 return View("ForgotPasswordConfirmation");
@@ -398,12 +369,12 @@ public class AccountController : Controller
         if (user == null)
         {
             // Don't reveal that the user does not exist
-            return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
+            return RedirectToAction(nameof(ResetPasswordConfirmation), "Account");
         }
         var result = _identityService.ResetPasswordAsync(user.ConvertToAppUserDto(), model.Code, model.Password);
         if (result.Succeeded)
         {
-            return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
+            return RedirectToAction(nameof(ResetPasswordConfirmation), "Account");
         }
         AddErrors(result.ConvertToIdentityResult());
         return View();
@@ -448,7 +419,7 @@ public class AccountController : Controller
 
         if (model.SelectedProvider == "Authenticator")
         {
-            return RedirectToAction(nameof(VerifyAuthenticatorCode), new { ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
+            return RedirectToAction(nameof(VerifyAuthenticatorCode), new { model.ReturnUrl, model.RememberMe });
         }
 
         // Generate the token and send it
@@ -461,7 +432,7 @@ public class AccountController : Controller
         _identityService.SendCode(model.SelectedProvider, code, user.ConvertToAppUserDto());
 
 
-        return RedirectToAction(nameof(VerifyCode), new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
+        return RedirectToAction(nameof(VerifyCode), new { Provider = model.SelectedProvider, model.ReturnUrl, model.RememberMe });
     }
 
     [HttpGet]

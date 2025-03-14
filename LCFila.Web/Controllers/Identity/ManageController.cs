@@ -6,7 +6,7 @@ using LCFila.Web.Models.Identity.ManageViewModels;
 using LCFila.Web.Models.User;
 using LCFila.Web.Mapping;
 
-namespace IdentitySamples.Controllers;
+namespace LCFila.Web.Controllers.Identity;
 
 [Authorize]
 public class ManageController : Controller
@@ -82,7 +82,7 @@ public class ManageController : Controller
         var user = GetCurrentUserAsync();
         var code = _identityManagerService.GenerateChangePhoneNumberTokenAsync(user.ConvertToAppUser(), model.PhoneNumber);
         //await _smsSender.SendSmsAsync(model.PhoneNumber, "Your security code is: " + code);
-        return RedirectToAction(nameof(VerifyPhoneNumber), new { PhoneNumber = model.PhoneNumber });
+        return RedirectToAction(nameof(VerifyPhoneNumber), new { model.PhoneNumber });
     }
 
     [HttpPost]

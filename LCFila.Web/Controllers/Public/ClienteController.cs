@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using LCFila.Controllers.Sistema;
 using LCFila.Application.Interfaces;
 using LCFila.Web.Mapping;
+using LCFila.Web.Controllers.Sistema;
 
 namespace LCFila.Web.Controllers.Public;
 

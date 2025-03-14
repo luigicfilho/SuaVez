@@ -45,7 +45,7 @@
                 </li>
             </ul>
             <div class="col-10 text-center">
-                @if (ViewBag.logo != "http://")
+                @if (ViewBag.logo != "http://" && !string.IsNullOrEmpty(ViewBag.logo))
                 {
                     <img src="@ViewBag.logo" style="width: 260px;" alt="Sua Vez" />
                 }
@@ -59,7 +59,7 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a asp-area="" asp-controller="Home" asp-action="Index" class="brand-link text-center">
-                @if (ViewBag.logo !=  "http://")
+                @if (ViewBag.logo != "http://" && !string.IsNullOrEmpty(ViewBag.logo))
                 {
                     <img src="@ViewBag.logo" style="width: 150px;" alt="Sua Vez" />
                 }

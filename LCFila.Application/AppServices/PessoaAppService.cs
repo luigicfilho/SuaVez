@@ -5,176 +5,175 @@ using LCFila.Infra.Interfaces;
 using System.Linq.Expressions;
 using LCFila.Application.Dto;
 
-namespace LCFila.Application.AppServices
+namespace LCFila.Application.AppServices;
+
+internal class PessoaAppService : IPessoaAppService
 {
-    internal class PessoaAppService : IPessoaAppService
+    public IPessoaRepository _pessoaRepository { get; }
+
+    public PessoaAppService(IPessoaRepository pessoaRepository)
     {
-        public IPessoaRepository _pessoaRepository { get; }
-
-        public PessoaAppService(IPessoaRepository pessoaRepository)
+        _pessoaRepository = pessoaRepository;
+    }
+    public bool Atender(Guid id, Guid filaid)
+    {
+        var pessoa = _pessoaRepository.ObterPorId(id).Result;
+        pessoa!.Ativo = false;
+        pessoa.Status = PessoaStatus.Atendido;
+        var result = _pessoaRepository.Atualizar(pessoa);
+        if (result.IsCompletedSuccessfully)
         {
-            _pessoaRepository = pessoaRepository;
+            return true;
         }
-        public bool Atender(Guid id, Guid filaid)
+        else
         {
-            var pessoa = _pessoaRepository.ObterPorId(id).Result;
-            pessoa!.Ativo = false;
-            pessoa.Status = PessoaStatus.Atendido;
-            var result = _pessoaRepository.Atualizar(pessoa);
-            if (result.IsCompletedSuccessfully)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return false;
         }
+    }
 
-        public bool Chamar(Guid id, Guid filaid)
+    public bool Chamar(Guid id, Guid filaid)
+    {
+        try
         {
-            try
-            {
-                var pessoa = GetDetails(id, filaid);
-                var pessoas = Buscar(p => p.FilaId == filaid && p.Ativo == true && p.Status == PessoaStatus.Esperando);
+            var pessoa = GetDetails(id, filaid);
+            var pessoas = Buscar(p => p.FilaId == filaid && p.Ativo == true && p.Status == PessoaStatus.Esperando);
 
-                foreach (var item in pessoas.OrderBy(p => p.Preferencial))
+            foreach (var item in pessoas.OrderBy(p => p.Preferencial))
+            {
+                if (item.Id == id)
                 {
-                    if (item.Id == id)
+                    item.Posicao = 0;
+                    item.Status = PessoaStatus.Chamado;
+                }
+                else
+                {
+                    item.Posicao = item.Posicao - 1;
+                }
+                Atualizar(item);
+            }
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+
+    }
+
+    public PessoasDto GetDetails(Guid Id, Guid filaid)
+    {
+        var pessoa = ObterPorId(Id);
+        PessoasDto pessoasDto = new()
+        {
+            Id = pessoa!.Id,
+            Nome = pessoa.Nome,
+            Status = pessoa.Status.ToString(),
+            Celular = pessoa.Celular,
+            Posicao = pessoa.Posicao,
+            Preferencial = pessoa.Preferencial,
+            Ativo = pessoa.Ativo
+        };
+        return pessoasDto;
+    }
+
+    public bool Pular(Guid id, Guid filaid)
+    {
+        try
+        {
+            var pessoa = ObterPorId(id);
+            var pessoas = Buscar(p => p.FilaId == filaid && p.Ativo == true && (p.Status == PessoaStatus.Esperando || p.Status == PessoaStatus.Chamado));
+            var posicaopessoadel = pessoa.Posicao;
+            foreach (var item in pessoas.OrderBy(p => p.Preferencial))
+            {
+                if (item.Id == id)
+                {
+                    if (item.Status == PessoaStatus.Chamado)
                     {
-                        item.Posicao = 0;
-                        item.Status = PessoaStatus.Chamado;
+                        item.Posicao = 1;
+                        item.Status = PessoaStatus.Esperando;
                     }
                     else
                     {
-                        item.Posicao = item.Posicao - 1;
+                        item.Posicao = item.Posicao + 1;
                     }
-                    Atualizar(item);
                 }
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
-        }
-
-        public PessoasDto GetDetails(Guid Id, Guid filaid)
-        {
-            var pessoa = ObterPorId(Id);
-            PessoasDto pessoasDto = new()
-            {
-                Id = pessoa!.Id,
-                Nome = pessoa.Nome,
-                Status = pessoa.Status.ToString(),
-                Celular = pessoa.Celular,
-                Posicao = pessoa.Posicao,
-                Preferencial = pessoa.Preferencial,
-                Ativo = pessoa.Ativo
-            };
-            return pessoasDto;
-        }
-
-        public bool Pular(Guid id, Guid filaid)
-        {
-            try
-            {
-                var pessoa = ObterPorId(id);
-                var pessoas = Buscar(p => p.FilaId == filaid && p.Ativo == true && (p.Status == PessoaStatus.Esperando || p.Status == PessoaStatus.Chamado));
-                var posicaopessoadel = pessoa.Posicao;
-                foreach (var item in pessoas.OrderBy(p => p.Preferencial))
+                else
                 {
-                    if (item.Id == id)
+                    if (item.Posicao > posicaopessoadel)
                     {
-                        if (item.Status == PessoaStatus.Chamado)
+                        if (item.Posicao == 1)
                         {
-                            item.Posicao = 1;
-                            item.Status = PessoaStatus.Esperando;
+                            item.Posicao = 0;
+                            item.Status = PessoaStatus.Chamado;
                         }
                         else
-                        {
-                            item.Posicao = item.Posicao + 1;
-                        }
-                    }
-                    else
-                    {
-                        if (item.Posicao > posicaopessoadel)
-                        {
-                            if (item.Posicao == 1)
-                            {
-                                item.Posicao = 0;
-                                item.Status = PessoaStatus.Chamado;
-                            }
-                            else
-                            {
-                                item.Posicao = item.Posicao - 1;
-                            }
-                        }
-                    }
-                    Atualizar(item);
-                }
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            
-        }
-
-        public bool Remover(Guid id, Guid filaid)
-        {
-            try
-            {
-                var pessoa = ObterPorId(id);
-                var pessoas = Buscar(p => p.FilaId == filaid && p.Ativo == true && (p.Status == PessoaStatus.Esperando || p.Status == PessoaStatus.Chamado));
-                var posicaopessoadel = pessoa.Posicao;
-                foreach (var item in pessoas.OrderBy(p => p.Preferencial))
-                {
-                    if (item.Id == id)
-                    {
-                        item.Ativo = false;
-                        item.Status = PessoaStatus.Removido;
-                    }
-                    else
-                    {
-                        if (item.Posicao > posicaopessoadel)
                         {
                             item.Posicao = item.Posicao - 1;
                         }
                     }
-                    Atualizar(item);
                 }
-                return true;
+                Atualizar(item);
             }
-            catch (Exception)
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+        
+    }
+
+    public bool Remover(Guid id, Guid filaid)
+    {
+        try
+        {
+            var pessoa = ObterPorId(id);
+            var pessoas = Buscar(p => p.FilaId == filaid && p.Ativo == true && (p.Status == PessoaStatus.Esperando || p.Status == PessoaStatus.Chamado));
+            var posicaopessoadel = pessoa.Posicao;
+            foreach (var item in pessoas.OrderBy(p => p.Preferencial))
             {
-                return false;
+                if (item.Id == id)
+                {
+                    item.Ativo = false;
+                    item.Status = PessoaStatus.Removido;
+                }
+                else
+                {
+                    if (item.Posicao > posicaopessoadel)
+                    {
+                        item.Posicao = item.Posicao - 1;
+                    }
+                }
+                Atualizar(item);
             }
+            return true;
         }
-
-        internal Pessoa ObterPorId(Guid Id) 
+        catch (Exception)
         {
-            return _pessoaRepository.ObterPorId(Id).Result!;
+            return false;
         }
+    }
 
-        internal IEnumerable<Pessoa> Buscar(Expression<Func<Pessoa, bool>> predicate)
-        {
-            return _pessoaRepository.Buscar(predicate).Result;
-        }
+    internal Pessoa ObterPorId(Guid Id) 
+    {
+        return _pessoaRepository.ObterPorId(Id).Result!;
+    }
 
-        internal bool Atualizar(Pessoa pessoa)
+    internal IEnumerable<Pessoa> Buscar(Expression<Func<Pessoa, bool>> predicate)
+    {
+        return _pessoaRepository.Buscar(predicate).Result;
+    }
+
+    internal bool Atualizar(Pessoa pessoa)
+    {
+        try
         {
-            try
-            {
-                _pessoaRepository.Atualizar(pessoa);
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }  
+            _pessoaRepository.Atualizar(pessoa);
+            return true;
         }
+        catch (Exception)
+        {
+            return false;
+        }  
     }
 }

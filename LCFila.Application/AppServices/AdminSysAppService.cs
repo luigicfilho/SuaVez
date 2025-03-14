@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using LCFila.Application.Helpers;
 using LCFila.Application.Interfaces;
 using LCFila.Domain.Models;
 using LCFila.Infra.Interfaces;
 using LCFila.Infra.External;
 using LCFila.Application.Dto;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Http;
 using LCFila.Domain.Enums;
 
 namespace LCFila.Application.AppServices;
@@ -45,7 +42,7 @@ public class AdminSysAppService : IAdminSysAppService
         return;
     }
 
-    public Results<EmpresaLoginDto> CreateEmpresa(EmpresaLoginDto empresaLogindto, string email, string password)
+    public Task<EmpresaLoginDto> CreateEmpresa(EmpresaLoginDto empresaLogindto, string email, string password)
     {
         var user = new AppUser
         {
@@ -92,11 +89,12 @@ public class AdminSysAppService : IAdminSysAppService
                 _userManager.DeleteAsync(user);
                 
                 //return resultFactory.Failure(new Error("APP01", "Was not possible to confirm the email."));
-                return Results<EmpresaLoginDto>.Failure(Error.GenericFailure("APP01", "Was not possible to confirm the email."));
+                //return Results<EmpresaLoginDto>.Failure(Error.GenericFailure("APP01", "Was not possible to confirm the email."));
             }
         }
 
-        return Results<EmpresaLoginDto>.Success(empresaLogindto!);
+        return Task.FromResult(empresaLogindto);
+        //return Results<EmpresaLoginDto>.Success(empresaLogindto!);
     }
 
     public async Task<EmpresaLoginDto> EditEmpresa(EmpresaLoginDto empresaLogin)
@@ -341,5 +339,18 @@ public class AdminSysAppService : IAdminSysAppService
         await _empresaRepository.SaveChanges();
 
         return empresaConfiguracao;
+    }
+
+    public bool IsEmpresaAtiva(string Email)
+    {
+        //TODO:
+        // do a better way to exclude sysadmin for this check
+        if (Email.Equals("admin@suavez.com.br", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return true;
+        }
+        var AllEmpresas = _empresaRepository.ObterTodos().Result;
+        var empresa = AllEmpresas.FirstOrDefault(s => s.UsersEmpresa.Any(p => p.Email == Email));
+        return empresa!.Ativo;
     }
 }

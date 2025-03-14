@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using LCFila.Application.Interfaces;
 
-namespace LCFila.Controllers.Sistema;
+namespace LCFila.Web.Controllers.Sistema;
 
 public abstract class BaseController : Controller
 {

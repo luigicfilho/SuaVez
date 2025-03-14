@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using LCFila.Controllers.Sistema;
 using LCFila.Web.Mapping;
 using LCFila.Application.Interfaces;
 using LCFila.Web.Models.Fila;
 using LCFila.Web.Models.Pessoa;
+using LCFila.Web.Controllers.Sistema;
 
-namespace LCFila.Controllers;
+namespace LCFila.Web.Controllers;
 
 [Authorize(Roles = "SysAdmin,EmpAdmin,OperatorEmp")]
 public class FilaController : BaseController

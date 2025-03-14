@@ -1,8 +1,8 @@
 ﻿using Microsoft.FeatureManagement.Mvc;
-using LCFila.Controllers.Sistema;
 using LCFila.Application.Interfaces;
+using LCFila.Web.Controllers.Sistema;
 
-namespace LCFila.Controllers;
+namespace LCFila.Web.Controllers;
 
 [FeatureGate("Scheduling")]
 public class SchedulerController : BaseController

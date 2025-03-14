@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using LCFila.Controllers.Sistema;
 using LCFila.Application.Interfaces;
 using LCFila.Web.Models;
+using LCFila.Web.Controllers.Sistema;
 
-namespace LCFila.Controllers;
+namespace LCFila.Web.Controllers;
 
 [Authorize(Roles = "SysAdmin,EmpAdmin,OperatorEmp")]
 public class HomeController : BaseController
