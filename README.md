@@ -1,4 +1,4 @@
-# LCFila - Queue Managment
+# SuaVez - Queue Managment
 
 This project provides a robust Queue Management System (QMS) designed to handle multiple companies, provide UI customization, and incorporate advanced queue features like priority logic, real-time position tracking, and more.
 
@@ -40,7 +40,7 @@ The system is planned to integrate with a scheduler for time-based queue managem
 
 ### Clone the repository:
 ```bash
-git clone https://github.com/luigicfilho/LCFila.git
+git clone https://github.com/luigicfilho/SuaVez.git
 ```
 ### Navigate to the project folder:
 
