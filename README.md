@@ -3,7 +3,7 @@
 This project provides a robust Queue Management System (QMS) designed to handle multiple companies, provide UI customization, and incorporate advanced queue features like priority logic, real-time position tracking, and more.
 
 > [!CAUTION]
-> This project was originally developed from an abandoned client project. It was over-engineered with a lot of unnecessary complexity and features, and is not recommended for use in a production or product environment. While it has been adapted for inclusion in a portfolio, it may not follow best practices for scalability, performance, or maintainability. If you're considering using it, please review the code thoroughly and make the necessary adjustments before deploying to production.
+> This project was originally developed from an abandoned client project. It will be over-engineered with a lot of unnecessary complexity and features, and is not recommended for use in a production or product environment. While it has been adapted for inclusion in a portfolio, it may not follow best practices for scalability, performance, or maintainability. If you're considering using it, please review the code thoroughly and make the necessary adjustments before deploying to production.
 
 
 ## Features
