@@ -70,7 +70,7 @@ Here is a diagram illustrating the architecture of the Queue Management System:
 
 ```mermaid
 ---
-title: LCFila Architecture Diagram
+title: SuaVez Architecture Diagram
 ---
 stateDiagram
     accTitle: Layers Diagram of LC Fila Application
