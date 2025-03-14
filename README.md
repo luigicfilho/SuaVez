@@ -45,7 +45,7 @@ git clone https://github.com/luigicfilho/SuaVez.git
 ### Navigate to the project folder:
 
 ```bash
-cd LCFila
+cd SuaVez
 ```
 
 ### Run the migrations to create database
