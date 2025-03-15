@@ -12,6 +12,4 @@ public class Pessoa : Entity
     public bool Preferencial { get; set; }
     public int Posicao { get; set; }
     public PessoaStatus Status { get; set; }
-    /* EF Relations */
-    //public Fila Fila { get; set; } = new();
 }

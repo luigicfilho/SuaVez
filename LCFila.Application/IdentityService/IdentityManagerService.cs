@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using LCFila.Infra.External;
 using LCFila.Application.Dto;
+using LCFila.Application.Mappers;
 
 namespace LCFila.Application.IdentityService;
 

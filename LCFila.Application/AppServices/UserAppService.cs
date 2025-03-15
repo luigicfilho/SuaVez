@@ -68,9 +68,12 @@ internal class UserAppService : IUserAppService
     {
         try
         {
-            var user = new AppUser { UserName = UserEmail, Email = UserEmail };
-            //var userlogged = _userManager.GetUserAsync userLoggedIn;
-            user.EmailConfirmed = true;
+            var user = new AppUser
+            {
+                UserName = UserEmail,
+                Email = UserEmail,
+                EmailConfirmed = true
+            };
             var result = _userManager.CreateAsync(user, Password).Result;
             if (result.Succeeded)
             {
@@ -171,7 +174,6 @@ internal class UserAppService : IUserAppService
         {
             return false;
         }
-
     }
 
     public bool RemoverUser(Guid id)

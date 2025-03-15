@@ -1,7 +1,6 @@
 ﻿using LCFila.Domain.Models;
 using LCFila.Infra.Context;
 using LCFila.Infra.Interfaces;
-using LCFila.Infra.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace LCFila.Infra.Repository;

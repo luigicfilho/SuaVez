@@ -21,8 +21,8 @@ public class ConfigAppService : IConfigAppService
         var user = _userManager.Users.SingleOrDefault(p => p.UserName == userName);
         if (user == null)
         {
-            //var Empresaid = user.EmpresaLogin.Id;
-            
+            // User cannot be null
+            ArgumentNullException.ThrowIfNull(user);
         }
         var empresa = _empresaRepository.ObterTodos().Result.SingleOrDefault(p => p.IdAdminEmpresa == Guid.Parse(user!.Id));
         return empresa!;

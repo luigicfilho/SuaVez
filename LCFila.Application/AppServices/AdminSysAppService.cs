@@ -5,7 +5,7 @@ using LCFila.Domain.Models;
 using LCFila.Infra.Interfaces;
 using LCFila.Infra.External;
 using LCFila.Application.Dto;
-using LCFila.Domain.Enums;
+using LCFila.Application.Mappers;
 
 namespace LCFila.Application.AppServices;
 
@@ -100,55 +100,11 @@ public class AdminSysAppService : IAdminSysAppService
     public async Task<EmpresaLoginDto> EditEmpresa(EmpresaLoginDto empresaLogin)
     {
         var empLogin = await _empresaRepository.ObterPorId(empresaLogin.Id);
-        //TODO: Update what it's needed
-        List<AppUser> appuserlist = [];
-        foreach (var appuser in empresaLogin.UsersEmpresa!)
-        {
-            appuserlist.Add(new()
-            {
-                Email = appuser.Email!,
-                PhoneNumber = appuser.PhoneNumber!,
-                Id = appuser.Id,
-                UserName = appuser.UserName!
-            });
-        }
 
-        List<Fila> filalist = [];
-        foreach (var filas in empresaLogin.EmpresaFilas!)
-        {
-            filalist.Add(new()
-            {
-                Id = filas.Id,
-                Nome = filas.Nome,
-                DataInicio = filas.DataInicio,
-                DataFim = filas.DataFim,
-                Tipofila = Enum.Parse<TiposFilas>(filas.Tipofila),
-                Status = Enum.Parse<FilaStatus>(filas.Status),
-                Ativo = filas.Ativo,
-                TempoMedio = filas.TempoMedio
-            });
-        }
 
-        EmpresaConfiguracao empConfDto = new()
-        {
-            Id = empresaLogin.EmpresaConfiguracao!.Id,
-            NomeDaEmpresa = empresaLogin.EmpresaConfiguracao.NomeDaEmpresa,
-            LinkLogodaEmpresa = empresaLogin.EmpresaConfiguracao.LinkLogodaEmpresa,
-            CorPrincipalEmpresa = empresaLogin.EmpresaConfiguracao.CorPrincipalEmpresa,
-            CorSegundariaEmpresa = empresaLogin.EmpresaConfiguracao.CorSegundariaEmpresa,
-            FooterEmpresa = empresaLogin.EmpresaConfiguracao.FooterEmpresa
-        };
+        EmpresaLogin empresaLoginDto = new();
+        empresaLoginDto = empresaLogin.ConvertToEmpresaLogin();
 
-        EmpresaLogin empresaLoginDto = new()
-        {
-            NomeEmpresa = empresaLogin!.NomeEmpresa,
-            CNPJ = empresaLogin!.CNPJ,
-            IdAdminEmpresa = empresaLogin.IdAdminEmpresa,
-            UsersEmpresa = appuserlist,
-            EmpresaConfiguracao = empConfDto,
-            EmpresaFilas = filalist,
-            Ativo = empresaLogin.Ativo
-        };
         await _empresaRepository.Atualizar(empresaLoginDto!);
         await _empresaRepository.SaveChanges();
         return empresaLogin;
@@ -157,130 +113,33 @@ public class AdminSysAppService : IAdminSysAppService
     public async Task<IEnumerable<EmpresaLoginDto>> GetAllEmpresas()
     {
         var empresasLogins = await _empresaRepository.ObterTodos();
-        List<AppUserDto> appuserlist = [];
-
-        List<FilaDto> filalist = [];
-
-        List<EmpresaLoginDto> empresaLoginDtos = [];
-        foreach (var emps in empresasLogins)
+        if(empresasLogins is not null)
         {
-            foreach (var appuser in emps.UsersEmpresa)
-            {
-                appuserlist.Add(new()
-                {
-                    Email = appuser.Email!,
-                    PhoneNumber = appuser.PhoneNumber!,
-                    Id = appuser.Id,
-                    UserName = appuser.UserName!
-                });
-            }
-            foreach (var filas in emps.EmpresaFilas)
-            {
-                filalist.Add(new()
-                {
-                    Id = filas.Id,
-                    Nome = filas.Nome,
-                    DataInicio = filas.DataInicio,
-                    DataFim = filas.DataFim,
-                    Tipofila = filas.Tipofila.ToString(),
-                    Status = filas.Status.ToString(),
-                    Ativo = filas.Ativo,
-                    TempoMedio = filas.TempoMedio
-                });
-            }
-            EmpresaConfiguracaoDto empConfDto = new()
-            {
-                Id = emps.EmpresaConfiguracao.Id,
-                NomeDaEmpresa = emps.EmpresaConfiguracao.NomeDaEmpresa,
-                LinkLogodaEmpresa = emps.EmpresaConfiguracao.LinkLogodaEmpresa,
-                CorPrincipalEmpresa = emps.EmpresaConfiguracao.CorPrincipalEmpresa,
-                CorSegundariaEmpresa = emps.EmpresaConfiguracao.CorSegundariaEmpresa,
-                FooterEmpresa = emps.EmpresaConfiguracao.FooterEmpresa
-            };
-            empresaLoginDtos.Add(new EmpresaLoginDto
-            {
-                Id = emps.Id,
-                NomeEmpresa = emps!.NomeEmpresa,
-                CNPJ = emps!.CNPJ,
-                IdAdminEmpresa = emps.IdAdminEmpresa,
-                UsersEmpresa = appuserlist,
-                EmpresaConfiguracao = empConfDto,
-                EmpresaFilas = filalist,
-                Ativo = emps.Ativo
-            });
+            return empresasLogins.ConvertToEmpresaLoginDto();
         }
-        return empresaLoginDtos;
+        return new List<EmpresaLoginDto>();
     }
 
     public async Task<EmpresaLoginDto> GetEmpresaDetail(Guid Id)
     {
         var retorno = await _empresaRepository!.ObterPorId(Id);
-        List<AppUserDto> appuserlist = [];
 
-        foreach(var appuser in retorno!.UsersEmpresa)
+        if (retorno is not null)
         {
-            appuserlist.Add(new()
-            {
-                Email = appuser.Email!,
-                PhoneNumber = appuser.PhoneNumber!,
-                Id = appuser.Id,
-                UserName = appuser.UserName!
-            });
+            return retorno.ConvertToDto();
         }
-
-        List<FilaDto> filalist = [];
-        foreach (var filas in retorno!.EmpresaFilas)
-        {
-            filalist.Add(new()
-            {
-                Id = filas.Id,
-                Nome = filas.Nome,
-                DataInicio = filas.DataInicio,
-                DataFim = filas.DataFim,
-                Tipofila = filas.Tipofila.ToString(),
-                Status = filas.Status.ToString(),
-                Ativo = filas.Ativo,
-                TempoMedio = filas.TempoMedio
-            });
-        }
-
-        EmpresaConfiguracaoDto empConfDto = new()
-        {
-            Id = retorno.EmpresaConfiguracao.Id,
-            NomeDaEmpresa = retorno.EmpresaConfiguracao.NomeDaEmpresa,
-            LinkLogodaEmpresa = retorno.EmpresaConfiguracao.LinkLogodaEmpresa,
-            CorPrincipalEmpresa = retorno.EmpresaConfiguracao.CorPrincipalEmpresa,
-            CorSegundariaEmpresa = retorno.EmpresaConfiguracao.CorSegundariaEmpresa,
-            FooterEmpresa = retorno.EmpresaConfiguracao.FooterEmpresa
-        };
-
-        EmpresaLoginDto empresaLoginDto = new()
-        {
-            NomeEmpresa = retorno!.NomeEmpresa,
-            CNPJ = retorno!.CNPJ,
-            IdAdminEmpresa = retorno.IdAdminEmpresa,
-            UsersEmpresa = appuserlist,
-            EmpresaConfiguracao = empConfDto,
-            EmpresaFilas = filalist,
-            Ativo = retorno.Ativo
-        };
-
-        return empresaLoginDto;
+        return new EmpresaLoginDto();
     }
 
     public async Task<AppUserDto> GetEmpresaAdmin(string IdAdminEmpresa)
     {
         var retorno = await _userManager.FindByIdAsync(IdAdminEmpresa);
 
-        AppUserDto appUserDto = new()
+        if (retorno is not null)
         {
-            Email = retorno!.Email!,
-            PhoneNumber = retorno.PhoneNumber!,
-            Id = retorno.Id,
-            UserName = retorno!.UserName!
-        };
-
-        return appUserDto!;
+            return retorno.ConvertToAppUserDto();
+        }
+        return new AppUserDto();
     }
     public async Task RemoveEmpresa(Guid Id)
     {
@@ -303,17 +162,7 @@ public class AdminSysAppService : IAdminSysAppService
         IEnumerable<EmpresaConfiguracao> config = await _empresaConfigRepository.Buscar(p => p.NomeDaEmpresa == empresa.NomeEmpresa);
         EmpresaConfiguracao empcofig = config.FirstOrDefault()!;
 
-        EmpresaConfiguracaoDto empresaConfiguracaoDto = new()
-        {
-            CorPrincipalEmpresa = empcofig.CorPrincipalEmpresa,
-            CorSegundariaEmpresa = empcofig.CorSegundariaEmpresa,
-            Id = empcofig.Id,
-            NomeDaEmpresa = empcofig.NomeDaEmpresa,
-            FooterEmpresa = empcofig.FooterEmpresa,
-            LinkLogodaEmpresa = empcofig.LinkLogodaEmpresa
-        };
-
-        return empresaConfiguracaoDto;
+        return empcofig.ConvertToDto();
     }
 
     public async Task<EmpresaConfiguracaoDto> UpdateEmpresaConfiguracao(Guid Id, EmpresaConfiguracaoDto empresaConfiguracao, string filePath)

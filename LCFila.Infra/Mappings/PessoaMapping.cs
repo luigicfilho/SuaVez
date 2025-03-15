@@ -20,11 +20,6 @@ public class PessoaMapping : IEntityTypeConfiguration<Pessoa>
             .IsRequired()
             .HasColumnType("varchar(200)");
 
-        //builder.HasOne(f => f.Fila).WithOne();
-           //.WithMany() // or .WithOne() if it's a one-to-one
-           //.HasForeignKey(p => p.FilaId);// Specify the foreign key property
-           //.OnDelete(DeleteBehavior.Restrict);
-
         builder.ToTable("Pessoas");
     }
 }

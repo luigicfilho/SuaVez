@@ -8,8 +8,8 @@ using LCFila.Web.Models;
 using LCFila.Web.Models.Identity.AccountViewModels;
 using LCFila.Web.Models.User;
 using LCFila.Web.Mapping;
-using LCFila.Application.IdentityService;
 using LCFila.Application.Interfaces;
+using LCFila.Application.Mappers;
 
 namespace LCFila.Web.Controllers.Identity;
 

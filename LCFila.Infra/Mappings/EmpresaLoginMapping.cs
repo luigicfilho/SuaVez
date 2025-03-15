@@ -20,8 +20,6 @@ public class EmpresaLoginMapping : IEntityTypeConfiguration<EmpresaLogin>
 
         builder.HasOne(f => f.EmpresaConfiguracao);
 
-        //builder.HasMany(f => f.UsersEmpresa).WithOne(i => i.EmpresaLogin);
-
         builder.HasMany(f => f.EmpresaFilas);
 
         builder.ToTable("EmpresaLogins");

@@ -34,12 +34,10 @@ internal class FilaAppService : IFilaAppService
             var pessoasdafila = pessoas.Where(p => p.FilaId == FilaId && p.Ativo == true && p.Status == PessoaStatus.Esperando).ToList();
 
             Pessoa pessoadb = new();
-            //Pessoa.DataEntradaNaFila = DateTime.Now;
             pessoadb.Ativo = true;
             pessoadb.Status = PessoaStatus.Esperando;
             pessoadb.Preferencial = Pessoa.Preferencial;
-            //Enum.Parse<PessoaStatus>(Enum.GetName(pessoaViewModel.Status)!);
-            //Pessoa.Fila = fila!;
+
             if (Pessoa.Preferencial)
             {
                 pessoadb.Posicao = 1;
@@ -65,7 +63,6 @@ internal class FilaAppService : IFilaAppService
                 pessoadb.Posicao = pessoasdafila.Count + 1;
             }
             pessoadb.FilaId = FilaId;
-            //Pessoa.Fila = fila!;
             _pessoaRepository.Adicionar(pessoadb);
             return true;
         }
@@ -118,7 +115,6 @@ internal class FilaAppService : IFilaAppService
             EmpresaId = empresalogin!.Id
         };
 
-
         return createFilaDto;
     }
 
@@ -128,39 +124,31 @@ internal class FilaAppService : IFilaAppService
 
         var allusers = GetAllUsers();
         var user = _userManager.Users.SingleOrDefaultAsync(p => p.UserName == UserName).Result;
-        //var allusers = GetAllUsers();
         var empresalogin = _empresaRepository.Buscar(s => s.IdAdminEmpresa == Guid.Parse(user!.Id));
         var Empresaid = empresalogin.Id;
         var pegarfila = _filaRepository.ObterTodos().Result;
         var allfila = pegarfila.Where(p => p.UserId == Guid.Parse(user!.Id)).ToList();
         
-        List<Fila> filasdousuario = new List<Fila>();
-        //if (User.IsInRole("EmpAdmin"))
-        //{
-        //    filasdousuario = pegarfila.Where(p => p.EmpresaId == Empresaid).ToList();
-        //} else
-        //{
+        List<Fila> filasdousuario = [];
 
         foreach (var item in allfila)
         {
-            FilaDto fila = new();
-            fila.Id = item.Id;
-            fila.Status = Enum.GetName(item.Status)!;
-            fila.Nome = item.Nome;
-            fila.DataInicio = item.DataInicio;
-            fila.Ativo = item.Ativo;
-            fila.NomeUser = allusers.SingleOrDefault(p => p.Id == item.UserId.ToString())!.UserName!;
+            FilaDto fila = new()
+            {
+                Id = item.Id,
+                Status = Enum.GetName(item.Status)!,
+                Nome = item.Nome,
+                DataInicio = item.DataInicio,
+                Ativo = item.Ativo,
+                NomeUser = allusers.SingleOrDefault(p => p.Id == item.UserId.ToString())!.UserName!
+            };
             listaDeFila.Add(fila);
         }
         return listaDeFila;
-        //}
-
-        //var pessoas = _pessoaRepository.ObterTodos().Result;
     }
 
     public FilaDetailsDto GetPessoas(Guid Id, string UserName)
     {
-
         var user = _userManager.Users.SingleOrDefaultAsync(p => p.UserName == UserName).Result;
         var empresalogin = _empresaRepository.Buscar(s => s.IdAdminEmpresa == Guid.Parse(user!.Id)).Result;
         var Empresaid = empresalogin.SingleOrDefault()!.Id;
@@ -172,14 +160,16 @@ internal class FilaAppService : IFilaAppService
         
         foreach(var pessoa in pessoas)
         {
-            PessoasDto pessoaDto = new();
-            pessoaDto.Id = pessoa.Id;
-            pessoaDto.Nome = pessoa.Nome;
-            pessoaDto.Posicao = pessoa.Posicao;
-            pessoaDto.Preferencial = pessoa.Preferencial;
-            pessoaDto.Celular = pessoa.Celular;
-            pessoaDto.Status = Enum.GetName(pessoa.Status)!;
-            pessoaDto.Ativo = pessoa.Ativo;
+            PessoasDto pessoaDto = new()
+            {
+                Id = pessoa.Id,
+                Nome = pessoa.Nome,
+                Posicao = pessoa.Posicao,
+                Preferencial = pessoa.Preferencial,
+                Celular = pessoa.Celular,
+                Status = Enum.GetName(pessoa.Status)!,
+                Ativo = pessoa.Ativo
+            };
             filaDetails.ListaPessoas.Add(pessoaDto);
         }
 
@@ -188,15 +178,17 @@ internal class FilaAppService : IFilaAppService
 
     public Guid IniciarFila(string UserName)
     {
+        //TODO: Verificar
         var user = _userManager.Users.SingleOrDefaultAsync(p => p.UserName == UserName).Result;
         var empresalogin = _empresaRepository.Buscar(s => s.IdAdminEmpresa == Guid.Parse(user!.Id)).Result.FirstOrDefault();
         var Empresaid = empresalogin!.Id;
-        Fila novafila = new Fila();
-        novafila.DataInicio = DateTime.Now;
-        novafila.TempoMedio = "30";
-        novafila.EmpresaId = Empresaid;
-        novafila.UserId = Guid.Parse(user!.Id);
-        //var result = CriarFila(novafila);
+        Fila novafila = new Fila
+        {
+            DataInicio = DateTime.Now,
+            TempoMedio = "30",
+            EmpresaId = Empresaid,
+            UserId = Guid.Parse(user!.Id)
+        };
         return novafila.Id;
     }
 
