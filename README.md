@@ -1,71 +1,52 @@
 # SuaVez - Queue Managment
 
-This project provides a robust Queue Management System (QMS) designed to handle multiple companies, provide UI customization, and incorporate advanced queue features like priority logic, real-time position tracking, and more.
+**SuaVez** is a robust **Queue Management System** designed for fast-food chains, restaurants, and multi-company environments. It provides advanced queue control, priority management, and customization options to enhance operational efficiency and customer satisfaction. 
+
+This project was initially developed as a monolithic ASP.NET Core 3.1 application with Identity Pages integrated as Razor, and later refactored into a layered architecture with Identity moved to an MVC structure.
 
 > [!CAUTION]
 > This project was originally developed from an abandoned client project. It will be over-engineered with a lot of unnecessary complexity and features, and is not recommended for use in a production or product environment. While it has been adapted for inclusion in a portfolio, it may not follow best practices for scalability, performance, or maintainability. If you're considering using it, please review the code thoroughly and make the necessary adjustments before deploying to production.
 
+## Table of Contents
 
-## Features
-- **Multiple Companies Support**
+- [Key Features](#key-features)
+- [Architecture Overview](#architecture-overview)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [Planned Features](#planned-features)
+- [Architecture Decision Records (ADRs)](#architecture-decision-records-adrs)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
-The system allows the management of queues for multiple companies simultaneously. Each company can have its own queue, and users can choose which queue to join.
 
-- **Customizable UI**
+## Key Features
 
-UI elements are designed with flexibility in mind. Users can customize their interface to meet their preferences for a better experience. (Details on how to customize will be included in the documentation.)
+### Core Queue Management
+- **Multiple Companies Support**: Manage queues for multiple companies simultaneously. Each company can have its own queue, and users can choose which queue to join.
+- **Position Tracking and Exit Option**: Users can see their current position in the queue and leave the queue directly from the interface.
+- **Priority Logic**: Customizable priority rules to prioritize certain users (e.g., VIPs, urgent requests) based on roles or other criteria.
+- **Handling Multiple Queues**: Supports managing multiple queues in parallel for efficient handling of large groups or multiple service points.
 
-- **Position Tracking and Exit Option**
+### Customization and Flexibility
+- **Customizable UI**: Users and admins can personalize the interface (e.g., color schemes, layouts) to match branding or preferences.
+- **Scalability**: Designed to handle small restaurants to large fast-food chains with multiple locations.
 
-Every user can see their current position in the queue. If they decide to leave the queue, they can do so directly from the same page.
+### Advanced Features
+- **Real-Time Notifications**: Notify users of their queue status via SMS, mobile app, or on-site displays.
+- **Wait Time Estimation**: Provide accurate wait time predictions based on queue length and service speed.
+- **Scheduler Integration (Planned)**: Future integration with a scheduler for time-based queue management (e.g., appointments, reserved times).
 
-- **Priority Logic**
+### Technical Improvements
+- **Refactored Architecture**: Migrated from a monolithic ASP.NET Core 3.1 application to a layered architecture:
+  - **LCFila.Web**: Frontend UI written in Razor MVC.
+  - **LCFila.Application**: Backend services.
+  - **LCFila.Infra**: Infrastructure logic for database and external services.
+  - **LCFila.Domain**: Core domain logic (e.g., queue management, priority logic).
+- **Identity Migration**: Refactored Identity Pages from Razor to an MVC structure for better maintainability and scalability.
+- **Database Migrations**: Implemented EF Core migrations for database management.
 
-The system includes a priority queue feature that allows certain individuals or types of requests to be prioritized over others. The priority logic can be customized based on user roles or other criteria.
-
-- **Handling Multiple Queues Simultaneously**
-
-The system supports managing many queues in parallel, ensuring efficient handling for large groups or multiple service points.
-
-- **Scheduler Integration (Planned)**
-
-The system is planned to integrate with a scheduler for time-based queue management, allowing automatic scheduling of services or sessions based on available resources and timings.
-
-## Requirements
-- .NET 8
-- A modern web browser (for the frontend)
-- Optional: Scheduler integration (planned feature, see below)
-
-## Installation
-
-### Clone the repository:
-```bash
-git clone https://github.com/luigicfilho/SuaVez.git
-```
-### Navigate to the project folder:
-
-```bash
-cd SuaVez
-```
-
-### Run the migrations to create database
-
-```bash
-dotnet tool install --global dotnet-ef
-dotnet ef migrations add Initial --startup-project .\LCFila.Web\LCFila.Web.csproj --project .\LCFila.Infra\LCFila.Infra.csproj
-dotnet ef database update --project .\LCFila.Infra\LCFila.Infra.csproj -s .\LCFila.Web\LCFila.Web.csproj
-dotnet ef migrations script -o ../fileName.sql --startup-project .\LCFila.Web\LCFila.Web.csproj --project .\LCFila.Infra\LCFila.Infra.csproj
-```
-
-### Run the development server:
-
-```bash
-dotnet run
-```
-
-## How It Works
-
-### Architecture Overview
+## Architecture Overview
 Here is a diagram illustrating the architecture of the Queue Management System:
 
 ```mermaid
@@ -90,41 +71,49 @@ stateDiagram
     end note
 ```
 
-The diagram above shows the major components and how they interact within the system, including:
 
-- **LCFila.Web** - The frontend UI written in Razor MVC for user interaction.
-- **LCFila.Blazor** - The optional, not implemented frontend UI written in Blazor for user interaction.
-- **LCFila.Application** - The backend services.
-- **LCFila.Infra** - The Infrastructure logic to connect to database and external services
-- **LCFila.Domain** - The domain logic (e.g., queue management, priority logic).
+### Key Components
 
-You can check the ADRs:
+- **LCFila.Web** - Frontend UI for user interaction.
+- **LCFila.Application** - Backend services for business logic.
+- **LCFila.Infra** - Infrastructure layer for database and external integrations.
+- **LCFila.Domain** - Core domain logic, including queue management and priority rules.
 
-- ADR-1: [Using MVC Web App](https://github.com/luigicfilho/LCFila/blob/main/docs/adr/adr-001-implement-LC-Fila-as-dotnet-mvc.md)
-- ADR-2: [Adopt DDD With Layered Architecture](https://github.com/luigicfilho/LCFila/blob/main/docs/adr/adr-002-adopt-ddd-with-layered-architecture.md)
 
-**1. Queue Creation for Multiple Companies**
-- Each company can have its own queue.
-- Users select which company’s queue they wish to join based on availability.
+## Getting Started
 
-**2. UI Customization**
-- Users can personalize their dashboard (color schemes, layout preferences).
-- Admins or company owners can also customize their interface to match branding requirements.
+### Requirements
 
-**3. Position Tracking**
-- Users can view their current position in the queue.
-- Users are notified when their turn is approaching.
-- An option is provided for users to leave the queue if needed.
+- .NET 8
+- A modern web browser (for the frontend)
+- Optional: Scheduler integration (planned feature)
 
-**4. Priority Logic**
-- Different users can have different priorities based on role (e.g., VIP customers or urgent service requests).
-- The system processes priority users first, ensuring efficient queue management.
+### Setup
 
-**5. Handling Multiple Lists**
-- The system can handle and display several queues at the same time, enabling companies to manage different service points or types of requests simultaneously.
+1. Clone the repository:
+```bash
+git clone https://github.com/luigicfilho/SuaVez.git
+```
+2. Navigate to the project folder:
 
-**6. Scheduler Integration (Planned)**
-- Future versions will include a scheduler to manage time-based services automatically (e.g., appointments, reserved times, etc.).
+```bash
+cd SuaVez
+```
+
+3. Run the migrations to create database
+
+```bash
+dotnet tool install --global dotnet-ef
+dotnet ef migrations add Initial --startup-project .\LCFila.Web\LCFila.Web.csproj --project .\LCFila.Infra\LCFila.Infra.csproj
+dotnet ef database update --project .\LCFila.Infra\LCFila.Infra.csproj -s .\LCFila.Web\LCFila.Web.csproj
+dotnet ef migrations script -o ../fileName.sql --startup-project .\LCFila.Web\LCFila.Web.csproj --project .\LCFila.Infra\LCFila.Infra.csproj
+```
+
+4. Run the development server:
+
+```bash
+dotnet run
+```
 
 ## Usage
 
@@ -140,20 +129,28 @@ You can check the ADRs:
     - Monitor active queues and their statuses.
 
 ## Planned Features
-- Scheduler Integration
-Automatically assign slots to users based on availability and timing.
+- **Scheduler Integration**: Automatically assign slots to users based on availability and timing.
 
-- Mobile Optimization
-Make the platform mobile-responsive for better usability across devices.
+- **Mobile Optimization**: Make the platform mobile-responsive for better usability across devices.
 
-- Notifications
-Implement push notifications to alert users when their turn is approaching or if there is an issue with the queue.
+- **Notifications**: Implement push notifications to alert users when their turn is approaching or if there is an issue with the queue.
 
-- Contributing
+## Architecture Decision Records (ADRs)
+
+This project follows a documented decision-making process for key architectural choices. Below are the Architecture Decision Records (ADRs) that explain the reasoning behind major technical decisions:
+
+- **ADR-1**: [Using MVC Web App](https://github.com/luigicfilho/LCFila/blob/main/docs/adr/adr-001-implement-LC-Fila-as-dotnet-mvc.md)
+  - Decision to use Razor MVC for the frontend UI to leverage its simplicity and integration with ASP.NET Core.
+
+- **ADR-2**: [Adopt Layered Architecture](https://github.com/luigicfilho/LCFila/blob/main/docs/adr/adr-002-adopt-ddd-with-layered-architecture.md)
+  - Decision to refactor the monolithic application into a layered architecture (Domain-Driven Design) for better maintainability and scalability.
+
+
+## Contributing
 We welcome contributions! If you’d like to contribute to the Queue Management System, feel free to fork the repository and submit a pull request. Please make sure your contributions adhere to the project's coding standards.
 
 ## License
-This project is licensed under the CC BY-NC-ND 4.0 - see the LICENSE file for details.
+This project is licensed under the CC BY-NC-ND 4.0 - see the [LICENSE](LICENSE) file for details.
 
 ## Contact
 If you have any questions or need further support, feel free to open an issue or reach out via discussion tab.
