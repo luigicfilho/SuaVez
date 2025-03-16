@@ -1,1 +1,15 @@
-
+name: 📘 User story
+description: A brief, plain-language explanation of a feature or functionality
+title: '📘 [User Story] - <title> '
+labels: [
+  "user story"
+]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description"
+      description: Please enter an explicit description of your issue
+      placeholder: Short and explicit description of your incident...
+    validations:
+      required: true
