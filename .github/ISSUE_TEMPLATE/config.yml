@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📚 Documentation
+    url: https://github.com/luigicfilho/SuaVez/discussions
+    about: This issue tracker is not for documentation issues. Please file documentation issues on the Ionic Docs repo.
+  - name: 💻 LC Fila Support
+    url: https://github.com/luigicfilho/SuaVez/discussions
+    about: Please ask and answer questions here.
+  - name: 🤔 LC Fila Support
+    url: https://github.com/luigicfilho/SuaVez/discussions
+    about: Please report security vulnerabilities here.
