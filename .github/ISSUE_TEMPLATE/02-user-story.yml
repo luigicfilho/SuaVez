@@ -5,11 +5,27 @@ labels: [
   "user story"
 ]
 body:
-  - type: textarea
-    id: description
+  - type: input
+    id: as-a
     attributes:
-      label: "Description"
-      description: Please enter an explicit description of your issue
-      placeholder: Short and explicit description of your incident...
+      label: "As a "
+      description: Please enter the perspective of the user of the story. 
+      placeholder: ex. end user
+    validations:
+      required: true
+  - type: textarea
+    id: i-want-to
+    attributes:
+      label: "I want to "
+      description: Please enter an explicit description of a feature or functionality
+      placeholder: Short and explicit description of your problem to be solved...
+    validations:
+      required: true
+  - type: textarea
+    id: so-i-can
+    attributes:
+      label: ", so I can "
+      description: Please enter an reason for feature or functionality
+      placeholder: Short and explicit description of the goal to be achieved...
     validations:
       required: true
