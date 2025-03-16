@@ -1,7 +1,6 @@
 name: "🚀 Feature Request"
 description: "I have a specific suggestion for Babel!"
 labels: ["i: needs triage"]
-type: Suggestion
 body:
   - type: markdown
     attributes:
