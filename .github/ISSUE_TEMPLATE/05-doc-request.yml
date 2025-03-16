@@ -1,0 +1,32 @@
+name: 📝 Documentation Request
+description: Updating documentation (e.g. README, Wiki, Guides etc.)
+title: "📝 [DOC] - <title>"
+labels: ["doc", "triage"]
+projects: ["projects/2"]
+assignees:
+  - luigicfilho
+body:
+  - type: textarea
+    id: pain
+    attributes:
+      label: "Pain"
+      description: Explain the pain you are experiencing.
+      placeholder: Short and explicit description of the pain...
+  - type: textarea
+    id: suggested
+    attributes:
+      label: "Suggested Documentation"
+      description: Short summary of the documentation that should be added.
+      placeholder: Short and explicit summary of the suggested documentation to be add...
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: "Acceptance Criteria"
+      description: Define the criteria that will be satisfied the pain ? .
+      placeholder: Acceptance Criteria helps to answer the question "How will I know when I'm done with this story?". It defines the requirements that must be met for the story to be completed...
+  - type: textarea
+    id: more
+    attributes:
+      label: "More Information"
+      description: Any additional information.
+      placeholder: Add any other context here...
