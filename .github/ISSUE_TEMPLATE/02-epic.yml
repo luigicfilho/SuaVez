@@ -1,0 +1,36 @@
+name: ⚡ Epic
+description: A brief, plain-language explanation of a feature or functionality
+title: '⚡ [Epic] - <title> '
+labels: [
+  "epic"
+]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        An epic represents a milestone on the MDN OKR roadmap. Implementation is expected to take more than a single sprint 
+  - type: checkboxes
+    id: acceptance
+    attributes:
+      label: Acceptance criteria!
+      description: The Acceptance criteria is defined? 
+      options:
+        - label: This is something that can be verified to show that this epic is satisfied.
+          required: true
+  - type: checkboxes
+    id: implementation-ready
+    attributes:
+      label: Implementation Ready Checklist!
+      description: Check if this user story is ready to be add into the sprint. (DoR)
+      options:
+        - label: Acceptance criteria defined.
+        - label: Team understands acceptance criteria
+        - label: User workflows defined / designed
+        - label: Acceptance criteria is verifiable / testable 
+        - label: External / 3rd Party dependencies identified 
+  - type: textarea
+    id: design
+    attributes:
+      label: "Workflow / Design"
+      description: Define workflow here or add url link to workflow / design document describing it.
+      placeholder: Short and explicit description of the workflow...
