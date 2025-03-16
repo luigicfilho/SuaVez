@@ -7,6 +7,15 @@ assignees: ''
 
 ---
 
+[] A Bug
+  [] details expected state vs. actual state
+  [] offers a step-by-step guide on how to reproduce the issue
+  [] includes environment details
+     (e.g. physical device, operating system, browser)
+  [] may have additional assets attached
+     (e.g. screenshots, videos)
+
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
