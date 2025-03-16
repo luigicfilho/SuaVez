@@ -29,3 +29,26 @@ body:
       placeholder: Short and explicit description of the goal to be achieved...
     validations:
       required: true
+  - type: markdown
+    attributes:
+      value: |
+        Acceptance criteria!
+  - type: checkboxes
+    id: acceptance
+    attributes:
+      label: Acceptance criteria!
+      description: The Acceptance criteria is defined? 
+      options:
+        - label: This is something that can be verified to show that this user story is satisfied.
+          required: true
+  - type: checkboxes
+    id: sprint-ready
+    attributes:
+      label: Sprint Ready Checklist!
+      description: Check if this user story is ready to be add into the sprint. (DoR)
+      options:
+        - label: Acceptance criteria defined.
+        - label: Team understands acceptance criteria
+        - label: Team has defined solution / steps to satisfy acceptance criteria 
+        - label: Acceptance criteria is verifiable / testable 
+        - label: External / 3rd Party dependencies identified 
