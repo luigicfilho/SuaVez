@@ -29,10 +29,6 @@ body:
       placeholder: Short and explicit description of the goal to be achieved...
     validations:
       required: true
-  - type: markdown
-    attributes:
-      value: |
-        Acceptance criteria!
   - type: checkboxes
     id: acceptance
     attributes:
