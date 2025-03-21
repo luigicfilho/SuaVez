@@ -139,10 +139,10 @@ dotnet run
 
 This project follows a documented decision-making process for key architectural choices. Below are the Architecture Decision Records (ADRs) that explain the reasoning behind major technical decisions:
 
-- **ADR-1**: [Using MVC Web App](https://github.com/luigicfilho/LCFila/blob/main/docs/adr/adr-001-implement-LC-Fila-as-dotnet-mvc.md)
+- **ADR-1**: [Using MVC Web App](https://github.com/luigicfilho/LCFila/blob/main/docs/architectural/adr/adr-001-implement-LC-Fila-as-dotnet-mvc.md)
   - Decision to use Razor MVC for the frontend UI to leverage its simplicity and integration with ASP.NET Core.
 
-- **ADR-2**: [Adopt Layered Architecture](https://github.com/luigicfilho/LCFila/blob/main/docs/adr/adr-002-adopt-ddd-with-layered-architecture.md)
+- **ADR-2**: [Adopt Layered Architecture](docs/architectural/adr/adr-002-adopt-layered-architecture.md)
   - Decision to refactor the monolithic application into a layered architecture (Domain-Driven Design) for better maintainability and scalability.
 
 
