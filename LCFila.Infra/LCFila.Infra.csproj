@@ -18,11 +18,11 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.12" />
 
 		<!-- Required for Update-Database EntityFramework -->
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.12" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9" />
 		
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.12" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.12" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.12">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.9">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
