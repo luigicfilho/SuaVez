@@ -150,7 +150,7 @@ This project follows a documented decision-making process for key architectural 
 We welcome contributions! If you’d like to contribute to the Queue Management System, feel free to fork the repository and submit a pull request. Please make sure your contributions adhere to the project's coding standards.
 
 ## License
-This project is licensed under the CC BY-NC-ND 4.0 - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Polyform-Strict - see the [LICENSE](LICENSE) file for details.
 
 ## Contact
 If you have any questions or need further support, feel free to open an issue or reach out via discussion tab.
